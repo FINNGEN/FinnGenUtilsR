@@ -3,11 +3,7 @@
 #### CURRENT FILE: DEV SCRIPT #####
 ###################################
 
-# Engineering
-
-## Dependencies ----
-usethis::use_pipe()
-usethis::use_tibble()
+renv::init()
 
 ## Add one line by package you want to add as dependency
 usethis::use_package( "dplyr" )
@@ -17,42 +13,22 @@ usethis::use_package( "tibble")
 usethis::use_package( "purrr")
 usethis::use_package( "readr")
 usethis::use_package( "lubridate")
-usethis::use_package( "janitor")
-usethis::use_package( "apexcharter")
-usethis::use_package( "forcats")
-usethis::use_package( "ggupset")
 usethis::use_package( "ggplot2")
 usethis::use_package( "checkmate")
-
-usethis::use_package( "vdiffr", type = "Suggest")
-
+usethis::use_package( "bigrquery")
 
 
 ## Add functions
-usethis::use_r("data")
-usethis::use_r("cohortData_table")
-usethis::use_r("cohortData_operations")
-usethis::use_r("summarise_cohortData")
-usethis::use_r("plot_upset_cohortsOverlap")
-usethis::use_r("table_summarycohortData")
-usethis::use_r("plot_cohortData_comparison")
-
+usethis::use_r("fg_append_code_info_to_longitudinal_data")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data_raw( name = "test_data", open = FALSE )
+# usethis::use_data_raw( name = "test_data", open = FALSE )
 
 ## Tests ----
 ## Add one line by test you want to create
 usethis::use_testthat()
-usethis::use_test( "as_cohortData" )
-usethis::use_test( "is_cohortData" )
-usethis::use_test( "bind_cohortData" )
-usethis::use_test( "cohortData_union" )
-usethis::use_test( "bracketNotClosed" )
-usethis::use_test("summarise_cohortData")
-usethis::use_test("plot_upset_cohortData")
-usethis::use_test("table_summarycohortData")
+usethis::use_test( "fg_append_code_info_to_longitudinal_data")
 
 # Documentation
 
