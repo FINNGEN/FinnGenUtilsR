@@ -1,55 +1,244 @@
-library(testthat)
-library(bigrquery)
+#
+# SETUP
+#
 
 bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
 project_id <- "atlas-development-270609"
 
-test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r6.finngen_dummy50k_detailed_longitudinal_v1_0"
+test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r6.finngen_dummy50k_detailed_longitudinal_v2"
 fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v1_0"
+tmp_schema <- "sandbox"
+
+# redundant long executions
+## tb_vocabulary_combinations: table with all combinations of SOURCE, ICDVER, CATEGORY
+### from dplyr::distinct(SOURCE, ICDVER, CATEGORY, .keep_all = T)
+sql <- paste0("
+    SELECT * FROM (
+      SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `ICDVER`, `CATEGORY`) AS q04
+      FROM ", test_longitudinal_data_table, "
+    ) WHERE q04 = 1"
+)
+
+tb_vocabulary_combinations <- bigrquery::bq_project_query(project_id, sql)
 
 
-# sql <- paste("SELECT * FROM ", fg_codes_info_table, " LIMIT 10")
-# tb <- bq_project_query(billing, sql)
-# bq_table_download(tb, n_max = 10)
-
+#
+# TEST
+#
 test_that("fg_append_code_info_to_longitudinal_data works", {
 
-
   sql <- paste("SELECT * FROM ", test_longitudinal_data_table, " WHERE FINNGENID='FG00000001'")
-  tb <- bq_project_query(project_id, sql)
-  tb_with_translations <- FinnGenUtilsR::fg_bq_append_code_info_to_longitudinal_data(project_id, tb, fg_codes_info_table, PURCH_map_to = "VNR")
- a <- bq_table_download(tb_with_translations)
- a
+  tb <- bigrquery::bq_project_query(project_id, sql)
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(project_id, tb, fg_codes_info_table)
+  res <-  bigrquery::bq_table_download(tb_with_translations)
+  res |> checkmate::expect_tibble()
 
 })
 
 
+test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: default", {
 
-s <- paste("SELECT * FROM ", fg_codes_info_table, "WHERE FG_CODE1='T814'")
-tb2 <- bq_project_query(billing, s)
- bq_table_download(tb2, n_max = 10)
+  skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
+
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, tb_vocabulary_combinations, fg_codes_info_table
+    )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  # at the moment the HPN and HPO not implemented
+  res |> dplyr::filter(!stringr::str_detect(CATEGORY, "HPO")) |>
+    dplyr::filter(!stringr::str_detect(CATEGORY, "HPN")) |>
+    dplyr::filter(is.na(vocabulary_id)) |>
+    checkmate::expect_tibble(nrows = 0)
+})
+
+test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: PURCH = VNR", {
+
+  skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
+
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, tb_vocabulary_combinations, fg_codes_info_table,
+    PURCH_map_to = "VNR"
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  # at the moment the HPN and HPO not implemented
+  res |> dplyr::filter(!stringr::str_detect(CATEGORY, "HPO")) |>
+    dplyr::filter(!stringr::str_detect(CATEGORY, "HPN")) |>
+    dplyr::filter(is.na(vocabulary_id)) |>
+    checkmate::expect_tibble(nrows = 0)
+})
+
+test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: REIMB = ICD", {
+
+  skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
+
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, tb_vocabulary_combinations, fg_codes_info_table,
+    REIMB_map_to = "ICD"
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  # at the moment the HPN and HPO not implemented
+  res |> dplyr::filter(!stringr::str_detect(CATEGORY, "HPO")) |>
+    dplyr::filter(!stringr::str_detect(CATEGORY, "HPN")) |>
+    dplyr::filter(is.na(vocabulary_id)) |>
+    checkmate::expect_tibble(nrows = 0)
+})
 
 
 
- sql <- fg_append_code_info_to_longitudinal_data_sql(test_longitudinal_data_table, fg_codes_info_table)
+
+test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
+
+  # upload
+  test_table <- tibble::tibble(
+    FINNGENID = paste0("F0000000", 1:5),
+    SOURCE = c('INPAT','OUTPAT', 'PRIM_OUT','DEATH', 'REIMB'),
+    EVENT_AGE = 0.0,
+    APPROX_EVENT_DAY = lubridate::ymd("2000-01-01"),
+    CODE1 = c("N0839", "N0839", "N0839",          "N0839", as.character(NA)),
+    CODE2 = c("E112",   "E112",  "E112", as.character(NA),          "N0839"),
+    CODE3 = c("N02BE01",   as.character(NA),  as.character(NA), as.character(NA), as.character(NA)),
+    CODE4 = as.character(NA),
+    ICDVER = "10",
+    CATEGORY = c('0', '0', "ICD0", "U", "ICD"),
+    INDEX = "0"
+  )
+
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  bigrquery::bq_table_create(bq_test_table, test_table)
+  bigrquery::bq_table_upload(bq_test_table, test_table)
 
 
- library(plotly)
+  # DEFAULT
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, bq_test_table, fg_codes_info_table,
+    REIMB_map_to = "ICD"
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  res |>
+    dplyr::arrange(FINNGENID) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    expect_equal(
+      tibble::tibble(
+        FG_CODE1 = c("N0839", "N0839", "N0839",          "N0839", "N0839"),
+        FG_CODE2 = c("E112",   "E112",  "E112", as.character(NA), as.character(NA)),
+        FG_CODE3 = as.character(NA),
+      )
+    )
+
+  #  ICD10fi_map_to = "CODE1"
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, bq_test_table, fg_codes_info_table,
+    ICD10fi_map_to = "CODE1",
+    REIMB_map_to = "ICD"
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  res |>
+    dplyr::arrange(FINNGENID) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    expect_equal(
+      tibble::tibble(
+        FG_CODE1 = c("N0839", "N0839", "N0839",          "N0839", "N0839"),
+        FG_CODE2 = as.character(NA),
+        FG_CODE3 = as.character(NA),
+      )
+    )
+
+  #  ICD10fi_map_to = "CODE2"
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, bq_test_table, fg_codes_info_table,
+    ICD10fi_map_to = "CODE2",
+    REIMB_map_to = "ICD"
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  res |>
+    dplyr::arrange(FINNGENID) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    expect_equal(
+      tibble::tibble(
+        FG_CODE1 = c("E112", "E112", "E112",  "N0839", "N0839"),
+        FG_CODE2 = as.character(NA),
+        FG_CODE3 = as.character(NA),
+      )
+    )
+
+  #  ICD10fi_map_to = "ATC"
+  tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+    project_id, bq_test_table, fg_codes_info_table,
+    ICD10fi_map_to = "ATC",
+    REIMB_map_to = "ICD"
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations)
+
+  res |>
+    dplyr::arrange(FINNGENID) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    expect_equal(
+      tibble::tibble(
+        FG_CODE1 = c("N02BE01", as.character(NA), as.character(NA),  "N0839", "N0839"),
+        FG_CODE2 = as.character(NA),
+        FG_CODE3 = as.character(NA),
+      )
+    )
+
+  #clean
+  bigrquery::bq_table_delete(bq_test_table)
+
+})
 
 
- fig <- a |>
-   plot_ly(type="scatter",  x = ~APPROX_EVENT_DAY , y = ~CODE1, fill = vocabulary_id    )
+#
+#
+#
 
- fig
+# sql <- paste("SELECT * FROM ", test_longitudinal_data_table, "ORDER BY FINNGENID LIMIT 10000 ")
+# tb <- bq_project_query(project_id, sql)
+# long_data <- bq_table_download(tb)
+
+# sql <- paste("SELECT * FROM ", fg_codes_info_table)
+# tb <- bq_project_query(project_id, sql)
+# fg_codes_info <- bq_table_download(tb)
 
 
- a |> arrange(vocabulary_id) |>
-   plotly::plot_ly(
-   type = 'scatter', mode = 'markers',
-   x = ~APPROX_EVENT_DAY,
-   y = ~ CODE1,
-   text = ~name_en,
-   hoverinfo = 'text',
-   color = ~vocabulary_id,
-   showlegend = T
- )
+#
+#
+# long_data_tbl <-dbConnect(
+#   bigrquery::bigquery(),
+#   project = project_id,
+#   dataset = "sandbox_tools_r6",
+#   billing = project_id
+# ) |>
+#   dplyr::tbl("finngen_dummy50k_detailed_longitudinal_v2")
+#
+# long_data_tbl %>%
+#   dplyr::distinct(SOURCE, ICDVER, CATEGORY, .keep_all = T) |>
+#   dplyr::show_query()
+#
+
+
+# library(plotly)
+#
+#
+# fig <- a |>
+#   plot_ly(type="scatter",  x = ~APPROX_EVENT_DAY , y = ~CODE1, fill = vocabulary_id    )
+#
+# fig
+#
+#
+# a |> arrange(vocabulary_id) |>
+#   plotly::plot_ly(
+#   type = 'scatter', mode = 'markers',
+#   x = ~APPROX_EVENT_DAY,
+#   y = ~ CODE1,
+#   text = ~name_en,
+#   hoverinfo = 'text',
+#   color = ~vocabulary_id,
+#   showlegend = T
+# )

@@ -28,7 +28,7 @@
 #' @param ICD9fi_precision Number or leading codes in ICD9fi to map to, default = 5
 #' @param ICD8fi_precision Number or leading codes in ICD8fi to map to, default = 5
 #' @param ATC_precision Number or leading codes in ATC to map to, default = 7
-#' @param NOMESCOfi_precision Number or leading codes in NOMESCO to map to, default = 5
+#' @param NCSPfi_precision Number or leading codes in NOMESCO to map to, default = 5
 #'
 #' @param new_colums_prefix string indicating a prefix to add to the appended columns, default="".
 #'
@@ -49,7 +49,7 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
   ICD9fi_precision = 5,
   ICD8fi_precision = 5,
   ATC_precision = 7,
-  NOMESCOfi_precision  = 5,
+  NCSPfi_precision  = 5,
   #
   new_colums_prefix = ""
   ){
@@ -72,7 +72,7 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
   ICD9fi_precision |> checkmate::assert_number(lower = 1, upper = 5)
   ICD8fi_precision |> checkmate::assert_number(lower = 1, upper = 5)
   ATC_precision |> checkmate::assert_number(lower = 1, upper = 7)
-  NOMESCOfi_precision |> checkmate::assert_number(lower = 1, upper = 5)
+  NCSPfi_precision |> checkmate::assert_number(lower = 1, upper = 5)
 
   new_colums_prefix |> checkmate::assert_character(len = 1)
 
@@ -92,7 +92,7 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
       ICD9fi_precision = ICD9fi_precision,
       ICD8fi_precision = ICD8fi_precision,
       ATC_precision = ATC_precision,
-      NOMESCOfi_precision  = NOMESCOfi_precision
+      NCSPfi_precision  = NCSPfi_precision
     )
 
 
@@ -111,7 +111,7 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
 #'
 #' Wrap around fg_append_code_info_to_longitudinal_data_sql to work with bigrquery package
 #'
-#' @param bq_projectid string with the bigquery project id
+#' @param bq_project_id string with the bigquery project id
 #' @param bq_table an object of type <bq_table> with a table in longitudinal_data format
 #' @param fg_codes_info_table string with the full path (project.schema.table) to the bq table with the fg_codes_info
 #' @param ... see \link{fg_append_code_info_to_longitudinal_data_sql} for the mapping options
@@ -121,14 +121,14 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
 #'
 #' @examples
 fg_bq_append_code_info_to_longitudinal_data <- function(
-  bq_projectid,
+  bq_project_id,
   bq_table,
   fg_codes_info_table,
   ...
 ){
 
   # validate
-  bq_projectid |> checkmate::assert_subset(bigrquery::bq_projects())
+  bq_project_id |> checkmate::assert_subset(bigrquery::bq_projects())
   bq_table |> checkmate::assert_class("bq_table")
 
 
@@ -138,7 +138,7 @@ fg_bq_append_code_info_to_longitudinal_data <- function(
     ...
   )
 
-  new_tb <- bigrquery::bq_project_query(project_id, sql)
+  new_tb <- bigrquery::bq_project_query(bq_project_id, sql)
 
   return(new_tb)
 
