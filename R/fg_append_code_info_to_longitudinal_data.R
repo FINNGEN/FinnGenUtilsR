@@ -35,7 +35,8 @@
 #' @return sql script ready to be ran
 #' @export
 #'
-#' @examples
+#' @importFrom checkmate assert_character assert_subset assert_number
+#' @importFrom SqlRender readSql render
 fg_append_code_info_to_longitudinal_data_sql <- function(
   longitudinal_data_table,
   fg_codes_info_table,
@@ -117,10 +118,10 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
 #' @param fg_codes_info_table string with the full path (project.schema.table) to the bq table with the fg_codes_info
 #' @param ... see \link{fg_append_code_info_to_longitudinal_data_sql} for the mapping options
 #'
-#' @return
+#' @return bq_table with added columns
 #' @export
-#'
-#' @examples
+#' @importFrom checkmate assert_subset assert_class
+#' @importFrom bigrquery bq_projects bq_project_query
 fg_bq_append_code_info_to_longitudinal_data <- function(
   bq_project_id,
   bq_table,

@@ -16,6 +16,7 @@ usethis::use_package( "lubridate")
 usethis::use_package( "ggplot2")
 usethis::use_package( "checkmate")
 usethis::use_package( "bigrquery")
+usethis::use_package( "SqlRender")
 
 
 ## Add functions
@@ -33,7 +34,7 @@ usethis::use_test( "fg_append_code_info_to_longitudinal_data")
 # Documentation
 
 ## Vignette ----
-#usethis::use_vignette("connection_tutorial")
+usethis::use_vignette("tutorial")
 #usethis::use_vignette("tutorial")
 #devtools::build_vignettes()
 
