@@ -37,19 +37,23 @@ WITH service_sector_fg_codes AS (
       WHEN SOURCE IN ('INPAT','OUTPAT','PRIM_OUT') AND ICDVER = '10' AND ICD10fi_map_to = 'CODE1_CODE2' AND CODE1 IS NULL AND CODE2 IS NOT NULL THEN CODE2
       WHEN SOURCE IN ('INPAT','OUTPAT','PRIM_OUT') AND ICDVER = '10' AND ICD10fi_map_to = 'CODE2'       THEN CODE2
       WHEN SOURCE IN ('INPAT','OUTPAT','PRIM_OUT') AND ICDVER = '10' AND ICD10fi_map_to = 'ATC'       THEN CODE3
-      WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPHO' THEN CODE2
-      WHEN SOURCE = 'CANC' AND CANC_map_to = 'BEH' THEN CODE3
-      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'VNR' THEN CODE3
+      WHEN SOURCE IN ('INPAT','OUTPAT') AND ICDVER = '10' THEN REGEXP_REPLACE(CODE1,r'\+|\*|\#|\&','')
+      WHEN SOURCE IN ('PRIM_OUT') AND REGEXP_CONTAINS(CATEGORY, r'^ICD') THEN REGEXP_REPLACE(CODE1,r'\+|\*|\#|\&','')
+      WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPHO_BEH' THEN NULL
+      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'REIMB' THEN  CODE2
+      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'VNR' THEN  LPAD(CODE3, 6, "0")
       WHEN SOURCE = 'REIMB' AND REIMB_map_to = 'ICD' THEN CODE2
       ELSE CODE1
     END AS FG_CODE1,
     CASE
       WHEN SOURCE IN ('INPAT','OUTPAT','PRIM_OUT') AND ICDVER = '10' AND ICD10fi_map_to = 'CODE1_CODE2' AND CODE1 IS NOT NULL AND CODE2 IS NOT NULL AND CODE1!=CODE2 THEN CODE2
       WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPO_BEH_TOPO' THEN CODE2
+      WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPHO_BEH' THEN CODE2
       ELSE NULL
     END AS FG_CODE2,
     CASE
-      WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPO_BEH_TOPO' THEN CODE3
+       WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPO_BEH_TOPO' THEN CODE3
+       WHEN SOURCE = 'CANC' AND CANC_map_to = 'MORPHO_BEH' THEN CODE3
       ELSE NULL
     END AS FG_CODE3,
      CASE
@@ -60,14 +64,17 @@ WITH service_sector_fg_codes AS (
       WHEN SOURCE IN ('INPAT','OUTPAT','DEATH') AND ICDVER = '9' THEN 'ICD9fi'
       WHEN SOURCE IN ('INPAT','OUTPAT','DEATH') AND ICDVER = '8' THEN 'ICD8fi'
       WHEN SOURCE = 'CANC' THEN 'ICDO3'
-      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'ATC' AND CODE1 IS NOT NULL THEN 'ATC'
-      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'VNR' AND  CODE3 IS NOT NULL THEN 'VNRfi'
+      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'ATC' THEN 'ATC'
+      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'VNR' THEN 'VNRfi'
+      WHEN SOURCE = 'PURCH' AND PURCH_map_to = 'REIMB' THEN 'REIMB'
       WHEN SOURCE = 'PRIM_OUT' AND REGEXP_CONTAINS(CATEGORY, r'^ICP') THEN 'ICPC'
       WHEN SOURCE = 'PRIM_OUT' AND REGEXP_CONTAINS(CATEGORY, r'^OP') THEN 'SPAT'
       WHEN SOURCE = 'PRIM_OUT' AND REGEXP_CONTAINS(CATEGORY, r'^MOP') THEN 'NCSPfi'
       WHEN SOURCE IN ('OPER_IN','OPER_OUT') AND REGEXP_CONTAINS(CATEGORY, r'^NOM') THEN 'NCSPfi'
       WHEN SOURCE IN ('OPER_IN','OPER_OUT') AND REGEXP_CONTAINS(CATEGORY, r'^MFHL') THEN 'FHL'
       WHEN SOURCE IN ('OPER_IN','OPER_OUT') AND REGEXP_CONTAINS(CATEGORY, r'^SFHL') THEN 'FHL'
+      WHEN SOURCE IN ('OPER_IN','OPER_OUT') AND REGEXP_CONTAINS(CATEGORY, r'^HPN') THEN 'HPN'
+      WHEN SOURCE IN ('OPER_IN','OPER_OUT') AND REGEXP_CONTAINS(CATEGORY, r'^HPO') THEN 'HPO'
       WHEN SOURCE = 'REIMB' AND REIMB_map_to = 'REIMB' THEN 'REIMB'
       WHEN SOURCE = 'REIMB' AND REIMB_map_to = 'ICD' AND ICDVER = '10' THEN 'ICD10fi'
       WHEN SOURCE = 'REIMB' AND REIMB_map_to = 'ICD' AND ICDVER = '9' THEN 'ICD9fi'
@@ -111,7 +118,13 @@ WITH service_sector_fg_codes AS (
   )
 
 # join longitudinal table with pre formated
-SELECT ssfgcp.*, fgc.concept_class_id, fgc.name_en, fgc.name_fi
+SELECT
+  ssfgcp.*,
+  fgc.concept_class_id AS concept_class_id@new_colums_sufix,
+  fgc.name_en AS name_en@new_colums_sufix,
+  fgc.name_fi AS name_fi@new_colums_sufix,
+  fgc.code AS code@new_colums_sufix,
+  fgc.omop_concept_id AS omop_concept_id@new_colums_sufix
 FROM service_sector_fg_codes_precision AS ssfgcp
 LEFT JOIN @fg_codes_info_table as fgc
 ON ssfgcp.vocabulary_id = fgc.vocabulary_id AND
