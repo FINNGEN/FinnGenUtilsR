@@ -1,5 +1,5 @@
 
-#' fg_append_code_info_to_longitudinal_data
+#' fg_append_code_info_to_longitudinal_data_sql
 #'
 #' @param longitudinal_data_table full path to the table in longitudinal_data format
 #' @param fg_codes_info_table full path to the table with the codes info

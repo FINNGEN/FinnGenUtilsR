@@ -1,0 +1,127 @@
+---
+title: "tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(bigrquery)
+library(FinnGenUtilsR)
+library(plotly)
+
+
+bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
+project_id <- "atlas-development-270609"
+
+test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r6.finngen_dummy50k_detailed_longitudinal_v2"
+fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v1"
+tmp_schema <- "sandbox"
+```
+
+
+
+```{r}
+sql <- paste("SELECT * FROM ", test_longitudinal_data_table, "WHERE FINNGENID='FG00000001' ")
+tb <- bq_project_query(project_id, sql)
+
+tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+  project_id, tb, fg_codes_info_table,
+  ICD10fi_precision = 3,
+    ICD9fi_precision = 3,
+    ICD8fi_precision = 3,
+    ATC_precision = 3,
+    NCSPfi_precision  = 2
+  )
+one_patient_long_data <- bq_table_download(tb_with_translations)
+```
+
+
+```{r}
+
+fig <- one_patient_long_data |> 
+  #select(SOURCE, code, APPROX_EVENT_DAY) |> 
+  arrange(SOURCE, APPROX_EVENT_DAY) |>
+  nest(data = c(-SOURCE, -code)) |> mutate(n=row_number()) |> unnest(data) |> 
+  #
+  mutate(
+    text = str_c(vocabulary_id, ": ", code, "\n", name_en, "\n", APPROX_EVENT_DAY), 
+    ytick_label = str_c(vocabulary_id, ":", code)
+    ) |> 
+  group_by(n) |> 
+  #
+  plotly::plot_ly(
+  type = 'scatter', mode = 'lines+markers',
+  x = ~APPROX_EVENT_DAY,
+  y = ~ -n,
+  text = ~text,
+  hoverinfo = 'text',
+  color = ~SOURCE,
+  showlegend = F
+)
+
+```
+
+```{r}
+fig |>  
+  plotly::layout(
+    yaxis = list(
+      tickmode = "array", 
+      tickvals = ~-n,
+      ticktext  = ~ytick_label, 
+      ticklabelposition = "outside right"
+    )
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
