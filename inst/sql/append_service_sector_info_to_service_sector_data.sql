@@ -41,7 +41,7 @@ WITH service_sector_fg_codes_preprocessed AS(
             THEN CODE9
       ELSE NULL
     END AS FG_CODE9,
-     FROM @service_sector_data_table limit 100
+     FROM @service_sector_data_table
   )
 
 # join longitudinal table with pre formated
