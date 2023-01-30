@@ -1,6 +1,6 @@
 #' fg_append_provider_info_to_service_sector_data_sql
 #'
-#' @param longitudinal_data_table full path to the table in longitudinal_data format
+#' @param service_sector_data_table full path to the table in service_sector_data format
 #' @param fg_codes_info_table full path to the table with the codes info
 #'
 #' @param new_colums_sufix string indicating a prefix to add to the appended columns, default="".
@@ -14,9 +14,7 @@ fg_append_provider_info_to_service_sector_data_sql <- function(
     service_sector_data_table,
     fg_codes_info_table,
     #
-    new_colums_sufix = ""
-){
-
+    new_colums_sufix = "") {
   # VALIDATE PARAMETERS
   service_sector_data_table |> checkmate::assert_character()
   fg_codes_info_table |> checkmate::assert_character()
@@ -29,14 +27,12 @@ fg_append_provider_info_to_service_sector_data_sql <- function(
     SqlRender::render(
       service_sector_data_table = service_sector_data_table,
       fg_codes_info_table = fg_codes_info_table,
-       #
+      #
       new_colums_sufix = new_colums_sufix
     )
 
 
   return(sql)
-
-
 }
 
 
@@ -44,12 +40,12 @@ fg_append_provider_info_to_service_sector_data_sql <- function(
 
 #' fg_bq_append_provider_info_to_service_sector_data
 #'
-#' Wrap around fg_append_code_info_to_longitudinal_data_sql to work with bigrquery package
+#' Wrap around fg_append_provider_info_to_service_sector_data_sql to work with bigrquery package
 #'
 #' @param bq_project_id string with the bigquery project id
 #' @param bq_table an object of type <bq_table> with a table in longitudinal_data format
 #' @param fg_codes_info_table string with the full path (project.schema.table) to the bq table with the fg_codes_info
-#' @param ... see \link{fg_append_code_info_to_longitudinal_data_sql} for the mapping options
+#' @param ... see `fg_append_provider_info_to_service_sector_data_sql` for the mapping options
 #'
 #' @return bq_table with added columns
 #' @export
@@ -59,9 +55,7 @@ fg_bq_append_provider_info_to_service_sector_data <- function(
     bq_project_id,
     bq_table,
     fg_codes_info_table,
-    ...
-){
-
+    ...) {
   # validate
   bq_project_id |> checkmate::assert_subset(bigrquery::bq_projects())
   bq_table |> checkmate::assert_class("bq_table")
@@ -76,15 +70,4 @@ fg_bq_append_provider_info_to_service_sector_data <- function(
   new_tb <- bigrquery::bq_project_query(bq_project_id, sql)
 
   return(new_tb)
-
 }
-
-
-
-
-
-
-
-
-
-

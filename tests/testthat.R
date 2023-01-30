@@ -8,5 +8,6 @@
 
 library(testthat)
 library(FinnGenUtilsR)
+library(readr)# some other pacakge is missing this call
 
 test_check("FinnGenUtilsR")

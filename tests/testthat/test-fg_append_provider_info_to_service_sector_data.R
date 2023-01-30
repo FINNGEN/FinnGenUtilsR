@@ -17,8 +17,7 @@ sql <- paste0("
       SELECT *,
         ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `CODE6`, `CODE7`) AS q04
       FROM ", test_longitudinal_data_table, "
-    ) WHERE q04 = 1"
-)
+    ) WHERE q04 = 1")
 
 tb_servicesector_combinations <- bigrquery::bq_project_query(project_id, sql)
 
@@ -27,31 +26,28 @@ tb_servicesector_combinations <- bigrquery::bq_project_query(project_id, sql)
 # TEST
 #
 test_that("fg_bq_append_provider_info_to_service_sector_data_sql works", {
-
   skip_if(!bigrquery::bq_table_exists(tb_servicesector_combinations))
 
   tb_with_translations <- fg_bq_append_provider_info_to_service_sector_data(project_id, tb_servicesector_combinations, fg_codes_info_table)
-  res <-  bigrquery::bq_table_download(tb_with_translations, n_max = 100)
+  res <- bigrquery::bq_table_download(tb_with_translations, n_max = 100)
   res |> checkmate::expect_tibble()
-
 })
 
 
 
 
 test_that("fg_bq_append_provider_info_to_service_sector_data_sql maps hilmo CODE6 and code7", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1:11),
-    SOURCE = c('INPAT','OUTPAT','OPER_IN', 'OPER_OUT', 'INPAT','OUTPAT','OPER_IN', 'OPER_OUT', 'PRIM_OUT', 'PRIM_OUT', 'PRIM_OUT'),
+    SOURCE = c("INPAT", "OUTPAT", "OPER_IN", "OPER_OUT", "INPAT", "OUTPAT", "OPER_IN", "OPER_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM_OUT"),
     EVENT_AGE = 0.0,
     APPROX_EVENT_DAY = lubridate::ymd("2000-01-01"),
     CODE1 = as.character(NA), CODE2 = as.character(NA), CODE3 = as.character(NA), CODE4 = as.character(NA),
     #
     CODE5 = as.character(NA),
-    CODE6 = c(NA,  NA, NA,  NA, "77", "77", "77", "77", "77", NA, NA),
-    CODE7 = c(NA,  NA, NA,  NA,   NA,   NA,   NA,   NA,  NA,  NA, "32311"),
+    CODE6 = c(NA, NA, NA, NA, "77", "77", "77", "77", "77", NA, NA),
+    CODE7 = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "32311"),
     CODE8 = as.character(NA),
     CODE9 = as.character(NA),
     #
@@ -61,7 +57,9 @@ test_that("fg_bq_append_provider_info_to_service_sector_data_sql maps hilmo CODE
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -73,22 +71,18 @@ test_that("fg_bq_append_provider_info_to_service_sector_data_sql maps hilmo CODE
   res <- bigrquery::bq_table_download(tb_with_translations)
 
   res |>
-    dplyr::arrange(stringr::str_sub(FINNGENID,-3) |> as.integer()) |>
-    dplyr::select(SOURCE, FG_CODE6, FG_CODE7, provider_concept_class_id, provider_code  ) |>
-    dplyr::select(SOURCE, provider_concept_class_id, provider_code  ) |>
+    dplyr::arrange(stringr::str_sub(FINNGENID, -3) |> as.integer()) |>
+    dplyr::select(SOURCE, FG_CODE6, FG_CODE7, provider_concept_class_id, provider_code) |>
+    dplyr::select(SOURCE, provider_concept_class_id, provider_code) |>
     expect_equal(
       tibble::tibble(
-        SOURCE = c('INPAT','OUTPAT','OPER_IN', 'OPER_OUT', 'INPAT','OUTPAT','OPER_IN', 'OPER_OUT', 'PRIM_OUT', 'PRIM_OUT', 'PRIM_OUT'),
-        provider_concept_class_id  = c(rep(as.character(NA), 4),rep("MEDSPECfi Level 0", 4), NA, NA, "ProfessionalCode"),
-        provider_code = c(NA,  NA, NA,  NA, "77", "77", "77", "77", NA, NA, "32311")
+        SOURCE = c("INPAT", "OUTPAT", "OPER_IN", "OPER_OUT", "INPAT", "OUTPAT", "OPER_IN", "OPER_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM_OUT"),
+        provider_concept_class_id = c(rep(as.character(NA), 4), rep("MEDSPECfi Level 0", 4), NA, NA, "ProfessionalCode"),
+        provider_code = c(NA, NA, NA, NA, "77", "77", "77", "77", NA, NA, "32311")
       )
     )
 
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
-
-
-

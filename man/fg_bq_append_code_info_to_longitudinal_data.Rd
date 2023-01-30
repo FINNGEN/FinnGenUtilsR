@@ -18,7 +18,7 @@ fg_bq_append_code_info_to_longitudinal_data(
 
 \item{fg_codes_info_table}{string with the full path (project.schema.table) to the bq table with the fg_codes_info}
 
-\item{...}{see \link{fg_append_code_info_to_longitudinal_data_sql} for the mapping options}
+\item{...}{see \url{fg_append_code_info_to_longitudinal_data_sql} for the mapping options}
 }
 \value{
 bq_table with added columns

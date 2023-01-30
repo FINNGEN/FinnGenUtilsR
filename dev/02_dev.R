@@ -3,20 +3,18 @@
 #### CURRENT FILE: DEV SCRIPT #####
 ###################################
 
-renv::init()
-
 ## Add one line by package you want to add as dependency
-usethis::use_package( "dplyr" )
-usethis::use_package( "tidyr" )
-usethis::use_package( "stringr")
-usethis::use_package( "tibble")
-usethis::use_package( "purrr")
-usethis::use_package( "readr")
-usethis::use_package( "lubridate")
-usethis::use_package( "ggplot2")
 usethis::use_package( "checkmate")
 usethis::use_package( "bigrquery")
 usethis::use_package( "SqlRender")
+
+
+usethis::use_package( "dplyr", type = "Suggests" )
+usethis::use_package( "stringr", type = "Suggests" )
+usethis::use_package( "tibble", type = "Suggests" )
+usethis::use_package( "lubridate", type = "Suggests" )
+usethis::use_package( "readr", type = "Suggests" )
+
 
 
 ## Add functions
@@ -37,9 +35,7 @@ usethis::use_test( "fg_append_service_sector_info_to_service_sector_data")
 # Documentation
 
 ## Vignette ----
-usethis::use_vignette("tutorial")
-#usethis::use_vignette("tutorial")
-#devtools::build_vignettes()
+usethis::use_vignette("tutorial_add_info")
 
 #usethis::use_pkgdown()
 
@@ -50,11 +46,7 @@ usethis::use_vignette("tutorial")
 #usethis::use_appveyor()
 
 # Compute the code coverage of your application
-covr::package_coverage()
-
-# You're now set! ----
-# go to dev/03_deploy.R
-rstudioapi::navigateToFile("dev/03_deploy.R")
+#covr::package_coverage()
 
 
 
