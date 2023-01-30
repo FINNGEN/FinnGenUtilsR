@@ -21,6 +21,8 @@ usethis::use_package( "SqlRender")
 
 ## Add functions
 usethis::use_r("fg_append_code_info_to_longitudinal_data")
+usethis::use_r("fg_append_service_sector_info_to_service_sector_data")
+usethis::use_r("fg_append_specialtiy_info_to_service_sector_data")
 
 ## Add internal datasets ----
 ## If you have data in your package
@@ -30,6 +32,7 @@ usethis::use_r("fg_append_code_info_to_longitudinal_data")
 ## Add one line by test you want to create
 usethis::use_testthat()
 usethis::use_test( "fg_append_code_info_to_longitudinal_data")
+usethis::use_test( "fg_append_service_sector_info_to_service_sector_data")
 
 # Documentation
 

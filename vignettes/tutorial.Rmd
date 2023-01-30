@@ -73,7 +73,7 @@ fig <- one_patient_long_data |>
 ```
 
 ```{r}
-fig |>  
+fig <- fig |>  
   plotly::layout(
     yaxis = list(
       tickmode = "array", 
@@ -88,11 +88,29 @@ fig |>
 
 
 
+# Test service sector naming 
+
+```{r}
+sql <- paste("SELECT * FROM ", test_longitudinal_data_table, "WHERE FINNGENID='FG00000001' ")
+tb <- bq_project_query(project_id, sql)
+```
 
 
 
 
 
+```{r}
+test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r10.finngen_r10_service_sector_detailed_longitudinal_v2"
+fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v2"
+
+sql <-  fg_append_service_sector_info_to_service_sector_data_sql(
+  test_longitudinal_data_table, 
+  fg_codes_info_table, prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector = F
+)
+
+clipr::write_clip(sql)
+
+```
 
 
 
