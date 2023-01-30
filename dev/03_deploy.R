@@ -16,7 +16,6 @@ browseURL("vignettes/tutorial_add_info.html")
 
 
 # increase version
-usethis::use_version()
 
 
 
@@ -24,4 +23,6 @@ usethis::use_version()
 pkgdown::build_site(new_process = FALSE)
 
 #rhub::check_for_cran()
-gert::git_commit_all("Version 2.0.0 ready");gert::git_push()
+usethis::use_version()
+
+gert::git_push()
