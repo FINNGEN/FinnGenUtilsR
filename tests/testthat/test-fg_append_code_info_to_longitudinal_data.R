@@ -17,8 +17,7 @@ sql <- paste0("
       SELECT *,
         ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `ICDVER`, `CATEGORY`) AS q04
       FROM ", test_longitudinal_data_table, "
-    ) WHERE q04 = 1"
-)
+    ) WHERE q04 = 1")
 
 tb_vocabulary_combinations <- bigrquery::bq_project_query(project_id, sql)
 
@@ -27,32 +26,29 @@ tb_vocabulary_combinations <- bigrquery::bq_project_query(project_id, sql)
 # TEST
 #
 test_that("fg_append_code_info_to_longitudinal_data works", {
-
   sql <- paste("SELECT * FROM ", test_longitudinal_data_table, " WHERE FINNGENID='FG00000001'")
   tb <- bigrquery::bq_project_query(project_id, sql)
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(project_id, tb, fg_codes_info_table)
-  res <-  bigrquery::bq_table_download(tb_with_translations)
+  res <- bigrquery::bq_table_download(tb_with_translations)
   res |> checkmate::expect_tibble()
-
 })
 
 
 test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: default", {
-
   skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
 
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
     project_id, tb_vocabulary_combinations, fg_codes_info_table
-    )
+  )
   res <- bigrquery::bq_table_download(tb_with_translations)
 
   # at the moment the HPN and HPO not implemented
-  res |> dplyr::filter(is.na(vocabulary_id)) |>
+  res |>
+    dplyr::filter(is.na(vocabulary_id)) |>
     checkmate::expect_tibble(nrows = 0)
 })
 
 test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: PURCH = VNR", {
-
   skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
 
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
@@ -62,12 +58,12 @@ test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary
   res <- bigrquery::bq_table_download(tb_with_translations)
 
   # at the moment the HPN and HPO not implemented
-  res |> dplyr::filter(is.na(vocabulary_id)) |>
+  res |>
+    dplyr::filter(is.na(vocabulary_id)) |>
     checkmate::expect_tibble(nrows = 0)
 })
 
 test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: REIMB = ICD", {
-
   skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
 
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
@@ -77,7 +73,8 @@ test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary
   res <- bigrquery::bq_table_download(tb_with_translations)
 
   # at the moment the HPN and HPO not implemented
-  res |> dplyr::filter(is.na(vocabulary_id)) |>
+  res |>
+    dplyr::filter(is.na(vocabulary_id)) |>
     checkmate::expect_tibble(nrows = 0)
 })
 
@@ -85,24 +82,25 @@ test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary
 
 
 test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1:5),
-    SOURCE = c('INPAT','OUTPAT', 'PRIM_OUT','DEATH', 'REIMB'),
+    SOURCE = c("INPAT", "OUTPAT", "PRIM_OUT", "DEATH", "REIMB"),
     EVENT_AGE = 0.0,
     APPROX_EVENT_DAY = lubridate::ymd("2000-01-01"),
-    CODE1 = c("N0839", "N0839", "N0839",          "N0839", as.character(NA)),
-    CODE2 = c("E112",   "E112",  "E112", as.character(NA),          "N0839"),
-    CODE3 = c("N02BE01",   as.character(NA),  as.character(NA), as.character(NA), as.character(NA)),
+    CODE1 = c("N0839", "N0839", "N0839", "N0839", as.character(NA)),
+    CODE2 = c("E112", "E112", "E112", as.character(NA), "N0839"),
+    CODE3 = c("N02BE01", as.character(NA), as.character(NA), as.character(NA), as.character(NA)),
     CODE4 = as.character(NA),
     ICDVER = "10",
-    CATEGORY = c('0', '0', "ICD0", "U", "ICD"),
+    CATEGORY = c("0", "0", "ICD0", "U", "ICD"),
     INDEX = "0"
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -116,11 +114,11 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
-        FG_CODE1 = c("N0839", "N0839", "N0839",          "N0839", "N0839"),
-        FG_CODE2 = c("E112",   "E112",  "E112", as.character(NA), as.character(NA)),
+        FG_CODE1 = c("N0839", "N0839", "N0839", "N0839", "N0839"),
+        FG_CODE2 = c("E112", "E112", "E112", as.character(NA), as.character(NA)),
         FG_CODE3 = as.character(NA),
       )
     )
@@ -135,10 +133,10 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
-        FG_CODE1 = c("N0839", "N0839", "N0839",          "N0839", "N0839"),
+        FG_CODE1 = c("N0839", "N0839", "N0839", "N0839", "N0839"),
         FG_CODE2 = as.character(NA),
         FG_CODE3 = as.character(NA),
       )
@@ -154,10 +152,10 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
-        FG_CODE1 = c("E112", "E112", "E112",  "N0839", "N0839"),
+        FG_CODE1 = c("E112", "E112", "E112", "N0839", "N0839"),
         FG_CODE2 = as.character(NA),
         FG_CODE3 = as.character(NA),
       )
@@ -173,24 +171,22 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
-        FG_CODE1 = c("N02BE01", as.character(NA), as.character(NA),  "N0839", "N0839"),
+        FG_CODE1 = c("N02BE01", as.character(NA), as.character(NA), "N0839", "N0839"),
         FG_CODE2 = as.character(NA),
         FG_CODE3 = as.character(NA),
       )
     )
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
 
 
 
 test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1:3),
@@ -198,8 +194,8 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
     EVENT_AGE = 0.0,
     APPROX_EVENT_DAY = lubridate::ymd("2000-01-01"),
     CODE1 = c("N02BE01", "N02BE01", "N02BE01"),
-    CODE2 = c("205",        "205",  as.character(NA)),
-    CODE3 = c("003121",    "3121",  as.character(NA)),
+    CODE2 = c("205", "205", as.character(NA)),
+    CODE3 = c("003121", "3121", as.character(NA)),
     CODE4 = as.character(NA),
     ICDVER = as.character(NA),
     CATEGORY = as.character(NA),
@@ -207,7 +203,9 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -220,7 +218,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = c("N02BE01", "N02BE01", "N02BE01"),
@@ -238,7 +236,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = c("003121", "003121", as.character(NA)),
@@ -256,7 +254,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3 ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = c("205", "205", as.character(NA)),
@@ -265,15 +263,13 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
       )
     )
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
 
 
 
 test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1),
@@ -290,7 +286,9 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -303,7 +301,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = "C619",
@@ -322,7 +320,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = "C619",
@@ -342,7 +340,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = as.character(NA),
@@ -352,15 +350,13 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
       )
     )
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
 
 
 
 test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1:3),
@@ -377,7 +373,9 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -390,7 +388,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = c("205", "205", "205"),
@@ -409,7 +407,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = c("I50", "4019X", as.character(NA)),
@@ -419,15 +417,13 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
       )
     )
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
 
 
 
 test_that("fg_append_code_info_to_longitudinal_data precision ", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1:5),
@@ -444,7 +440,9 @@ test_that("fg_append_code_info_to_longitudinal_data precision ", {
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -456,13 +454,13 @@ test_that("fg_append_code_info_to_longitudinal_data precision ", {
     ICD9fi_precision = 3,
     ICD8fi_precision = 3,
     ATC_precision = 3,
-    NCSPfi_precision  = 2
+    NCSPfi_precision = 2
   )
   res <- bigrquery::bq_table_download(tb_with_translations)
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code ) |>
+    dplyr::select(FG_CODE1, FG_CODE2, FG_CODE3, code) |>
     expect_equal(
       tibble::tibble(
         FG_CODE1 = c("N08", "845", "368", "N02", "AB"),
@@ -472,13 +470,11 @@ test_that("fg_append_code_info_to_longitudinal_data precision ", {
       )
     )
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
 
 test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
-
   # upload
   test_table <- tibble::tibble(
     FINNGENID = paste0("F0000000", 1:5),
@@ -489,13 +485,15 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
     CODE2 = as.character(NA),
     CODE3 = as.character(NA),
     CODE4 = as.character(NA),
-    ICDVER ="10",
+    ICDVER = "10",
     CATEGORY = "1",
     INDEX = "0"
   )
 
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
-  if(bigrquery::bq_table_exists(bq_test_table)){bigrquery::bq_table_delete(bq_test_table)}
+  if (bigrquery::bq_table_exists(bq_test_table)) {
+    bigrquery::bq_table_delete(bq_test_table)
+  }
   bigrquery::bq_table_create(bq_test_table, test_table)
   bigrquery::bq_table_upload(bq_test_table, test_table)
 
@@ -508,13 +506,12 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
   res <- bigrquery::bq_table_download(tb_with_translations)
 
   checkmate::expect_subset(
-    c("concept_class_id_SUB", "name_en_SUB", "name_fi_SUB", "code_SUB", "omop_concept_id_SUB" ),
+    c("concept_class_id_SUB", "name_en_SUB", "name_fi_SUB", "code_SUB", "omop_concept_id_SUB"),
     res |> names()
   )
 
-  #clean
+  # clean
   bigrquery::bq_table_delete(bq_test_table)
-
 })
 
 
@@ -538,5 +535,3 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
 # failed |>  distinct(vocabulary_id, CODE1, CODE2, CODE3, CODE4, .keep_all = T) |>
 #   arrange(vocabulary_id) |>
 #   view()
-
-
