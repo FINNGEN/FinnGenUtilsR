@@ -4,22 +4,18 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of FinnGenUtilsR is to ...
+R package with common functions to work with FinnGen data. 
 
 ## Installation
 
-You can install the development version of FinnGenUtilsR like so:
+You can install the latest version of FinnGenUtilsR like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+install.packages("remotes")
+remotes::install_github("FINNGEN/FinnGenUtilsR")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(FinnGenUtilsR)
-## basic example code
-```
+See vignettes or articles in github-page
 
