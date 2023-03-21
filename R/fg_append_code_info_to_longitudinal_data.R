@@ -132,7 +132,7 @@ fg_bq_append_code_info_to_longitudinal_data <- function(
     ...
   )
 
-  new_tb <- bigrquery::bq_project_query(bq_project_id, sql)
+  new_tb <- bigrquery::bq_project_query(bq_project_id, sql, ...)
 
   return(new_tb)
 }

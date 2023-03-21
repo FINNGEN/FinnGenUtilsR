@@ -19,3 +19,4 @@ remotes::install_github("FINNGEN/FinnGenUtilsR")
 
 See vignettes or articles in github-page
 
+ 

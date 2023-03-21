@@ -74,7 +74,7 @@ fg_bq_append_visit_type_info_to_service_sector_data <- function(
     ...
   )
 
-  new_tb <- bigrquery::bq_project_query(bq_project_id, sql)
+  new_tb <- bigrquery::bq_project_query(bq_project_id, sql, ...)
 
   return(new_tb)
 }
