@@ -1,3 +1,7 @@
+# FinnGenUtilsR 2.0.1
+
+- fg_bq_append_xxx functions pass extra parameters to bq_project_query, (e.g  allows to pass quiet=TRUE)
+
 # FinnGenUtilsR 2.0.0
 
 - Added function to name visit type in service sector data
