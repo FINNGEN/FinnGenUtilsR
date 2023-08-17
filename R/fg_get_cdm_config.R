@@ -8,12 +8,16 @@
 #' @param cohortTableName If a cohort table is needed, it can be set here, (default is "test_cohort_table").
 #' @param atlasDevelopment_gckey If environment = 'atlasDevelopment', the path to the Google Cloud key file.
 #' @param atlasDevelopment_pathToDriver If environment = 'atlasDevelopment', the path to the BigQuery driver.
-#' @param asYalm Whether to return the configuration settings as a YAML string (default is FALSE).
+#' @param asYaml Whether to return the configuration settings as a YAML string (default is FALSE).
 #'
 #' @return A list of configuration settings for the specified environment and data freeze number.
 #'
 #' @examples
 #' get_cdm_config("sandbox-6", 13)
+#'
+#' @importFrom checkmate assert_string assert_number
+#' @importFrom stringr str_detect str_replace_all
+#' @importFrom yaml yaml.load
 #'
 #' @export
 get_cdm_config <- function(
@@ -21,8 +25,8 @@ get_cdm_config <- function(
     dataFreezeNumber,
     cohortTableName = "test_cohort_table",
     atlasDevelopment_gckey =  Sys.getenv("GCP_SERVICE_KEY"),
-    atlasDevelopment_pathToDriver = Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),
-    asYalm = FALSE
+    atlasDevelopment_pathToDriver = paste0(Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),"/bigquery/"),
+    asYaml = FALSE
 ) {
 
 #browser()
@@ -35,6 +39,7 @@ get_cdm_config <- function(
   }
 
   checkmate::assert_number(dataFreezeNumber)
+  checkmate::assert_string(cohortTableName)
 
 
   if (environment == "atlasDevelopment") {
@@ -93,7 +98,7 @@ get_cdm_config <- function(
   options(sqlRenderTempEmulationSchema = configList$connection$tempEmulationSchema)
   message("Set option sqlRenderTempEmulationSchema = '", configList$connection$tempEmulationSchema, "'")
 
-  if (asYalm==TRUE) {
+  if (asYaml==TRUE) {
     return(configYalm)
   }
   return(configList)

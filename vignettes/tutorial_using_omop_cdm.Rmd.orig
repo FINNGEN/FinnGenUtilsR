@@ -9,7 +9,12 @@ editor_options:
   chunk_output_type: console
 ---
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 # Getting configuration to connect to OMOP-CDM
 
@@ -23,8 +28,7 @@ You only need to specify the sandbox number, and the dataFreeze you want to use.
 - dataFreezeNumber: At the time of writing dataFreeze can be 6, 7, 8, 9, 10, and 11, dataFreeze.
 - cohortTableName: Tipycally, Hades tools need a table where to generate the cohorts. This is the name for that table. Notice that this table is created in a BQ schema that is shared with other users in your organisation. This table may be overwrite by others. We recomend that you include your name in the table.
 
-
-```r
+```{r, eval=FALSE}
  config <- FinnGenUtilsR::get_cdm_config(
    environment = "sandbox-6",
    dataFreezeNumber = 11,
@@ -32,36 +36,21 @@ You only need to specify the sandbox number, and the dataFreeze you want to use.
    )
 ```
 
-
+```{r, message=FALSE, echo=FALSE}
+ config <- FinnGenUtilsR::get_cdm_config(
+   environment = "atlasDevelopment",
+   dataFreezeNumber = 11,
+   cohortTableName = "javier_test_cohort_table"
+   )
+```
  By default `get_cdm_config` provides a list, but we can also plot this in yalm format to evaluate it better
-
-```r
+```{r}
  FinnGenUtilsR::get_cdm_config(
    environment = "sandbox-6",
    dataFreezeNumber = 11,
    cohortTableName = "javier_test_cohort_table",
    asYaml = TRUE
  ) |> cat()
-#> Set option sqlRenderTempEmulationSchema = 'fg-production-sandbox-6.sandbox'
-#> 
-#>         databaseName: FinnGen-DF11
-#>         connection:
-#>           connectionDetailsSettings:
-#>             dbms: bigquery
-#>             user: ""
-#>             password: ""
-#>             connectionString: jdbc:bigquery://https://www.googleapis.com/auth/bigquery:433;ProjectId=fg-production-sandbox-6;OAuthType=3;Timeout=10000;
-#>             pathToDriver: /home/ivm/.jdbc_drivers/bigquery
-#>           tempEmulationSchema: fg-production-sandbox-6.sandbox #needed for creating tmp table in BigQuery
-#>           useBigrqueryUpload: true # option for HadesExtras
-#>         cdm:
-#>           cdmDatabaseSchema: finngen-production-library.finngen_omop_r11
-#>           vocabularyDatabaseSchema: finngen-production-library.finngen_omop_r11
-#>         cohortTable:
-#>           cohortDatabaseSchema: fg-production-sandbox-6.sandbox
-#>           cohortTableName: javier_test_cohort_table
-#>         webAPIurl: https://ohdsi-webapi.app.finngen.fi/WebAPI/
-#> 
 ```
 
 # Example using config to execute a Cohort Diagnostics analysis
@@ -70,8 +59,7 @@ Using this settings we can run an analysis similar to the [example in Cohort Dia
 
 ## Configuring the connection to the server
 
-
-```r
+```{r}
 connectionDetails <- DatabaseConnector::createConnectionDetails(
   dbms = config$connection$connectionDetailsSettings$dbms,
   connectionString = config$connection$connectionDetailsSettings$connectionString,
@@ -86,8 +74,7 @@ options(sqlRenderTempEmulationSchema = config$connection$tempEmulationSchema)
 
 ## Loading cohort references from webapi
 
-
-```r
+```{r, eval=FALSE}
 # Set up url
 baseUrl <- config$webAPIurl
 # list of cohort ids
@@ -101,12 +88,28 @@ cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
 ```
 
 
+```{r results = FALSE,message = FALSE,warning=FALSE, echo=FALSE}
+library(CohortDiagnostics)
+cohortDefinitionSet <- CohortGenerator::getCohortDefinitionSet(
+  settingsFileName = "Cohorts.csv",
+  jsonFolder = "cohorts",
+  sqlFolder = "sql/sql_server",
+  packageName = "CohortDiagnostics"
+)|>
+  dplyr::filter(cohortId!=14909)
 
+cohortDefinitionSet$cohortId <- c(2241, 2240, 2239)
+cohortDefinitionSet$cohortName <- c(
+  "[Test Hades Tools] Gastrointestinal hemorrhage 1",
+  "[Test Hades Tools] Gastrointestinal hemorrhage 2",
+  "[Test Hades Tools] Type 2 diabetes mellitus"
+)
+
+```
 
 ## Generate cohorts
 
-
-```r
+```{r}
 cohortTableNames <- CohortGenerator::getCohortTableNames(cohortTable = config$cohortTable$cohortTableName)
 
 # Next create the tables on the database
@@ -116,18 +119,8 @@ CohortGenerator::createCohortTables(
   cohortDatabaseSchema = config$cohortTable$cohortDatabaseSchema,
   incremental = FALSE
 )
-#> Connecting using BigQuery driver
-#> Creating cohort tables
-#> - Created table atlas-development-270609.sandbox.javier_test_cohort_table
-#> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_inclusion
-#> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_inclusion_result
-#> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_inclusion_stats
-#> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_summary_stats
-#> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_censor_stats
-#> Creating cohort tables took 33.22secs
 ```
-
-```r
+```{r results = FALSE, message = FALSE}
 # Generate the cohort set
 CohortGenerator::generateCohortSet(
   connectionDetails = connectionDetails,
@@ -138,33 +131,26 @@ CohortGenerator::generateCohortSet(
   incremental = FALSE
 )
 ```
-
-```r
+```{r}
 # cohort couts
 CohortGenerator::getCohortCounts(
   connectionDetails = connectionDetails,
   cohortDatabaseSchema = config$cohortTable$cohortDatabaseSchema,
   cohortTable = config$cohortTable$cohortTableName
 )
-#> Connecting using BigQuery driver
-#> Counting cohorts took 2.71 secs
-#>   cohortId cohortEntries cohortSubjects
-#> 1     2239          4198           4198
-#> 2     2241           328            328
-#> 3     2240           328            328
 ```
 
 ## execute cohort diagnostics
-
-```r
+```{r}
 exportFolder <- "export"
 ```
 
 
+```{r results = FALSE,message = FALSE,warning=FALSE,echo=FALSE}
+exportFolder <- tempdir()
+```
 
-
-
-```r
+```{r eval=FALSE}
 CohortDiagnostics::executeDiagnostics(cohortDefinitionSet,
                    connectionDetails = connectionDetails,
                    cohortTable = config$cohortTable$cohortTableName,
@@ -177,8 +163,7 @@ CohortDiagnostics::executeDiagnostics(cohortDefinitionSet,
 ```
 
 ## visualise cohort diagnostics
-
-```r
+```{r eval=FALSE}
 CohortDiagnostics::createMergedResultsFile(exportFolder, sqliteDbPath = "MyCohortDiagnosticsResulst.sqlite", overwrite = TRUE)
 CohortDiagnostics::launchDiagnosticsExplorer(sqliteDbPath = "MyCohortDiagnosticsResulst.sqlite")
 ```

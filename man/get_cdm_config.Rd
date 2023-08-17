@@ -8,10 +8,9 @@ get_cdm_config(
   environment,
   dataFreezeNumber,
   cohortTableName = "test_cohort_table",
-  atlasDevelopment_gckey =
-    "/Users/javier/keys/atlas-development-270609-410deaacc58b.json",
-  atlasDevelopment_pathToDriver = "/Users/javier/.config/hades/bigquery",
-  asYalm = FALSE
+  atlasDevelopment_gckey = Sys.getenv("GCP_SERVICE_KEY"),
+  atlasDevelopment_pathToDriver = Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),
+  asYaml = FALSE
 )
 }
 \arguments{
@@ -25,7 +24,7 @@ get_cdm_config(
 
 \item{atlasDevelopment_pathToDriver}{If environment = 'atlasDevelopment', the path to the BigQuery driver.}
 
-\item{asYalm}{Whether to return the configuration settings as a YAML string (default is FALSE).}
+\item{asYaml}{Whether to return the configuration settings as a YAML string (default is FALSE).}
 }
 \value{
 A list of configuration settings for the specified environment and data freeze number.
