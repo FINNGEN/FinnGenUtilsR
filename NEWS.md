@@ -1,3 +1,6 @@
+# FinnGenUtilsR 2.1.0
+- Added `get_cdm_config` function and "Tutorial using omop-cdm" vignette
+
 # FinnGenUtilsR 2.0.1
 
 - fg_bq_append_xxx functions pass extra parameters to bq_project_query, (e.g  allows to pass quiet=TRUE)
