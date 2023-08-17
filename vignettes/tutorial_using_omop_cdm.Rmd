@@ -3,8 +3,10 @@ title: "Tutorial using omop-cdm"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{tutorial_using_omop_cdm}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -96,7 +98,7 @@ cohortDefinitionSet <- CohortGenerator::getCohortDefinitionSet(
   dplyr::filter(cohortId!=14909) 
 
 cohortDefinitionSet$cohortId <- c(2241, 2240, 2239)
-cohortDefinitionSet$name <- c(
+cohortDefinitionSet$cohortName <- c(
   "[Test Hades Tools] Gastrointestinal hemorrhage 1",
   "[Test Hades Tools] Gastrointestinal hemorrhage 2",
   "[Test Hades Tools] Type 2 diabetes mellitus"
@@ -133,11 +135,19 @@ CohortGenerator::getCohortCounts(
   cohortDatabaseSchema = config$cohortTable$cohortDatabaseSchema,
   cohortTable = config$cohortTable$cohortTableName
 )
+```
 
-
-# execute cohort diagnostics ---------------------------
+## execute cohort diagnostics
+```{r}
 exportFolder <- "export"
+```
 
+
+```{r results = FALSE,message = FALSE,warning=FALSE,eval=FALSE}
+exportFolder <- tempdir()
+```
+
+```{r eval=FALSE}
 CohortDiagnostics::executeDiagnostics(cohortDefinitionSet,
                    connectionDetails = connectionDetails,
                    cohortTable = config$cohortTable$cohortTableName,
@@ -147,31 +157,25 @@ CohortDiagnostics::executeDiagnostics(cohortDefinitionSet,
                    databaseId = "MyCdm",
                    minCellCount = 5
 )
+```
 
-
-# visualise cohort diagnostics 
-
+## visualise cohort diagnostics 
+```{r eval=FALSE}
 CohortDiagnostics::createMergedResultsFile(exportFolder, sqliteDbPath = "MyCohortDiagnosticsResulst.sqlite", overwrite = TRUE)
 CohortDiagnostics::launchDiagnosticsExplorer(sqliteDbPath = "MyCohortDiagnosticsResulst.sqlite")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

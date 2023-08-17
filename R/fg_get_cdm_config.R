@@ -20,8 +20,8 @@ get_cdm_config <- function(
     environment,
     dataFreezeNumber,
     cohortTableName = "test_cohort_table",
-    atlasDevelopment_gckey = Sys.getenv(DATABASECONNECTOR_JAR_FOLDER),
-    atlasDevelopment_pathToDriver = Sys.getenv(GCP_SERVICE_KEY),
+    atlasDevelopment_gckey =  Sys.getenv("GCP_SERVICE_KEY"),
+    atlasDevelopment_pathToDriver = Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),
     asYalm = FALSE
 ) {
 
