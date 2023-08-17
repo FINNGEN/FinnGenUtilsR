@@ -14,7 +14,9 @@ knitr::knit("vignettes/tutorial_add_info.Rmd.orig", output = "vignettes/tutorial
 devtools::build_rmd("vignettes/tutorial_add_info.Rmd")
 browseURL("vignettes/tutorial_add_info.html")
 
-
+knitr::knit("vignettes/tutorial_using_omop_cdm.Rmd.orig", output = "vignettes/tutorial_using_omop_cdm.Rmd")
+devtools::build_rmd("vignettes/tutorial_using_omop_cdm.Rmd")
+browseURL("vignettes/tutorial_using_omop_cdm.html")
 # increase version
 
 

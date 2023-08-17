@@ -1,0 +1,31 @@
+DBMS:
+bigquery
+
+Error:
+java.sql.SQLException: [Simba][BigQueryJDBCDriver](100032) Error executing query job. Message: Operation timed out
+
+SQL:
+DROP TABLE IF EXISTS atlas-development-270609.sandbox.javier_test_cohort_table_inclusion_stats
+
+R version:
+R version 4.3.0 (2023-04-21)
+
+Platform:
+aarch64-apple-darwin20
+
+Attached base packages:
+- stats
+- graphics
+- grDevices
+- datasets
+- utils
+- methods
+- base
+
+Other attached packages:
+- FinnGenUtilsR (2.0.1)
+- CohortDiagnostics (3.2.3)
+- FeatureExtraction (3.3.0)
+- Andromeda (0.6.3)
+- dplyr (1.1.2)
+- DatabaseConnector (6.2.3)
