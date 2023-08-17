@@ -20,8 +20,8 @@ get_cdm_config <- function(
     environment,
     dataFreezeNumber,
     cohortTableName = "test_cohort_table",
-    atlasDevelopment_gckey = "/Users/javier/keys/atlas-development-270609-410deaacc58b.json",
-    atlasDevelopment_pathToDriver = "/Users/javier/.config/hades/bigquery",
+    atlasDevelopment_gckey = Sys.getenv(DATABASECONNECTOR_JAR_FOLDER),
+    atlasDevelopment_pathToDriver = Sys.getenv(GCP_SERVICE_KEY),
     asYalm = FALSE
 ) {
 
