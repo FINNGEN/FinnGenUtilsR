@@ -151,7 +151,8 @@ exportFolder <- tempdir()
 ```
 
 ```{r eval=FALSE}
-CohortDiagnostics::executeDiagnostics(cohortDefinitionSet,
+CohortDiagnostics::executeDiagnostics(
+                   cohortDefinitionSet,
                    connectionDetails = connectionDetails,
                    cohortTable = config$cohortTable$cohortTableName,
                    cohortDatabaseSchema = config$cohortTable$cohortDatabaseSchema,
