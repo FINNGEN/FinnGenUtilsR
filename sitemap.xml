@@ -16,6 +16,9 @@
     <loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_add_info.html</loc>
   </url>
   <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_connection_handler.html</loc>
+  </url>
+  <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_using_omop_cdm.html</loc>
   </url>
   <url>
@@ -26,6 +29,12 @@
   </url>
   <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/LogTibble.html</loc>
+  </url>
+  <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/create_fg_connection_handler_FromList.html</loc>
   </url>
   <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_append_code_info_to_longitudinal_data_sql.html</loc>
@@ -46,7 +55,13 @@
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_append_visit_type_info_to_service_sector_data.html</loc>
   </url>
   <url>
-    <loc>https://finngen.github.io/FinnGenUtilsR/reference/get_cdm_config.html</loc>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_connection_handler.html</loc>
+  </url>
+  <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_get_bq_config.html</loc>
+  </url>
+  <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_get_cdm_config.html</loc>
   </url>
   <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/index.html</loc>
