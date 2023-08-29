@@ -1,5 +1,8 @@
+# FinnGenUtilsR 2.2.0
+- Added `FGconnectionHandler` and `fg_get_bq_config()` to connect adn work with to FinnGen BQ databases as dataframes 
+
 # FinnGenUtilsR 2.1.0
-- Added `get_cdm_config` function and "Tutorial using omop-cdm" vignette
+- Added `fg_get_cdm_config` function and "Tutorial using omop-cdm" vignette
 
 # FinnGenUtilsR 2.0.1
 

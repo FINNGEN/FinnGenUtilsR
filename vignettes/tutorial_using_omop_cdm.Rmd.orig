@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 # Getting configuration to connect to OMOP-CDM
 
-Function `get_cdm_config` provides all the information needed to use one of the OMOP-CDM in FinnGen.
+Function `fg_get_cdm_config` provides all the information needed to use one of the OMOP-CDM in FinnGen.
 You only need to specify the sandbox number, and the dataFreeze you want to use.
 
 - environment: You can find your sandbox number by looking at the url in your browser when connected to sandbox.
@@ -29,7 +29,7 @@ You only need to specify the sandbox number, and the dataFreeze you want to use.
 - cohortTableName: Tipycally, Hades tools need a table where to generate the cohorts. This is the name for that table. Notice that this table is created in a BQ schema that is shared with other users in your organisation. This table may be overwrite by others. We recomend that you include your name in the table.
 
 ```{r, eval=FALSE}
- config <- FinnGenUtilsR::get_cdm_config(
+ config <- FinnGenUtilsR::fg_get_cdm_config(
    environment = "sandbox-6",
    dataFreezeNumber = 11,
    cohortTableName = "javier_test_cohort_table"
@@ -37,15 +37,15 @@ You only need to specify the sandbox number, and the dataFreeze you want to use.
 ```
 
 ```{r, message=FALSE, echo=FALSE}
- config <- FinnGenUtilsR::get_cdm_config(
+ config <- FinnGenUtilsR::fg_get_cdm_config(
    environment = "atlasDevelopment",
    dataFreezeNumber = 11,
    cohortTableName = "javier_test_cohort_table"
    )
 ```
- By default `get_cdm_config` provides a list, but we can also plot this in yalm format to evaluate it better
+ By default `fg_get_cdm_config` provides a list, but we can also plot this in yalm format to evaluate it better
 ```{r}
- FinnGenUtilsR::get_cdm_config(
+ FinnGenUtilsR::fg_get_cdm_config(
    environment = "sandbox-6",
    dataFreezeNumber = 11,
    cohortTableName = "javier_test_cohort_table",

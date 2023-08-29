@@ -1,0 +1,215 @@
+---
+title: "Tutorial connection to FinnGen BQ tables using FGconnectionHandler"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_connection_handler}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+```r
+#library(FinnGenUtilsR)
+devtools::load_all(".")
+#> ℹ Loading FinnGenUtilsR
+#options("DEBUG_DATABASECONNECTOR_DBPLYR" = FALSE)
+```
+
+# Configuration 
+
+Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` to produce the connection configuration based on the sandbox number, and the dataFreeze you want to use.
+
+
+- environment: You can find your sandbox number by looking at the url in your browser when connected to sandbox.
+
+![](pic/sandbox_number.png)
+
+- dataFreezeNumber: At the time of writing dataFreeze can be 6, 7, 8, 9, 10, and 11, dataFreeze.
+
+
+
+```r
+ config <- fg_get_bq_config(
+   environment = "sandbox-6",
+   dataFreezeNumber = 11
+   )
+#> Set option sqlRenderTempEmulationSchema = 'fg-production-sandbox-6.sandbox'
+```
+
+
+
+
+# Create FGconnectionHandler object 
+
+For convenience one can use function `create_fg_connection_handler_FromList` to generate a `FGconnectionHandler` object with the connection configuration from `fg_get_bq_config`. 
+
+
+```r
+FGconnectionHandler <- create_fg_connection_handler_FromList(config)
+#> Connecting using BigQuery driver
+#> Created a temporary table named #cars
+#> Inserting data took 0.0118 secs
+#> Dropping tables 'bgs2r5ihcars' from schema 'atlas-development-270609.sandbox'.
+#>   |                                                                                                                                                        |                                                                                                                                                |   0%  |                                                                                                                                                        |========================================================================                                                                        |  50%  |                                                                                                                                                        |================================================================================================================================================| 100%
+#> Executing SQL took 1.97 secs
+```
+
+`FGconnectionHandler` is an object with that manage the connection to the FinnGen tables in BQ. 
+
+First thing to do is to check the status of the connection. 
+`FGdb$connectionStatusLog` not only shows if the connection is correct, but also if the `tempEmulationSchema` works, and all tables in the sandboxToolsSchema and   medicalCodesSchema schemas, 
+
+
+```r
+FGconnectionHandler$connectionStatusLog
+#> # A tibble: 4 × 4
+#>   databaseName     type    step                          message                                                                                          
+#>   <chr>            <fct>   <chr>                         <chr>                                                                                            
+#> 1 atlasDevelopment SUCCESS Check database connection     Valid connection                                                                                 
+#> 2 atlasDevelopment SUCCESS Check temp table creation     can create temp tables                                                                           
+#> 3 atlasDevelopment SUCCESS sandboxToolsSchema connection Connected to tables: birth_mother_r11_v1, code_counts_r11_v1, code_prevalence_stratified_v1, cod…
+#> 4 atlasDevelopment SUCCESS medicalCodesSchema connection Connected to tables: fg_codes_info_v1, fg_codes_info_v2, fg_codes_info_v3, fg_codes_info_v4, fg_…
+```
+
+It checks if the connection is established, if it is possible to create temporary tables, and gets a list of all the tables in the  sandboxToolsSchema and   medicalCodesSchema schemas. 
+
+
+# Using FGconnectionHandler
+
+`FGdb$connectionStatusLog` contains a list of the existing table in the sandboxToolsSchema and   medicalCodesSchema schemas. 
+It is recomended to use the latests version of these tables. 
+
+
+```r
+FGconnectionHandler$getTblsandboxToolsSchema |> names()
+#> [1] "birth_mother_r11_v1"                                 "code_counts_r11_v1"                                 
+#> [3] "code_prevalence_stratified_v1"                       "code_prevalence_stratified_v2"                      
+#> [5] "endpoint_cohorts_r11_v1"                             "finngen_r11_service_sector_detailed_longitudinal_v1"
+#> [7] "finngenid_info_r11_v1"                               "vision_r11_v1"
+```
+
+Tables in the sandboxToolsSchema andmedicalCodesSchema can be used as if they were tibbles thanks to  [dbplyr](https://dbplyr.tidyverse.org/). 
+
+
+```r
+# get events with code "J45" in INPAT
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(code1 == "J45" & source == "INPAT")
+#> # Source:   SQL [6 x 16]
+#> # Database: DatabaseConnectorJdbcConnection
+#>   finngenid  source event_age approx_event_day code1 code2 code3 code4 code5 code6 code7 code8 code9 icdver category index  
+#>   <chr>      <chr>      <dbl> <date>           <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr>  <chr>    <chr>  
+#> 1 FG00000223 INPAT       58.4 2002-03-19       J45   <NA>  <NA>  19    1     40I   <NA>  <NA>  <NA>  10     1        4059   
+#> 2 FG00000971 INPAT       61.5 1997-03-19       J45   <NA>  <NA>  1     1     10R   <NA>  <NA>  <NA>  10     1        367218 
+#> 3 FG00001942 INPAT       29.5 2012-12-16       J45   <NA>  <NA>  9     1     15    <NA>  <NA>  <NA>  10     1        696336 
+#> 4 FG00003697 INPAT       68.7 2008-06-30       J45   <NA>  <NA>  4     1     99K   <NA>  <NA>  <NA>  10     1        1382623
+#> 5 FG00004237 INPAT       32.1 2002-10-04       J45   <NA>  <NA>  6     1     10    <NA>  <NA>  <NA>  10     1        1757751
+#> 6 FG00004874 INPAT       70.4 2015-01-31       J45   <NA>  <NA>  49    1     65    <NA>  <NA>  <NA>  10     1        1757585
+```
+
+At the moment of writing does not allow for the use of `str_detect`
+
+
+```r
+# get events with code "J45" and descendants
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(code1 == stringr::str_detect("^J45"))
+#> Error in `purrr::map_chr()`:
+#> ℹ In index: 5.
+#> Caused by error in `str_detect()`:
+#> ! `str_detect()` is not available in this SQL variant.
+```
+
+A work around is to inject a sql statement instead (notice that this SQL is not based in BQ, but in [SqlRender](https://ohdsi.github.io/SqlRender/) dialect based mostly in MSsqlServer)
+
+
+```r
+# get events with code "J45" and descendants
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))
+#> # Source:   SQL [?? x 16]
+#> # Database: DatabaseConnectorJdbcConnection
+#>    finngenid  source event_age approx_event_day code1 code2 code3 code4 code5 code6 code7 code8 code9 icdver category index
+#>    <chr>      <chr>      <dbl> <date>           <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr>  <chr>    <chr>
+#>  1 FG00000106 INPAT       42.3 2004-12-17       J450  <NA>  <NA>  13    6     96    <NA>  <NA>  <NA>  10     1        3589 
+#>  2 FG00000144 INPAT       36.5 2013-09-09       J459  <NA>  <NA>  1     1     10I   <NA>  <NA>  <NA>  10     1        2655 
+#>  3 FG00000223 INPAT       58.4 2002-03-19       J45   <NA>  <NA>  19    1     40I   <NA>  <NA>  <NA>  10     1        4059 
+#>  4 FG00000266 INPAT       20.3 2012-08-15       J459  <NA>  <NA>  39    1     20V   <NA>  <NA>  <NA>  10     1        4499 
+#>  5 FG00000317 INPAT       48.5 2008-02-08       J451  <NA>  <NA>  29    1     25    <NA>  <NA>  <NA>  10     2        4118 
+#>  6 FG00000507 INPAT       42.2 2018-01-01       J451  <NA>  <NA>  0     1     25    <NA>  <NA>  <NA>  10     1        4114 
+#>  7 FG00000515 INPAT       70.3 2014-11-01       J459  <NA>  <NA>  25    1     78    <NA>  <NA>  <NA>  10     1        3975 
+#>  8 FG00000591 INPAT       72.1 2014-12-07       J451  <NA>  <NA>  35    1     25    <NA>  <NA>  <NA>  10     1        2923 
+#>  9 FG00000631 INPAT       39.2 1997-04-23       J459  <NA>  <NA>  2     1     30Q   <NA>  <NA>  <NA>  10     1        661  
+#> 10 FG00000635 INPAT       62.8 2003-08-09       J450  <NA>  <NA>  37    1     20V   <NA>  <NA>  <NA>  10     1        2763 
+#> # ℹ more rows
+```
+
+As an example we can plot the age of smoking status of all the subjects with an asthma diagnose: 
+
+We get the asthma subjects by filtering the service sector data, and join the finngen_info data to get the smoke2, smoke3
+
+
+```r
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))|> 
+  dplyr::distinct(finngenid) |> 
+  dplyr::left_join(
+    FGconnectionHandler$getTblsandboxToolsSchema$finngenid_info_r11_v1(), 
+    by = "finngenid"
+  ) |> 
+  dplyr::count(smoke2, smoke3, sort = T)
+#> # Source:     SQL [?? x 3]
+#> # Database:   DatabaseConnectorJdbcConnection
+#> # Ordered by: desc(n)
+#>    smoke2 smoke3      n
+#>    <chr>  <chr>   <dbl>
+#>  1 no     <NA>      417
+#>  2 <NA>   <NA>      383
+#>  3 no     never     281
+#>  4 <NA>   never     237
+#>  5 no     current   166
+#>  6 yes    <NA>      157
+#>  7 no     former    154
+#>  8 <NA>   current   140
+#>  9 yes    never     133
+#> 10 <NA>   former    118
+#> # ℹ more rows
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
