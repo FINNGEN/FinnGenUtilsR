@@ -16,7 +16,6 @@ Imports:
     DatabaseConnector,
     DBI,
     dplyr,
-    HadesExtras,
     R6,
     SqlRender,
     stringr,
@@ -28,6 +27,8 @@ Suggests:
     readr,
     rmarkdown,
     testthat (>= 3.0.0)
+Remotes:
+  javier-gracia-tabuenca-tuni/HadesExtras
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://finngen.github.io/FinnGenUtilsR/
