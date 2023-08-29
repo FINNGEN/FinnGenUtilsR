@@ -20,7 +20,8 @@ Imports:
     SqlRender,
     stringr,
     tibble,
-    yaml
+    yaml, 
+    HadesExtras
 Suggests: 
     knitr,
     lubridate,
