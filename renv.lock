@@ -9,6 +9,26 @@
     ]
   },
   "Packages": {
+    "Andromeda": {
+      "Package": "Andromeda",
+      "Version": "0.6.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "DBI",
+        "RSQLite",
+        "cli",
+        "dbplyr",
+        "dplyr",
+        "hms",
+        "methods",
+        "pillar",
+        "rlang",
+        "tidyselect",
+        "zip"
+      ],
+      "Hash": "cad6476575c944a25e52317aa6edced9"
+    },
     "CohortGenerator": {
       "Package": "CohortGenerator",
       "Version": "0.8.0",
@@ -91,21 +111,53 @@
       ],
       "Hash": "06f849a536f805abebdcf131d18097b6"
     },
+    "FeatureExtraction": {
+      "Package": "FeatureExtraction",
+      "Version": "3.3.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "ohdsi",
+      "RemoteRepo": "FeatureExtraction",
+      "RemoteRef": "main",
+      "RemoteSha": "f6bf1cb5d14f45c242b368ea24f94bb8ae70ff50",
+      "Remotes": "ohdsi/Eunomia",
+      "Requirements": [
+        "Andromeda",
+        "DBI",
+        "DatabaseConnector",
+        "ParallelLogger",
+        "R",
+        "RSQLite",
+        "SqlRender",
+        "checkmate",
+        "cli",
+        "dplyr",
+        "jsonlite",
+        "methods",
+        "pillar",
+        "rJava",
+        "readr",
+        "rlang"
+      ],
+      "Hash": "117e99ad371057536d22afd876081081"
+    },
     "HadesExtras": {
       "Package": "HadesExtras",
       "Version": "0.0.0.9001",
       "Source": "GitHub",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "javier-gracia-tabuenca-tuni",
       "RemoteRepo": "HadesExtras",
       "RemoteRef": "master",
-      "RemoteSha": "9582f7bf3ca2e93c8f9250e03455c1c850928774",
-      "RemoteHost": "api.github.com",
+      "RemoteSha": "591212fd0a16053076461fd3162dc183b3460030",
       "Requirements": [
         "CohortGenerator",
         "DBI",
         "DatabaseConnector",
         "Eunomia",
+        "FeatureExtraction",
         "ParallelLogger",
         "R6",
         "RJSONIO",
@@ -133,7 +185,7 @@
         "validate",
         "yaml"
       ],
-      "Hash": "1298f8bbe664af19197a273337e6bfcd"
+      "Hash": "d2f7156b4736768abba041ecb382401b"
     },
     "MASS": {
       "Package": "MASS",
