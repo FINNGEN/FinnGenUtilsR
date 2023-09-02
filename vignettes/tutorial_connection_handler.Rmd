@@ -52,10 +52,10 @@ For convenience one can use function `create_fg_connection_handler_FromList` to 
 FGconnectionHandler <- create_fg_connection_handler_FromList(config)
 #> Connecting using BigQuery driver
 #> Created a temporary table named #cars
-#> Inserting data took 0.0118 secs
-#> Dropping tables 'bgs2r5ihcars' from schema 'atlas-development-270609.sandbox'.
-#>   |                                                                                                                                                        |                                                                                                                                                |   0%  |                                                                                                                                                        |========================================================================                                                                        |  50%  |                                                                                                                                                        |================================================================================================================================================| 100%
-#> Executing SQL took 1.97 secs
+#> Inserting data took 0.051 secs
+#> Dropping tables 'pbl7uvcfcars' from schema 'atlas-development-270609.sandbox'.
+#>   |                                                                                                                                                         |                                                                                                                                                 |   0%  |                                                                                                                                                         |========================================================================                                                                         |  50%  |                                                                                                                                                         |=================================================================================================================================================| 100%
+#> Executing SQL took 2.04 secs
 ```
 
 `FGconnectionHandler` is an object with that manage the connection to the FinnGen tables in BQ. 
@@ -67,12 +67,12 @@ First thing to do is to check the status of the connection.
 ```r
 FGconnectionHandler$connectionStatusLog
 #> # A tibble: 4 × 4
-#>   databaseName     type    step                          message                                                                                          
-#>   <chr>            <fct>   <chr>                         <chr>                                                                                            
-#> 1 atlasDevelopment SUCCESS Check database connection     Valid connection                                                                                 
-#> 2 atlasDevelopment SUCCESS Check temp table creation     can create temp tables                                                                           
-#> 3 atlasDevelopment SUCCESS sandboxToolsSchema connection Connected to tables: birth_mother_r11_v1, code_counts_r11_v1, code_prevalence_stratified_v1, cod…
-#> 4 atlasDevelopment SUCCESS medicalCodesSchema connection Connected to tables: fg_codes_info_v1, fg_codes_info_v2, fg_codes_info_v3, fg_codes_info_v4, fg_…
+#>   databaseName     type    step                          message                                                                                           
+#>   <chr>            <fct>   <chr>                         <chr>                                                                                             
+#> 1 atlasDevelopment SUCCESS Check database connection     Valid connection                                                                                  
+#> 2 atlasDevelopment SUCCESS Check temp table creation     can create temp tables                                                                            
+#> 3 atlasDevelopment SUCCESS sandboxToolsSchema connection Connected to tables: birth_mother_r11_v1, code_counts_r11_v1, code_prevalence_stratified_v1, code…
+#> 4 atlasDevelopment SUCCESS medicalCodesSchema connection Connected to tables: fg_codes_info_v1, fg_codes_info_v2, fg_codes_info_v3, fg_codes_info_v4, fg_c…
 ```
 
 It checks if the connection is established, if it is possible to create temporary tables, and gets a list of all the tables in the  sandboxToolsSchema and   medicalCodesSchema schemas. 

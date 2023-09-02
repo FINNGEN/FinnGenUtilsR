@@ -69,7 +69,7 @@ fg_get_bq_config <- function(
             user: ""
             password: ""
             connectionString: jdbc:bigquery://https://www.googleapis.com/auth/bigquery:433;ProjectId=fg-production-<environment>;OAuthType=3;Timeout=10000;
-            pathToDriver: /home/ivm/.jdbc_drivers/bigquery
+            pathToDriver: /usr/local/GoogleBigQueryJdbcDriver
           tempEmulationSchema: fg-production-<environment>.sandbox #needed for creating tmp table in BigQuery
           useBigrqueryUpload: true # option for HadesExtras
         schemas:

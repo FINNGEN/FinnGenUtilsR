@@ -124,7 +124,7 @@ CohortGenerator::createCohortTables(
 #> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_inclusion_stats
 #> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_summary_stats
 #> - Created table atlas-development-270609.sandbox.javier_test_cohort_table_censor_stats
-#> Creating cohort tables took 33.22secs
+#> Creating cohort tables took 32.94secs
 ```
 
 ```r
@@ -147,11 +147,11 @@ CohortGenerator::getCohortCounts(
   cohortTable = config$cohortTable$cohortTableName
 )
 #> Connecting using BigQuery driver
-#> Counting cohorts took 2.71 secs
+#> Counting cohorts took 2.36 secs
 #>   cohortId cohortEntries cohortSubjects
 #> 1     2239          4198           4198
-#> 2     2241           328            328
-#> 3     2240           328            328
+#> 2     2240           328            328
+#> 3     2241           328            328
 ```
 
 ## execute cohort diagnostics
