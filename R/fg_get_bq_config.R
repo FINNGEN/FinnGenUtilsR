@@ -73,8 +73,8 @@ fg_get_bq_config <- function(
           tempEmulationSchema: fg-production-<environment>.sandbox #needed for creating tmp table in BigQuery
           useBigrqueryUpload: true # option for HadesExtras
         schemas:
-          sandboxToolsSchema: atlas-development-270609.sandbox_tools_r<dataFreezeNumber>
-          medicalCodesSchema: atlas-development-270609.medical_codes
+          sandboxToolsSchema: finngen-production-library.sandbox_tools_r<dataFreezeNumber>
+          medicalCodesSchema: finngen-production-library.medical_codes
     ' |>
       stringr::str_replace_all("<environment>", environment) |>
       stringr::str_replace_all("<dataFreezeNumber>", as.character(dataFreezeNumber))
