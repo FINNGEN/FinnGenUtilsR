@@ -1,3 +1,6 @@
+# FinnGenUtilsR 2.2.1
+- Fix bug in fg_get_bq_config
+
 # FinnGenUtilsR 2.2.0
 - Added `FGconnectionHandler` and `fg_get_bq_config()` to connect adn work with to FinnGen BQ databases as dataframes 
 
