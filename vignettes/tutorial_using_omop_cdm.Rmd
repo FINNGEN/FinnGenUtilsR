@@ -13,7 +13,7 @@ editor_options:
 
 # Getting configuration to connect to OMOP-CDM
 
-Function `get_cdm_config` provides all the information needed to use one of the OMOP-CDM in FinnGen.
+Function `fg_get_cdm_config` provides all the information needed to use one of the OMOP-CDM in FinnGen.
 You only need to specify the sandbox number, and the dataFreeze you want to use.
 
 - environment: You can find your sandbox number by looking at the url in your browser when connected to sandbox.
@@ -25,7 +25,7 @@ You only need to specify the sandbox number, and the dataFreeze you want to use.
 
 
 ```r
- config <- FinnGenUtilsR::get_cdm_config(
+ config <- FinnGenUtilsR::fg_get_cdm_config(
    environment = "sandbox-6",
    dataFreezeNumber = 11,
    cohortTableName = "javier_test_cohort_table"
@@ -33,10 +33,10 @@ You only need to specify the sandbox number, and the dataFreeze you want to use.
 ```
 
 
- By default `get_cdm_config` provides a list, but we can also plot this in yalm format to evaluate it better
+ By default `fg_get_cdm_config` provides a list, but we can also plot this in yalm format to evaluate it better
 
 ```r
- FinnGenUtilsR::get_cdm_config(
+ FinnGenUtilsR::fg_get_cdm_config(
    environment = "sandbox-6",
    dataFreezeNumber = 11,
    cohortTableName = "javier_test_cohort_table",
