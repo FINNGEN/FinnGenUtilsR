@@ -21,13 +21,11 @@ Imports:
     stringr,
     tibble,
     yaml,
-    HadesExtras,
     rlang,
     Eunomia (>= 2.0.0),
     ResultModelManager,
     dbplyr
 Suggests: 
-    CohortDiagnostics,
     knitr,
     lubridate,
     readr,
