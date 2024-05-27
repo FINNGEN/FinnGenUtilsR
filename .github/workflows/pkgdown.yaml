@@ -22,7 +22,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       GCP_SERVICE_KEY_JSON: ${{ secrets.GCP_SERVICE_KEY_JSON }}
-      GCP_SERVICE_KEY: gcp-credentials.json
+      GCP_SERVICE_KEY: /tmp/gcp-credentials.json
     permissions:
       contents: write
     steps:
@@ -40,7 +40,7 @@ jobs:
           needs: website
 
       - name: Create GCP service key
-        run: echo '$GCP_SERVICE_KEY_JSON' | base64 --decode | jq > gcp-credentials.json
+        run: echo '$GCP_SERVICE_KEY_JSON' | base64 --decode | jq > /tmp/gcp-credentials.json
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
