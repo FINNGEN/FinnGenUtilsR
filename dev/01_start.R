@@ -32,3 +32,7 @@ usethis::use_pkgdown_github_pages()
 ## Set up Github
 usethis::use_git()
 usethis::use_github(organisation = "FINNGEN", private = TRUE)
+
+
+
+usethis::use_pkgdown_github_pages()

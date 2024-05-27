@@ -9,3 +9,7 @@ docs
 MyCohortDiagnosticsResulst.sqlite
 export/*
 errorReportSql.txt
+
+renv/*
+renv.lock
+.Rprofile

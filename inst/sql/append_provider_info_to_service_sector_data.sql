@@ -1,13 +1,13 @@
-#
-#
-# @service_sector_data_table :
-# full path to the table in service_sector format >v2
-#
-# @fg_codes_info_table :
-# full path to the table with the codes info
-#
-# @new_colums_sufix :
-# string indicating a prefix to add to the appended columns, default="".
+--
+--
+-- service_sector_data_table :
+-- full path to the table in service_sector format >v2
+--
+-- fg_codes_info_table :
+-- full path to the table with the codes info
+--
+-- new_colums_sufix :
+-- string indicating a prefix to add to the appended columns, default="".
 
 
 WITH service_sector_fg_codes_preprocessed AS(
@@ -23,7 +23,7 @@ WITH service_sector_fg_codes_preprocessed AS(
      FROM @service_sector_data_table
   )
 
-# join longitudinal table with pre formated
+-- join longitudinal table with pre formated
 SELECT
   ssfgpre.*,
   fgc.concept_class_id AS provider_concept_class_id@new_colums_sufix,

@@ -1,8 +1,8 @@
 ---
-title: "Adding names to longitudinal and service sector codes"
+title: "USING BIGRQUERY PACKAGE: Adding names to longitudinal and service sector codes"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tutorial_add_info}
+  %\VignetteIndexEntry{tutorial_add_info_bigrquery}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 # Intro
 
-This tutorial show how to append additional information to a longitudinal or service-sector table in bigquerry. 
+This tutorial show how to append additional information to a longitudinal or service-sector table in bigquery using the `bigrquery` package. 
 
 Information to add includes, name of the medical codes in English, name for the type of visit, name for the type of provider.
 
