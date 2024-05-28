@@ -116,7 +116,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
@@ -221,7 +221,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
@@ -304,7 +304,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
@@ -391,7 +391,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
@@ -458,7 +458,7 @@ test_that("fg_append_code_info_to_longitudinal_data precision ", {
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
@@ -509,7 +509,7 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, "tmp_test_finngenutilsr")
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }

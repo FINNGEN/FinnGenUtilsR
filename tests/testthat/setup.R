@@ -3,7 +3,6 @@
 #
 
 # bigquery
-
 bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
 project_id <- "atlas-development-270609"
 
@@ -16,6 +15,8 @@ tmp_schema <- "sandbox"
 test_handler_config <-fg_get_bq_config(
   environment = "atlasDevelopment",
   dataFreezeNumber = 11
-
 )
 
+
+# common variables
+tmp_test_table_name <- paste0('tmp_test_finngenutilsr_', Sys.getenv('R_TEST_ENVIROMENT', unset = 'local'))
