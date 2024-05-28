@@ -23,7 +23,6 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       GCP_SERVICE_KEY_JSON: ${{ secrets.GCP_SERVICE_KEY_JSON }}
       GCP_SERVICE_KEY: /tmp/gcp-credentials.json
-      DATABASECONNECTOR_JAR_FOLDER: /tmp/hades
     permissions:
       contents: write
     steps:
@@ -42,11 +41,6 @@ jobs:
 
       - name: Create GCP service key and forder for drivers
         run: echo $GCP_SERVICE_KEY_JSON  > /tmp/gcp-credentials.json
-        run: mkdir -p /tmp/hades
-
-      - name: Install biguery drivers
-        run: DatabaseConnector::downloadJdbcDrivers(dbms = 'bigquery', pathToDriver = Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"))
-        shell: Rscript {0}
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)

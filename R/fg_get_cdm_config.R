@@ -25,7 +25,7 @@ fg_get_cdm_config <- function(
     dataFreezeNumber,
     cohortTableName = "test_cohort_table",
     atlasDevelopment_gckey =  Sys.getenv("GCP_SERVICE_KEY"),
-    atlasDevelopment_pathToDriver = paste0(Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),"/bigquery/"),
+    atlasDevelopment_pathToDriver = system.file("extdata", "my_raw_data.csv", package="my_package"),
     asYaml = FALSE
 ) {
 
