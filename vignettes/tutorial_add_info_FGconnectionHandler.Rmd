@@ -28,7 +28,8 @@ To understand what is the `FGconnectionHandler` is recommended to see the dedica
 
 ```{r setup}
 library(dplyr)
-library(FinnGenUtilsR)
+#library(FinnGenUtilsR)
+devtools::load_all(".")
 ```
 
 This tutorial has been developed using dummy data under the Atlas development project. 
@@ -45,7 +46,7 @@ To execute it in Sandbox, be sure to change the configuration to fit your needs.
 ```{r, eval=FALSE}
  config <- fg_get_bq_config(
    environment = "sandbox-6", # set your sandbox number
-   dataFreezeNumber = 11 # set the dataFreeze you want to use
+   dataFreezeNumber = 12 # set the dataFreeze you want to use
    )
 ```
 
@@ -87,7 +88,10 @@ We can see that this table does not currently have information about the medical
 ```{r}
 ss_subject_1_tbl
 ```
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
+```
 
 # Adding info to medical codes
 
@@ -109,7 +113,12 @@ ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal
 ss_subject_1_with_translations_tbl |>  
   dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id) 
 ```
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
 
 ## If an event/row uses more than one medical code 
 
@@ -130,6 +139,13 @@ fg_dbplyr_append_code_info_to_longitudinal_data(
   ) |>
   filter(vocabulary_id == "ICD10fi" | vocabulary_id == "VNRfi") |>  
   dplyr::select(finngenid, source, approx_event_day, code1, code2, vocabulary_id, code, name_en, name_fi, omop_concept_id) 
+```
+
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
 ```
 
 Se the help, for more options
@@ -158,6 +174,12 @@ fg_dbplyr_append_code_info_to_longitudinal_data(
   dplyr::select(finngenid, source, approx_event_day, code1, code2, vocabulary_id, code, name_en, name_fi, omop_concept_id) 
 
 ```
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
 
 We can see in column `code` the truncated code and in `name_en` the name of the truncated code. 
 
@@ -179,6 +201,12 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
   dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en)
 ```
 
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
 
 # Adding info to provider type 
 
@@ -189,13 +217,21 @@ In the service-sector data, information about the provider is defined in CODE6 t
 
 
 ```{r}
-event_for_subject_1_with_provider <- fg_dbplyr_append_provider_info_to_service_sector_data(
+fg_dbplyr_append_provider_info_to_service_sector_data(
   ss_subject_1_tbl, 
   FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
   )|> 
   dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, provider_code, provider_name_en, provider_concept_class_id)
 ```
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+fg_dbplyr_append_provider_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
+  )|> 
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, provider_code, provider_name_en, provider_concept_class_id) |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
 
 
 
