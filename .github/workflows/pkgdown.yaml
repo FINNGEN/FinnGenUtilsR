@@ -41,8 +41,7 @@ jobs:
           needs: website
 
       - name: Create GCP service key and forder for drivers
-        run: echo $GCP_SERVICE_KEY_JSON  > /tmp/gcp-credentials.json
-        run: mkdir -p /tmp/hades
+        run: echo $GCP_SERVICE_KEY_JSON  > /tmp/gcp-credentials.json ; mkdir -p /tmp/hades
 
       - name: Install biguery drivers
         run: DatabaseConnector::downloadJdbcDrivers(dbms = 'bigquery', pathToDriver = Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"))
