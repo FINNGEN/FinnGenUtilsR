@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest,   r: 'devel', env: {R_TEST_ENVIROMENT: 'r_devel'},  http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release', env: {R_TEST_ENVIROMENT: 'r_release'}}
-          - {os: ubuntu-latest,   r: 'oldrel-1', env: {R_TEST_ENVIROMENT: 'r_oldrel'}}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

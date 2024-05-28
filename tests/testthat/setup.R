@@ -19,4 +19,8 @@ test_handler_config <-fg_get_bq_config(
 
 
 # common variables
-tmp_test_table_name <- paste0('tmp_test_finngenutilsr_', Sys.getenv('R_TEST_ENVIROMENT', unset = 'local'))
+# to avoid collide in the parallel github actions
+tmp_test_table_name <- paste0(
+  'tmp_test_finngenutilsr_',
+  R.version$major, R.version$minor, R.version$`svn rev`) |>
+  stringr::str_replace_all("\\.", "")
