@@ -32,10 +32,12 @@
 #' @param new_colums_sufix string indicating a prefix to add to the appended columns, default="".
 #'
 #' @return sql script ready to be ran
-#' @export
 #'
 #' @importFrom checkmate assert_character assert_subset assert_number
 #' @importFrom SqlRender readSql render
+#'
+#' @export
+#'
 fg_append_code_info_to_longitudinal_data_sql <- function(
     longitudinal_data_table,
     fg_codes_info_table,
@@ -99,10 +101,6 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
 
 
 
-
-
-
-
 #' fg_bq_append_code_info_to_longitudinal_data
 #'
 #' Wrap around fg_append_code_info_to_longitudinal_data_sql to work with bigrquery package
@@ -113,9 +111,12 @@ fg_append_code_info_to_longitudinal_data_sql <- function(
 #' @param ... see [fg_append_code_info_to_longitudinal_data_sql](fg_append_code_info_to_longitudinal_data_sql) for the mapping options
 #'
 #' @return bq_table with added columns
-#' @export
+#'
 #' @importFrom checkmate assert_subset assert_class
 #' @importFrom bigrquery bq_projects bq_project_query
+#'
+#' @export
+#'
 fg_bq_append_code_info_to_longitudinal_data <- function(
     bq_project_id,
     bq_table,
@@ -127,12 +128,79 @@ fg_bq_append_code_info_to_longitudinal_data <- function(
 
 
   sql <- fg_append_code_info_to_longitudinal_data_sql(
-    longitudinal_data_table = paste0(bq_table, collapse = "."),
+    longitudinal_data_table = paste0(bq_table$project, ".", bq_table$dataset, ".", bq_table$table),
     fg_codes_info_table = fg_codes_info_table,
     ...
   )
 
-  new_tb <- bigrquery::bq_project_query(bq_project_id, sql, ...)
+  # if using Sqlrender::trasnlate then the column names are converted to lower case
+  sql <- sql |> stringr::str_replace_all("VARCHAR","STRING")
+
+   new_tb  <- bigrquery::bq_project_query(
+    x = bq_project_id,
+    query = sql)
 
   return(new_tb)
 }
+
+
+#' fg_dbplyr_append_code_info_to_longitudinal_data
+#'
+#' Wrap around fg_append_code_info_to_longitudinal_data_sql to work with dbplyr package
+#'
+#' @param dbplyr_table an object of type <tbl> representing a table in longitudinal_data format
+#' @param dbplyr_fg_codes_info_table string with the full path (schema.table) to the database table with the fg_codes_info
+#' @param ... see [fg_append_code_info_to_longitudinal_data_sql](fg_append_code_info_to_longitudinal_data_sql) for the mapping options
+#'
+#' @return <tbl> with added columns
+#'
+#' @importFrom checkmate assert_class
+#' @importFrom dbplyr sql_render build_sql
+#' @importFrom dplyr tbl
+#'
+#' @export
+#'
+fg_dbplyr_append_code_info_to_longitudinal_data <- function(
+    dbplyr_table,
+    dbplyr_fg_codes_info_table,
+    ...) {
+  # validate
+  dbplyr_table |> checkmate::assert_class("tbl")
+
+  connection = dbplyr_table$src$con
+
+  sql <- fg_append_code_info_to_longitudinal_data_sql(
+    longitudinal_data_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_table)), ")"),
+    fg_codes_info_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_fg_codes_info_table)), ")"),
+    ...
+  )
+
+  new_dbplyr_table  <-  dplyr::tbl(connection, dbplyr::sql(sql))
+
+  return(new_dbplyr_table)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

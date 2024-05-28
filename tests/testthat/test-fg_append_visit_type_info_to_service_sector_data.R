@@ -1,40 +1,66 @@
+
 #
-# SETUP
+# fg_dbplyr_append_provider_info_to_service_sector_data
 #
+test_that("fg_dbplyr_append_provider_info_to_service_sector_data works", {
 
-bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
-project_id <- "atlas-development-270609"
+  on.exit({
+    rm(FGconnectionHandler)
+    gc()
+  })
 
-test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r10.finngen_r10_service_sector_detailed_longitudinal_v2"
-fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v2"
-tmp_schema <- "sandbox"
+  FGconnectionHandler <- create_fg_connection_handler_FromList(test_handler_config)
 
-# redundant long executions
-## tb_vocabulary_combinations: table with all combinations of SOURCE, ICDVER, CATEGORY
-### from dplyr::distinct(SOURCE, ICDVER, CATEGORY, .keep_all = T)
-sql <- paste0("
+  tbl <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1()  |>
+    dplyr::filter(finngenid == 'FG00000001') |>
+    fg_dbplyr_append_visit_type_info_to_service_sector_data(FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6())
+
+
+  table <- tbl |> dplyr::collect()
+
+  table |> checkmate::expect_tibble()
+  c("fg_code5", "fg_code6", "fg_code8", "fg_code9",
+    "visit_type_concept_class_id", "visit_type_name_en", "visit_type_name_fi",
+    "visit_type_code", "visit_type_omop_concept_id"  ) |>
+    checkmate::expect_subset(table |> colnames())
+
+
+})
+
+
+
+
+#
+# fg_bq_append_visit_type_info_to_service_sector_data
+#
+test_that("fg_bq_append_visit_type_info_to_service_sector_data works", {
+
+  on.exit({
+    bigrquery::bq_table_delete(tb_servicesector_combinations)
+  })
+
+  sql <- paste0("
     SELECT * FROM (
       SELECT *,
         ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `CODE5`, `CODE6`, `CODE8`, `CODE9`) AS q04
       FROM ", test_longitudinal_data_table, "
     ) WHERE q04 = 1")
 
-tb_servicesector_combinations <- bigrquery::bq_project_query(project_id, sql)
-
-
-#
-# TEST
-#
-test_that("fg_bq_append_visit_type_info_to_service_sector_data works", {
-  skip_if(!bigrquery::bq_table_exists(tb_servicesector_combinations))
+  tb_servicesector_combinations <- bigrquery::bq_project_query(project_id, sql)
 
   tb_with_translations <- fg_bq_append_visit_type_info_to_service_sector_data(project_id, tb_servicesector_combinations, fg_codes_info_table)
-  res <- bigrquery::bq_table_download(tb_with_translations)
+  res <- bigrquery::bq_table_download(tb_with_translations, n_max = 100)
+
   res |> checkmate::expect_tibble()
+  c("FG_CODE5", "FG_CODE6", "FG_CODE8","FG_CODE9",
+    "visit_type_concept_class_id", "visit_type_name_en", "visit_type_name_fi",
+    "visit_type_code", "visit_type_omop_concept_id"  ) |>
+    checkmate::expect_subset(res |> colnames())
 })
 
-
-
+#
+# fg_append_visit_type_info_to_service_sector_data
+#
 test_that("fg_bq_append_visit_type_info_to_service_sector_data maps PRIM_OUT CODE5 CODE6", {
   # upload
   test_table <- tibble::tibble(
@@ -85,7 +111,6 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps PRIM_OUT COD
   # clean
   bigrquery::bq_table_delete(bq_test_table)
 })
-
 
 
 test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE5", {

@@ -1,31 +1,35 @@
-#
-# SETUP
-#
 
-bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
-project_id <- "atlas-development-270609"
-
-test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r10.finngen_r10_service_sector_detailed_longitudinal_v2"
-fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v2"
-tmp_schema <- "sandbox"
-
-# redundant long executions
-## tb_vocabulary_combinations: table with all combinations of SOURCE, ICDVER, CATEGORY
-### from dplyr::distinct(SOURCE, ICDVER, CATEGORY, .keep_all = T)
-sql <- paste0("
-    SELECT * FROM (
-      SELECT *,
-        ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `ICDVER`, `CATEGORY`) AS q04
-      FROM ", test_longitudinal_data_table, "
-    ) WHERE q04 = 1")
-
-tb_vocabulary_combinations <- bigrquery::bq_project_query(project_id, sql)
 
 
 #
-# TEST
+# fg_dbplyr_append_code_info_to_longitudinal_data
 #
-test_that("fg_append_code_info_to_longitudinal_data works", {
+test_that("fg_dbplyr_append_code_info_to_longitudinal_data works", {
+
+  on.exit({
+    rm(FGconnectionHandler)
+    gc()
+  })
+
+  FGconnectionHandler <- create_fg_connection_handler_FromList(test_handler_config)
+
+  tbl <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1()  |>
+    dplyr::filter(finngenid == 'FG00000001') |>
+    fg_dbplyr_append_code_info_to_longitudinal_data(FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6())
+
+  table <- tbl |> dplyr::collect()
+
+  table |> checkmate::expect_tibble()
+  c('finngenid', 'approx_event_day', 'code1', 'code2', 'code3', 'code4', 'icdver', 'category', 'index', 'code', 'name_en', 'name_fi', 'omop_concept_id') |>
+    checkmate::expect_subset(names(table))
+
+})
+
+
+#
+# fg_bq_append_code_info_to_longitudinal_data
+#
+test_that("fg_bq_append_code_info_to_longitudinal_data works", {
   sql <- paste("SELECT * FROM ", test_longitudinal_data_table, " WHERE FINNGENID='FG00000001'")
   tb <- bigrquery::bq_project_query(project_id, sql)
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(project_id, tb, fg_codes_info_table)
@@ -34,11 +38,28 @@ test_that("fg_append_code_info_to_longitudinal_data works", {
 })
 
 
-test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: default", {
-  skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
+test_that("fg_bq_append_code_info_to_longitudinal_data works on real codes", {
+
+  on.exit({
+      bigrquery::bq_table_delete(tb_test_medical_codes_in_longitudinal_data)
+  })
+
+  # To make it faster we create a table with the longitudinal data for the unic combinations of SOURCE, ICDVER, CATEGORY
+  ## tb_vocabulary_combinations: table with all combinations of SOURCE, ICDVER, CATEGORY
+  ### from dplyr::distinct(SOURCE, ICDVER, CATEGORY, .keep_all = T)
+  sql <- paste0("
+    SELECT * FROM (
+      SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `ICDVER`, `CATEGORY`) AS q04
+      FROM ", test_longitudinal_data_table, "
+    ) WHERE q04 = 1")
+
+  tb_test_medical_codes_in_longitudinal_data <- bigrquery::bq_project_query(project_id, sql)
+
+  # fg_append_code_info_to_longitudinal_data finds the correct vocabulary: default
 
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
-    project_id, tb_vocabulary_combinations, fg_codes_info_table
+    project_id, tb_test_medical_codes_in_longitudinal_data, fg_codes_info_table
   )
   res <- bigrquery::bq_table_download(tb_with_translations)
 
@@ -46,13 +67,11 @@ test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary
   res |>
     dplyr::filter(is.na(vocabulary_id)) |>
     checkmate::expect_tibble(nrows = 0)
-})
 
-test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: PURCH = VNR", {
-  skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
+  # fg_append_code_info_to_longitudinal_data finds the correct vocabulary: PURCH = VNR"
 
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
-    project_id, tb_vocabulary_combinations, fg_codes_info_table,
+    project_id, tb_test_medical_codes_in_longitudinal_data, fg_codes_info_table,
     PURCH_map_to = "VNR"
   )
   res <- bigrquery::bq_table_download(tb_with_translations)
@@ -61,13 +80,12 @@ test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary
   res |>
     dplyr::filter(is.na(vocabulary_id)) |>
     checkmate::expect_tibble(nrows = 0)
-})
 
-test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary: REIMB = ICD", {
-  skip_if(!bigrquery::bq_table_exists(tb_vocabulary_combinations))
+
+  # fg_append_code_info_to_longitudinal_data finds the correct vocabulary: REIMB = ICD"
 
   tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
-    project_id, tb_vocabulary_combinations, fg_codes_info_table,
+    project_id, tb_test_medical_codes_in_longitudinal_data, fg_codes_info_table,
     REIMB_map_to = "ICD"
   )
   res <- bigrquery::bq_table_download(tb_with_translations)
@@ -79,8 +97,9 @@ test_that("fg_append_code_info_to_longitudinal_data finds the correct vocabulary
 })
 
 
-
-
+#
+# fg_append_code_info_to_longitudinal_data_sql
+#
 test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
   # upload
   test_table <- tibble::tibble(
@@ -513,6 +532,7 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
   # clean
   bigrquery::bq_table_delete(bq_test_table)
 })
+
 
 
 

@@ -105,7 +105,7 @@ fg_connection_handler <- R6::R6Class(
       tryCatch(
         {
           private$.connectionHandler$getConnection() |>
-            HadesExtras:::tmp_dplyr_copy_to(cars, overwrite = TRUE)
+            tmp_dplyr_copy_to(cars, overwrite = TRUE)
           private$.connectionHandler$getConnection() |>
             DatabaseConnector::dropEmulatedTempTables()
         },
@@ -206,7 +206,7 @@ create_fg_connection_handler_FromList <- function(
   config |> checkmate::assertList()
   config |> names() |> checkmate::assertNames(must.include = c("databaseName", "connection", "schemas" ))
 
-  connectionHandler <- HadesExtras::ResultModelManager_createConnectionHandler(
+    connectionHandler <- ResultModelManager_createConnectionHandler(
     connectionDetailsSettings = config$connection$connectionDetailsSettings,
     tempEmulationSchema = config$connection$tempEmulationSchema,
     useBigrqueryUpload = config$connection$useBigrqueryUpload
