@@ -8,7 +8,7 @@ fg_get_bq_config(
   environment,
   dataFreezeNumber,
   atlasDevelopment_gckey = Sys.getenv("GCP_SERVICE_KEY"),
-  atlasDevelopment_pathToDriver = paste0(Sys.getenv("DATABASECONNECTOR_JAR_FOLDER")),
+  atlasDevelopment_pathToDriver = system.file("drivers", package = "FinnGenUtilsR"),
   asYaml = FALSE
 )
 }
