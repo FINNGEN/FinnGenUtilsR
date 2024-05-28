@@ -45,7 +45,7 @@ jobs:
         run: mkdir -p /tmp/hades
 
       - name: Install biguery drivers
-        run: DatabaseConnector::downloadJdbcDrivers('bigquery')
+        run: DatabaseConnector::downloadJdbcDrivers(dbms = 'bigquery', pathToDriver = Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"))
         shell: Rscript {0}
 
       - name: Build site
