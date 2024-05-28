@@ -8,8 +8,7 @@ fg_get_bq_config(
   environment,
   dataFreezeNumber,
   atlasDevelopment_gckey = Sys.getenv("GCP_SERVICE_KEY"),
-  atlasDevelopment_pathToDriver = paste0(Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),
-    "/bigquery/"),
+  atlasDevelopment_pathToDriver = paste0(Sys.getenv("DATABASECONNECTOR_JAR_FOLDER")),
   asYaml = FALSE
 )
 }
