@@ -28,8 +28,7 @@ To understand what is the `FGconnectionHandler` is recommended to see the dedica
 
 ```{r setup}
 library(dplyr)
-#library(FinnGenUtilsR)
-devtools::load_all(".")
+library(FinnGenUtilsR)
 ```
 
 This tutorial has been developed using dummy data under the Atlas development project. 
