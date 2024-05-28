@@ -23,7 +23,6 @@ Imports:
     yaml,
     rlang,
     Eunomia (>= 2.0.0),
-    ResultModelManager (>= 0.5.7),
     dbplyr
 Suggests: 
     knitr,
@@ -31,8 +30,6 @@ Suggests:
     readr,
     rmarkdown,
     testthat (>= 3.0.0)
-Remotes:  
-    OHDSI/ResultModelManager
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://finngen.github.io/FinnGenUtilsR/

@@ -15,7 +15,6 @@
 #' @importFrom Eunomia getEunomiaConnectionDetails
 #' @importFrom rlang exec
 #' @importFrom DatabaseConnector createConnectionDetails
-#' @importFrom ResultModelManager PooledConnectionHandler
 #'
 #' @return A connection handler object.
 #'
@@ -84,7 +83,6 @@ ResultModelManager_createConnectionHandler  <- function(
 
   if (usePooledConnection) {
     stop("not implemented")
-    connectionHandler <- ResultModelManager::PooledConnectionHandler$new(connectionDetails, loadConnection = FALSE, ...)
   } else {
     connectionHandler <- tmp_ConnectionHandler$new(connectionDetails, loadConnection = FALSE, ...)
   }
@@ -116,7 +114,6 @@ tmp_inDatabaseSchema <- function (databaseSchema, table)
 #' till this is fixed https://github.com/OHDSI/DatabaseConnector/issues/236
 #'
 #' @importFrom R6 R6Class
-#' @importFrom ResultModelManager ConnectionHandler
 #' @importFrom checkmate assertString
 #' @importFrom dbplyr in_schema
 #' @importFrom dplyr tbl
@@ -125,7 +122,7 @@ tmp_inDatabaseSchema <- function (databaseSchema, table)
 
 tmp_ConnectionHandler <- R6::R6Class(
   "tmp_ConnectionHandler",
-  inherit = ResultModelManager::ConnectionHandler,
+  inherit = ResultModelManager_ConnectionHandler,
   public = list(
     #'
     #' @description get a dplyr table object (i.e. lazy loaded)
