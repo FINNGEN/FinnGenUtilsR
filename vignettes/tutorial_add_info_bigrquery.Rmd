@@ -56,7 +56,10 @@ We can see that this table does not currently have information about the medical
 ```{r}
 bq_table_download(event_for_subject_1)
 ```
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1) |> rmarkdown::paged_table()
+```
 
 # Adding info to medical codes
 
@@ -73,7 +76,12 @@ For example: code, for the original code; name_en, for the name of the code in E
 bq_table_download(event_for_subject_1_with_translations) |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) 
 ```
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id)  |>
+  rmarkdown::paged_table()
+```
 
 ## If an event/row uses more than one medical code 
 
@@ -97,6 +105,13 @@ one_patient_long_data <- bq_table_download(event_for_subject_1_with_translations
 ```{r}
 bq_table_download(event_for_subject_1_with_translations) |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) 
+```
+
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id)  |> 
+  rmarkdown::paged_table()
 ```
 
 Se the help, for more options
@@ -134,7 +149,12 @@ bq_table_download(event_for_subject_1_with_translations) |>
 
 
 
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id)  |>
+  rmarkdown::paged_table()
+```
 
 
 
@@ -160,7 +180,12 @@ bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |>
 ```
 
 
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en)|> 
+  rmarkdown::paged_table()
+```
 
 
 
@@ -186,7 +211,11 @@ bigrquery::bq_table_download(event_for_subject_1_with_provider) |>
 
 
 
-
+(same table in html format for exporation)
+```{r echo=FALSE}
+bigrquery::bq_table_download(event_for_subject_1_with_provider) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> rmarkdown::paged_table()
+```
 
 
 

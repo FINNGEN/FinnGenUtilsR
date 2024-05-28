@@ -6,7 +6,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r, include = FALSE}
@@ -84,6 +84,13 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
   dplyr::filter(code1 == "J45" & source == "INPAT")
 ```
 
+(same table in html format for exporation)
+```{r echo=FALSE}
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(code1 == "J45" & source == "INPAT") |> 
+  as.data.frame()|> rmarkdown::paged_table()
+```
+
 At the moment of writing does not allow for the use of `str_detect`
 
 ```{r error=TRUE}
@@ -101,6 +108,13 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))
 ```
 
+(same table in html format for exporation)
+```{r echo=FALSE}
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))  |> 
+  as.data.frame()|> rmarkdown::paged_table()
+```
+
 As an example we can plot the age of smoking status of all the subjects with an asthma diagnose: 
 
 We get the asthma subjects by filtering the service sector data, and join the finngen_info data to get the smoke2, smoke3
@@ -115,6 +129,19 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
   ) |> 
   dplyr::count(smoke2, smoke3, sort = T)
   
+```
+
+(same table in html format for exporation)
+```{r echo=FALSE}
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))|> 
+  dplyr::distinct(finngenid) |> 
+  dplyr::left_join(
+    FGconnectionHandler$getTblsandboxToolsSchema$finngenid_info_r11_v1(), 
+    by = "finngenid"
+  ) |> 
+  dplyr::count(smoke2, smoke3, sort = T) |> 
+  as.data.frame()|> rmarkdown::paged_table()
 ```
 
 
