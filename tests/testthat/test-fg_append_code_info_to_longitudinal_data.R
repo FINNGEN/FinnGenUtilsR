@@ -110,6 +110,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -193,8 +194,6 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICD10fi all options", {
       )
     )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -215,6 +214,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -276,8 +276,6 @@ test_that("fg_append_code_info_to_longitudinal_data maps PURCH all options", {
       )
     )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -298,6 +296,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -363,8 +362,6 @@ test_that("fg_append_code_info_to_longitudinal_data maps ICDO3 all options", {
       )
     )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -385,6 +382,7 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -430,8 +428,6 @@ test_that("fg_append_code_info_to_longitudinal_data maps REIMB all options", {
       )
     )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -452,6 +448,7 @@ test_that("fg_append_code_info_to_longitudinal_data precision ", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -483,8 +480,6 @@ test_that("fg_append_code_info_to_longitudinal_data precision ", {
       )
     )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
@@ -503,6 +498,7 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -523,8 +519,6 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
     res |> names()
   )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 

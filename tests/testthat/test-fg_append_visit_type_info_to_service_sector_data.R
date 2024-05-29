@@ -28,16 +28,10 @@ test_that("fg_dbplyr_append_provider_info_to_service_sector_data works", {
 })
 
 
-
-
 #
 # fg_bq_append_visit_type_info_to_service_sector_data
 #
 test_that("fg_bq_append_visit_type_info_to_service_sector_data works", {
-
-  on.exit({
-    bigrquery::bq_table_delete(tb_servicesector_combinations)
-  })
 
   sql <- paste0("
     SELECT * FROM (
@@ -81,7 +75,9 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps PRIM_OUT COD
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
+
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
@@ -107,9 +103,6 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps PRIM_OUT COD
       )
     )
 
-
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -133,6 +126,7 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE5"
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -159,9 +153,6 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE5"
       )
     )
 
-
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -186,6 +177,7 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE98
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -212,9 +204,6 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE98
       )
     )
 
-
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -240,6 +229,7 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data overlap hilmo cod
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -285,8 +275,6 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data overlap hilmo cod
       )
     )
 
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
 
 
@@ -312,6 +300,7 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps SOURCE", {
     INDEX = "0"
   )
 
+  on.exit({bigrquery::bq_table_delete(bq_test_table)})
   bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
@@ -338,7 +327,4 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps SOURCE", {
       )
     )
 
-
-  # clean
-  bigrquery::bq_table_delete(bq_test_table)
 })
