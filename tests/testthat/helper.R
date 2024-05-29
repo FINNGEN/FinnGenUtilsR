@@ -6,5 +6,5 @@ test_rename <- function(name){
     name,'_',
     R.version$major, R.version$minor, R.version$`svn rev`,
     R.version$os) |>
-    gsub("\\W", "", text) |> tolower()
+    stringr::str_replace_all("\\W", "") |> tolower()
 }
