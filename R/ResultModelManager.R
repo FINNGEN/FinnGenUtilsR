@@ -131,7 +131,6 @@ ResultModelManager_ConnectionHandler <- R6::R6Class(
     #' Closes connection (if active)
     closeConnection = function() {
       if (self$dbIsValid()) {
-        ParallelLogger::logInfo("Closing database connection")
         DatabaseConnector::disconnect(self$con)
       }
       self$isActive <- FALSE
@@ -305,10 +304,8 @@ requiredPackage <- function(packageName) {
     )
   },
   "jdbc" = function(cd) {
-    ParallelLogger::logInfo("Using DatabaseConnector jdbc driver.")
     # Set java stack size on linux to workaround overflow problem
     if (is.null(getOption("java.parameters")) & .Platform$OS.type == "linux") {
-      ParallelLogger::logInfo("Unix system detected and no java.parameters option set. Fixing stack with -Xss5m")
       options(java.parameters = "-Xss5m")
     }
 
