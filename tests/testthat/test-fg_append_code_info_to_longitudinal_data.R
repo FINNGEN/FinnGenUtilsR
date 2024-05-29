@@ -1,6 +1,4 @@
 
-
-
 #
 # fg_dbplyr_append_code_info_to_longitudinal_data
 #
