@@ -40,10 +40,6 @@ test_that("fg_bq_append_code_info_to_longitudinal_data works", {
 
 test_that("fg_bq_append_code_info_to_longitudinal_data works on real codes", {
 
-  on.exit({
-      bigrquery::bq_table_delete(tb_test_medical_codes_in_longitudinal_data)
-  })
-
   # To make it faster we create a table with the longitudinal data for the unic combinations of SOURCE, ICDVER, CATEGORY
   ## tb_vocabulary_combinations: table with all combinations of SOURCE, ICDVER, CATEGORY
   ### from dplyr::distinct(SOURCE, ICDVER, CATEGORY, .keep_all = T)
