@@ -18,10 +18,8 @@ jobs:
 
     strategy:
       fail-fast: false
-      parallel: 1
       matrix:
         config:
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
 
