@@ -17,10 +17,3 @@ test_handler_config <-fg_get_bq_config(
   dataFreezeNumber = 11
 )
 
-
-# common variables
-# to avoid collide in the parallel github actions
-tmp_test_table_name <- paste0(
-  'tmp_test_finngenutilsr_',
-  R.version$major, R.version$minor, R.version$`svn rev`) |>
-  stringr::str_replace_all("\\.", "")

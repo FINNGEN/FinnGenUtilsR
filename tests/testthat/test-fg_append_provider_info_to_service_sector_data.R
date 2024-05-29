@@ -84,7 +84,7 @@ test_that("fg_bq_append_provider_info_to_service_sector_data_sql maps hilmo CODE
     INDEX = "0"
   )
 
-  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, tmp_test_table_name)
+  bq_test_table <- bigrquery::bq_table(project_id, tmp_schema, test_rename("test_finngenutilsr"))
   if (bigrquery::bq_table_exists(bq_test_table)) {
     bigrquery::bq_table_delete(bq_test_table)
   }
