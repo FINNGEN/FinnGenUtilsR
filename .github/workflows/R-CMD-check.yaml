@@ -5,6 +5,8 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master, development]
+  schedule:
+    - cron: '0 5 * * 0' # every Sunday at 5am UTC
 
 name: R-CMD-check
 
