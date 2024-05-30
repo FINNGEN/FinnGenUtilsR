@@ -1,6 +1,6 @@
 Package: FinnGenUtilsR
 Title: FinnGenUtilsR
-Version: 2.1.0
+Version: 3.0.0
 Authors@R: 
     person("Javier", "Gracia-Tabuenca", , "javier.graciatabuenca@tuni.fi", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2455-0598"))
@@ -9,20 +9,27 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: 
     bigrquery,
     checkmate,
-    SqlRender
-Suggests: 
+    DatabaseConnector,
+    DBI,
     dplyr,
+    R6,
+    SqlRender,
+    stringr,
+    tibble,
+    yaml,
+    rlang,
+    Eunomia (>= 2.0.0),
+    dbplyr
+Suggests: 
     knitr,
     lubridate,
     readr,
     rmarkdown,
-    stringr,
-    testthat (>= 3.0.0),
-    tibble
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://finngen.github.io/FinnGenUtilsR/

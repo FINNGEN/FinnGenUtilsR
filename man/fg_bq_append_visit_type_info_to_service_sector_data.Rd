@@ -3,7 +3,7 @@
 %   R/fg_append_visit_type_info_to_service_sector_data.R
 \name{fg_bq_append_visit_type_info_to_service_sector_data}
 \alias{fg_bq_append_visit_type_info_to_service_sector_data}
-\title{fg_bq_append_code_info_to_longitudinal_data}
+\title{fg_bq_append_visit_type_info_to_service_sector_data}
 \usage{
 fg_bq_append_visit_type_info_to_service_sector_data(
   bq_project_id,

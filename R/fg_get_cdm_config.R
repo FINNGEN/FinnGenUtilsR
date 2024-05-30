@@ -13,19 +13,19 @@
 #' @return A list of configuration settings for the specified environment and data freeze number.
 #'
 #' @examples
-#' get_cdm_config("sandbox-6", 13)
+#' fg_get_cdm_config("sandbox-6", 13)
 #'
 #' @importFrom checkmate assert_string assert_number
 #' @importFrom stringr str_detect str_replace_all
 #' @importFrom yaml yaml.load
 #'
 #' @export
-get_cdm_config <- function(
+fg_get_cdm_config <- function(
     environment,
     dataFreezeNumber,
     cohortTableName = "test_cohort_table",
     atlasDevelopment_gckey =  Sys.getenv("GCP_SERVICE_KEY"),
-    atlasDevelopment_pathToDriver = paste0(Sys.getenv("DATABASECONNECTOR_JAR_FOLDER"),"/bigquery/"),
+    atlasDevelopment_pathToDriver = system.file("extdata", "my_raw_data.csv", package="my_package"),
     asYaml = FALSE
 ) {
 
