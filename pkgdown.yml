@@ -5,7 +5,7 @@ articles:
   tutorial_add_info_bigrquery: tutorial_add_info_bigrquery.html
   tutorial_add_info_FGconnectionHandler: tutorial_add_info_FGconnectionHandler.html
   tutorial_connection_handler: tutorial_connection_handler.html
-last_built: 2024-05-30T06:39Z
+last_built: 2024-05-30T06:44Z
 urls:
   reference: https://finngen.github.io/FinnGenUtilsR/reference
   article: https://finngen.github.io/FinnGenUtilsR/articles
