@@ -71,6 +71,7 @@ createSandboxAPIConnection <- function(base_url, token) {
 #' @export
 #' @importFrom stringr str_detect
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr %>%
 #' @importFrom tibble tibble
 #' @importFrom readr write_tsv
 #' @importFrom httr add_headers upload_file POST status_code content
