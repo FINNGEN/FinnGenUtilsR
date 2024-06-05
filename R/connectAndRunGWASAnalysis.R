@@ -71,7 +71,6 @@ createSandboxAPIConnection <- function(base_url, token) {
 #' @export
 #' @importFrom stringr str_detect
 #' @importFrom dplyr bind_rows
-#' @importFrom dplyr %>%
 #' @importFrom tibble tibble
 #' @importFrom readr write_tsv
 #' @importFrom httr add_headers upload_file POST status_code content
@@ -98,7 +97,7 @@ runGWASAnalysis <- function(
   dplyr::bind_rows(
     tibble::tibble( FID = cohorts_settings$cases_cohort$validated_ids, {{phenotype_name}}:=1),
     tibble::tibble( FID = cohorts_settings$controls_cohort$validated_ids, {{phenotype_name}}:=0)
-  ) %>% readr::write_tsv(tmp_path_phenofile)
+  ) |> readr::write_tsv(tmp_path_phenofile)
 
   # prepare api params
   authorization = paste("Bearer", connection_sandboxAPI$token)
