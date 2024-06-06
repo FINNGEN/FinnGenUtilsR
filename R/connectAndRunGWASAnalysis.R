@@ -10,7 +10,9 @@
 #' @importFrom tibble tibble
 createSandboxAPIConnection <- function(base_url, token) {
 
-  ##TODO: add the checkmate to the input parameters
+  # if different version of openssl package is used in docker and URL host
+  # there will be an error. To avoid the error set up the following configs
+  httr::set_config(httr::config(ssl_verifypeer = FALSE, ssl_verifyhost = FALSE))
 
   # create call to get users info
   authorization = paste("Bearer", token)
