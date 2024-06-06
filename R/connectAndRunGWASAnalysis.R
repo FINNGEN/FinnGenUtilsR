@@ -126,7 +126,7 @@ runGWASAnalysis <- function(
 
   logTibble = connection_sandboxAPI$conn_status_tibble$logTibble
 
-  if(logTibble[logTibble$type == "ERROR", 'message'] != ""){
+  if(logTibble$type == "ERROR"){
     res <- list(
       status = FALSE,
       message = "Connection in connection_sandboxAPI not stablised"
