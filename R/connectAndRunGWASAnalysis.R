@@ -45,9 +45,6 @@ createSandboxAPIConnection <- function(base_url, token) {
   conn_status <- LogTibble$new()
   if (error_message !=""){
     conn_status$ERROR("Test connection Sandbox API", error_message)
-    conn_status$error = TRUE
-  } else {
-    conn_status$error = FALSE
   }
 
   return(list(
