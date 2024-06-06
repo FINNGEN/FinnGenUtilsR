@@ -45,6 +45,8 @@ createSandboxAPIConnection <- function(base_url, token) {
   conn_status <- LogTibble$new()
   if (error_message !=""){
     conn_status$ERROR("Test connection Sandbox API", error_message)
+  } else {
+    conn_status$SUCCESS("Test connection Sandbox API", "Valid connection")
   }
 
   return(list(
@@ -175,12 +177,12 @@ runGWASAnalysis <- function(
 
   cases_cohort <- list(
     name = unique(cases$cohort_name),
-    validated_ids = cases$person_source_value
+    validated_ids = cases$person_source_value[!is.na(cases$person_source_value)]
   )
 
   controls_cohort <- list(
     name = unique(controls$cohort_name),
-    validated_ids = controls$person_source_value
+    validated_ids = controls$person_source_value[!is.na(controls$person_source_value)]
   )
 
   cohorts_settings <- list(
