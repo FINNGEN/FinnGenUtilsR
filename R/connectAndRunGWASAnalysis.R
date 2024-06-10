@@ -89,7 +89,7 @@ runGWASAnalysis <- function(
     cases_description = cohorts_settings$cases_cohort$name,
     controls_description = cohorts_settings$controls_cohort$name,
     notification_email = connection_sandboxAPI$notification_email,
-    release = "Regenie9"
+    release = "finngen_R12"
 ) {
 
   if(!stringr::str_detect(phenotype_name, "^[[:upper:]|[:digit:]]+$")){
