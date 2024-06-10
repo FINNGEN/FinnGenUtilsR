@@ -13,7 +13,7 @@ runGWASAnalysis(
   cases_description = cohorts_settings$cases_cohort$name,
   controls_description = cohorts_settings$controls_cohort$name,
   notification_email = connection_sandboxAPI$notification_email,
-  release = "Regenie9"
+  release = "finngen_R12"
 )
 }
 \arguments{
