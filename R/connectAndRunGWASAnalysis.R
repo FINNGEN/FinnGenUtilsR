@@ -82,14 +82,13 @@ createSandboxAPIConnection <- function(base_url, token) {
 #' @importFrom jsonlite toJSON
 runGWASAnalysis <- function(
     connection_sandboxAPI,
-    cohorts_settings,
+    cases_finngenids,
+    controls_finngenids,
     phenotype_name,
     title = phenotype_name,
     description = phenotype_name,
-    cases_description = cohorts_settings$cases_cohort$name,
-    controls_description = cohorts_settings$controls_cohort$name,
     notification_email = connection_sandboxAPI$notification_email,
-    release = "finngen_R12"
+    release = "Regenie12"
 ) {
 
   if(!stringr::str_detect(phenotype_name, "^[[:upper:]|[:digit:]]+$")){
@@ -100,8 +99,8 @@ runGWASAnalysis <- function(
   tmp_path_phenofile = file.path(tempdir(), "phenofile.tsv")
 
   dplyr::bind_rows(
-    tibble::tibble( FID = cohorts_settings$cases_cohort$validated_ids, {{phenotype_name}}:=1),
-    tibble::tibble( FID = cohorts_settings$controls_cohort$validated_ids, {{phenotype_name}}:=0)
+    tibble::tibble( FID = cases_finngenids, {{phenotype_name}}:=1),
+    tibble::tibble( FID = controls_finngenids, {{phenotype_name}}:=0)
   ) %>% readr::write_tsv(tmp_path_phenofile)
 
   # prepare api params
@@ -112,13 +111,11 @@ runGWASAnalysis <- function(
 
   json = jsonlite::toJSON(
     list(
-      num_cases=length(cohorts_settings$cases_cohort$validated_ids),
-      num_controls=length(cohorts_settings$controls_cohort$validated_ids),
+      num_cases=length(cases_finngenids),
+      num_controls=length(controls_finngenids),
       title = title,
       description = description,
       phenotype_name = phenotype_name,
-      cases = cases_description,
-      controls = controls_description,
       notification_email = notification_email,
       release = release
     ),
@@ -157,40 +154,4 @@ runGWASAnalysis <- function(
 
 
 
-.get_cohorts_settings <- function(
-    cohort_data,
-    cases_db_name,
-    cases_cohort_name,
-    controls_db_name,
-    controls_cohort_name) {
-
-  checkmate::assert(
-    sum(cohort$database_id == cases_db_name & cohort$cohort_name == cases_cohort_name) > 0
-  )
-
-  checkmate::assert(
-    sum(cohort$database_id == controls_db_name & cohort$cohort_name == controls_cohort_name) > 0
-  )
-
-  cases <- cohort[which(cohort$database_id == cases_db_name & cohort$cohort_name == cases_cohort_name), ]
-  controls <- cohort[which(cohort$database_id == controls_db_name & cohort$cohort_name == controls_cohort_name), ]
-
-  cases_cohort <- list(
-    name = unique(cases$cohort_name),
-    validated_ids = cases$person_source_value[!is.na(cases$person_source_value)]
-  )
-
-  controls_cohort <- list(
-    name = unique(controls$cohort_name),
-    validated_ids = controls$person_source_value[!is.na(controls$person_source_value)]
-  )
-
-  cohorts_settings <- list(
-    cases_cohort = cases_cohort,
-    controls_cohort = controls_cohort
-  )
-
-  return(cohorts_settings)
-
-}
 
