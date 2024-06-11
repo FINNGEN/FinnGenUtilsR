@@ -6,20 +6,17 @@
 \usage{
 runGWASAnalysis(
   connection_sandboxAPI,
-  cohorts_settings,
+  cases_finngenids,
+  controls_finngenids,
   phenotype_name,
   title = phenotype_name,
   description = phenotype_name,
-  cases_description = cohorts_settings$cases_cohort$name,
-  controls_description = cohorts_settings$controls_cohort$name,
   notification_email = connection_sandboxAPI$notification_email,
-  release = "finngen_R12"
+  release = "Regenie12"
 )
 }
 \arguments{
 \item{connection_sandboxAPI}{PARAM_DESCRIPTION}
-
-\item{cohorts_settings}{PARAM_DESCRIPTION}
 
 \item{phenotype_name}{PARAM_DESCRIPTION}
 
@@ -27,13 +24,15 @@ runGWASAnalysis(
 
 \item{description}{PARAM_DESCRIPTION, Default: phenotype_name}
 
-\item{cases_description}{PARAM_DESCRIPTION, Default: cohorts_settings$cases_cohort$name}
-
-\item{controls_description}{PARAM_DESCRIPTION, Default: cohorts_settings$controls_cohort$name}
-
 \item{notification_email}{PARAM_DESCRIPTION, Default: connection_sandboxAPI$notification_email}
 
 \item{release}{PARAM_DESCRIPTION, Default: 'Regenie9'}
+
+\item{cohorts_settings}{PARAM_DESCRIPTION}
+
+\item{cases_description}{PARAM_DESCRIPTION, Default: cohorts_settings$cases_cohort$name}
+
+\item{controls_description}{PARAM_DESCRIPTION, Default: cohorts_settings$controls_cohort$name}
 }
 \description{
 runGWASAnalysis
