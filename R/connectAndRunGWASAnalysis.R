@@ -64,14 +64,13 @@ createSandboxAPIConnection <- function(base_url, token) {
 #' @title runGWASAnalysis
 #' @description runGWASAnalysis
 #' @param connection_sandboxAPI PARAM_DESCRIPTION
-#' @param cohorts_settings PARAM_DESCRIPTION
+#' @param cases_finngenids PARAM_DESCRIPTION
+#' @param controls_finngenids PARAM_DESCRIPTION
 #' @param phenotype_name PARAM_DESCRIPTION
 #' @param title PARAM_DESCRIPTION, Default: phenotype_name
 #' @param description PARAM_DESCRIPTION, Default: phenotype_name
-#' @param cases_description PARAM_DESCRIPTION, Default: cohorts_settings$cases_cohort$name
-#' @param controls_description PARAM_DESCRIPTION, Default: cohorts_settings$controls_cohort$name
 #' @param notification_email PARAM_DESCRIPTION, Default: connection_sandboxAPI$notification_email
-#' @param release PARAM_DESCRIPTION, Default: 'Regenie9'
+#' @param release PARAM_DESCRIPTION, Default: 'Regenie12'
 #' @export
 #' @importFrom stringr str_detect
 #' @importFrom dplyr bind_rows

@@ -18,6 +18,10 @@ runGWASAnalysis(
 \arguments{
 \item{connection_sandboxAPI}{PARAM_DESCRIPTION}
 
+\item{cases_finngenids}{PARAM_DESCRIPTION}
+
+\item{controls_finngenids}{PARAM_DESCRIPTION}
+
 \item{phenotype_name}{PARAM_DESCRIPTION}
 
 \item{title}{PARAM_DESCRIPTION, Default: phenotype_name}
@@ -26,13 +30,7 @@ runGWASAnalysis(
 
 \item{notification_email}{PARAM_DESCRIPTION, Default: connection_sandboxAPI$notification_email}
 
-\item{release}{PARAM_DESCRIPTION, Default: 'Regenie9'}
-
-\item{cohorts_settings}{PARAM_DESCRIPTION}
-
-\item{cases_description}{PARAM_DESCRIPTION, Default: cohorts_settings$cases_cohort$name}
-
-\item{controls_description}{PARAM_DESCRIPTION, Default: cohorts_settings$controls_cohort$name}
+\item{release}{PARAM_DESCRIPTION, Default: 'Regenie12'}
 }
 \description{
 runGWASAnalysis
