@@ -37,6 +37,9 @@
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/ResultModelManager_createConnectionHandler.html</loc>
   </url>
   <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/createSandboxAPIConnection.html</loc>
+  </url>
+  <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/create_fg_connection_handler_FromList.html</loc>
   </url>
   <url>
@@ -77,6 +80,9 @@
   </url>
   <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://finngen.github.io/FinnGenUtilsR/reference/runGWASAnalysis.html</loc>
   </url>
   <url>
     <loc>https://finngen.github.io/FinnGenUtilsR/reference/tmp_ConnectionHandler.html</loc>
