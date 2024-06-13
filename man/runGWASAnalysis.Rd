@@ -12,6 +12,7 @@ runGWASAnalysis(
   title = phenotype_name,
   description = phenotype_name,
   notification_email = connection_sandboxAPI$notification_email,
+  analysis_type = "additive",
   release = "Regenie12"
 )
 }
@@ -29,6 +30,8 @@ runGWASAnalysis(
 \item{description}{PARAM_DESCRIPTION, Default: phenotype_name}
 
 \item{notification_email}{PARAM_DESCRIPTION, Default: connection_sandboxAPI$notification_email}
+
+\item{analysis_type}{Specifies type of the analysis to perform (additive, recessive, dominant), Default: 'additive'}
 
 \item{release}{PARAM_DESCRIPTION, Default: 'Regenie12'}
 }

@@ -70,6 +70,7 @@ createSandboxAPIConnection <- function(base_url, token) {
 #' @param title PARAM_DESCRIPTION, Default: phenotype_name
 #' @param description PARAM_DESCRIPTION, Default: phenotype_name
 #' @param notification_email PARAM_DESCRIPTION, Default: connection_sandboxAPI$notification_email
+#' @param analysis_type Specifies type of the analysis to perform (additive, recessive, dominant), Default: 'additive'
 #' @param release PARAM_DESCRIPTION, Default: 'Regenie12'
 #' @export
 #' @importFrom stringr str_detect
@@ -86,6 +87,7 @@ runGWASAnalysis <- function(
     title = phenotype_name,
     description = phenotype_name,
     notification_email = connection_sandboxAPI$notification_email,
+    analysis_type = "additive",
     release = "Regenie12"
 ) {
 
@@ -115,6 +117,7 @@ runGWASAnalysis <- function(
       description = description,
       phenotype_name = phenotype_name,
       notification_email = notification_email,
+      analysistype = analysis_type,
       release = release
     ),
     auto_unbox = TRUE)
