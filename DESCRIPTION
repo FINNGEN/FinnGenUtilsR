@@ -23,7 +23,10 @@ Imports:
     yaml,
     rlang,
     Eunomia (>= 2.0.0),
-    dbplyr
+    dbplyr,
+    httr,
+    jsonlite, 
+    readr
 Suggests: 
     knitr,
     lubridate,

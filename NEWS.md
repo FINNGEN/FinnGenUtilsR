@@ -2,6 +2,7 @@
 - Make package compatible with Sandbox local CRAN
 - Added functions to add info to longitudinal data using dbplyr
 - Added tutorial to work with FGconnectionHandler and dbplyr
+- Added Github acctions to r-check the package every week with latest dependencies
 
 # FinnGenUtilsR 2.2.1
 - Fix bug in fg_get_bq_config
