@@ -19,7 +19,7 @@ install.packages("FinnGenUtilsR")
 
 - Easy calculation of connection parameters to connect to FinnGen BigQuery databases
 - An object `FGconnectionHandler` to connect to FinnGen BigQuery databases and work with the tables as dataframes
-- Functions to add info to the longitudinal data. Eg adding names to medical codes, or visit types. For both:
+- Functions to add info to the longitudinal data. Eg adding names to medical codes, or visit types.  For both:
   - Working with [Bigrquery](https://bigrquery.r-dbi.org/) 
   - Working with [dbplyr](https://dbplyr.tidyverse.org/) 
 
@@ -27,5 +27,4 @@ install.packages("FinnGenUtilsR")
 ## Example
 
 See vignettes or articles in [github-page](https://finngen.github.io/FinnGenUtilsR/)
-
  
