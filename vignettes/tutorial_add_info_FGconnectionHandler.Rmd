@@ -38,6 +38,11 @@ This tutorial has been developed using dummy data under the Atlas development pr
    environment = "atlasDevelopment",
    dataFreezeNumber = 11
    )
+ cdm_config <- fg_get_cdm_config(
+   environment = "atlasDevelopment",
+   dataFreezeNumber = 11,
+   atlasDevelopment_pathToDriver = system.file("drivers", package = "FinnGenUtilsR")
+ )
 ```
 
 
@@ -47,18 +52,24 @@ To execute it in Sandbox, be sure to change the configuration to fit your needs.
    environment = "sandbox-6", # set your sandbox number
    dataFreezeNumber = 12 # set the dataFreeze you want to use
    )
+ cdm_config <- fg_get_cdm_config(
+   environment = "sandbox-6",
+   dataFreezeNumber = 12
+  )
 ```
 
 Create a `FGconnectionHandler` object with the connection configuration from `fg_get_bq_config`. 
 
 ```{r}
 FGconnectionHandler <- create_fg_connection_handler_FromList(config)
+CDMconnectionHandler <- HadesExtras::createCDMdbHandlerFromList(cdm_config)
 ```
 
 We can check if the connection has been successful. 
 
 ```{r}
 FGconnectionHandler$connectionStatusLog
+CDMconnectionHandler$connectionStatusLog
 ```
 
 We can access the service sector data using the connection object as follows: 
@@ -189,15 +200,17 @@ Function `fg_dbplyr_append_visit_type_info_to_service_sector_data` adds new colu
 
 In the service-sector data, information about the visit type is defined in CODE5 to CODE9 depending on the SOURCE and time period. 
 `fg_dbplyr_append_visit_type_info_to_service_sector_data` abstracts this nuances, and assign one visit type code per row. 
-Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. 
+Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. Additionally we have added diagnostic_relevance column which will produce whether a visit is diagnostic or non-diagnositc visit. For diagnostic_relevance column we need vocabulary tables concept and concept_relationship.
 
 
 ```{r}
 fg_dbplyr_append_visit_type_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6(),
+  CDMconnectionHandler$getTblVocabularySchema$concept_relationship(),
+  CDMconnectionHandler$getTblVocabularySchema$concept()
   )|> 
-  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en)
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en, diagnostic_relevance)
 ```
 
 (same table in html format for exporation)

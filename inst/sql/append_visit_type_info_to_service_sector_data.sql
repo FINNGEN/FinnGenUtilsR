@@ -6,6 +6,12 @@
 -- fg_codes_info_table :
 -- full path to the table with the codes info
 --
+-- vocab_omop_concept_relationship :
+-- full path to the vocabulary omop concep_relationship table for a datafreeze release
+--
+-- vocab_omop_concept :
+-- full path to the vocabulary omop concep table for a datafreeze release
+--
 -- prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector
 -- Some hilmo visits are including both coding systems, SRC|ServiceSector and SRC|Contact|Urgency, if TRUE the second is used
 --
@@ -41,23 +47,57 @@ WITH visit_type_fg_codes_preprocessed AS(
             THEN CODE9
       ELSE NULL
     END AS FG_CODE9,
-     FROM @service_sector_data_table
-  )
-
+    CASE
+      WHEN CODE4 IS NOT NULL AND SAFE_CAST(CODE4 AS INT64) >= 1 THEN DATE_ADD(APPROX_EVENT_DAY, INTERVAL CAST(CODE4 AS INT64) DAY)
+      ELSE APPROX_EVENT_DAY
+    END AS approx_end_day
+    FROM @service_sector_data_table
+),
 -- join longitudinal table with pre formated
-SELECT
-  ssfgpre.*,
-  fgc.concept_class_id AS visit_type_concept_class_id@new_colums_sufix,
-  fgc.name_en AS visit_type_name_en@new_colums_sufix,
-  fgc.name_fi AS visit_type_name_fi@new_colums_sufix,
-  fgc.code AS visit_type_code@new_colums_sufix,
-  fgc.omop_concept_id AS visit_type_omop_concept_id@new_colums_sufix
-FROM visit_type_fg_codes_preprocessed AS ssfgpre
-LEFT JOIN @fg_codes_info_table as fgc
-ON ssfgpre.SOURCE IS NOT DISTINCT FROM fgc.SOURCE AND
-   ssfgpre.FG_CODE5 IS NOT DISTINCT FROM fgc.FG_CODE5 AND
-   ssfgpre.FG_CODE6 IS NOT DISTINCT FROM fgc.FG_CODE6 AND
-   ssfgpre.FG_CODE8 IS NOT DISTINCT FROM fgc.FG_CODE8 AND
-   ssfgpre.FG_CODE9 IS NOT DISTINCT FROM fgc.FG_CODE9
+visits_from_registers_with_source_visit_type_id AS (
+  SELECT
+    ssfgpre.*,
+    fgc.concept_class_id AS visit_type_concept_class_id@new_colums_sufix,
+    fgc.name_en AS visit_type_name_en@new_colums_sufix,
+    fgc.name_fi AS visit_type_name_fi@new_colums_sufix,
+    fgc.code AS visit_type_code@new_colums_sufix,
+    fgc.omop_concept_id AS visit_type_omop_concept_id@new_colums_sufix
+  FROM visit_type_fg_codes_preprocessed AS ssfgpre
+  LEFT JOIN @fg_codes_info_table as fgc
+  ON ssfgpre.SOURCE IS NOT DISTINCT FROM fgc.SOURCE AND
+     ssfgpre.FG_CODE5 IS NOT DISTINCT FROM fgc.FG_CODE5 AND
+     ssfgpre.FG_CODE6 IS NOT DISTINCT FROM fgc.FG_CODE6 AND
+     ssfgpre.FG_CODE8 IS NOT DISTINCT FROM fgc.FG_CODE8 AND
+     ssfgpre.FG_CODE9 IS NOT DISTINCT FROM fgc.FG_CODE9
 --WHERE SOURCE IN ('CANC','REIMB')
 --LIMIT 10
+)
+SELECT vfrwsvti.*EXCEPT(approx_end_day),
+       CASE
+            WHEN ssmap.concept_id_2 IN (9201, 8717, 581384, 8971, 32760,
+                                        9203, 8870, 581381,
+                                        262,
+                                        9202, 38004207, 581479, 38004693, 8964, 8949, 38004453, 8966, 8716, 38004702, 38004677, 8858, 8905, 8584, 581477,
+                                        581380, 8756, 8977, 38004696, 32261, 8761, 8941, 8960, 8782, 38003620
+                                       ) THEN 'Diagnostic visit'
+            ELSE 'Non-diagnostic visit'
+       END AS diagnostic_relevance
+FROM visits_from_registers_with_source_visit_type_id AS vfrwsvti
+LEFT JOIN (
+  SELECT cr.concept_id_1, cr.concept_id_2, c.concept_name
+  FROM @vocab_omop_concept_relationship AS cr
+  JOIN @vocab_omop_concept AS c
+  ON cr.concept_id_2 = c.concept_id
+  WHERE cr.relationship_id = 'Maps to' AND c.domain_id IN ('Visit','Metadata')
+) AS ssmap
+ON CAST(vfrwsvti.visit_type_omop_concept_id AS INT64) = ssmap.concept_id_1
+-- remove hilmo inpat visits that are inpatient with ndays=1 or ourtpatient with ndays>1
+WHERE NOT (
+            (vfrwsvti.SOURCE IN ('INPAT','OPER_IN') AND
+             vfrwsvti.APPROX_EVENT_DAY = vfrwsvti.approx_end_day AND
+             REGEXP_CONTAINS(ssmap.concept_name,r'^(Inpatient|Rehabilitation|Other|Substance|Emergency Room and Inpatient Visit)'))
+            OR
+            (vfrwsvti.SOURCE IN ('INPAT','OPER_IN') AND
+             vfrwsvti.APPROX_EVENT_DAY < vfrwsvti.approx_end_day AND
+             REGEXP_CONTAINS(ssmap.concept_name,r'^(Outpatient|Ambulatory|Home|Emergency Room Visit|Case Management Visit)'))
+          )
