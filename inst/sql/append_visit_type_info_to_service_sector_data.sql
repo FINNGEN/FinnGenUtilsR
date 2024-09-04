@@ -79,7 +79,7 @@ visits_from_registers_with_source_and_standard_visit_type_id AS (
          vfrwsvti.APPROX_EVENT_DAY,
          vfrwsvti.approx_end_day,
          vfrwsvti.CODE1, vfrwsvti.CODE2, vfrwsvti.CODE3, vfrwsvti.CODE4,
-         vfrwsvti.CODE5, vfrwsvti.CODE6, vfrwsvti.CODE8, vfrwsvti.CODE9,
+         vfrwsvti.CODE5, vfrwsvti.CODE6, vfrwsvti.CODE7, vfrwsvti.CODE8, vfrwsvti.CODE9,
          vfrwsvti.ICDVER, vfrwsvti.CATEGORY,
          vfrwsvti.INDEX,
          CASE
@@ -122,7 +122,7 @@ visits_from_registers_with_source_and_standard_visit_type_null_id AS (
   vfrwssti.CODE5, vfrwssti.CODE6, vfrwssti.CODE7, vfrwssti.CODE8, vfrwssti.CODE9,
   vfrwssti.ICDVER, vfrwssti.CATEGORY,
   vfrwssti.INDEX,
-  vfrwssti.FG_CODE5, vfrwssti.FG_CODE6, vfrwssti.FG_CODE7, vfrwssti.FG_CODE8, vfrwssti.FG_CODE9,
+  vfrwssti.FG_CODE5, vfrwssti.FG_CODE6, vfrwssti.FG_CODE8, vfrwssti.FG_CODE9,
   fgc.concept_class_id AS visit_type_concept_class_id@new_colums_sufix,
   fgc.name_en AS visit_type_name_en@new_colums_sufix,
   fgc.name_fi AS visit_type_name_fi@new_colums_sufix,
