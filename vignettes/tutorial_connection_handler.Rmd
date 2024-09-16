@@ -22,14 +22,14 @@ library(FinnGenUtilsR)
 
 # Configuration 
 
-Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` to produce the connection configuration based on the sandbox number, and the dataFreeze you want to use.
+Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` to produce the connection configuration based on the sandbox number, and the data Freeze you want to use.
 
 
-- environment: You can find your sandbox number by looking at the url in your browser when connected to sandbox.
+- environment: You can find your sandbox number by looking at the URL in your browser when connected to sandbox.
 
 ![](pic/sandbox_number.png)
 
-- dataFreezeNumber: At the time of writing dataFreeze can be 6, 7, 8, 9, 10, and 11, dataFreeze.
+- dataFreezeNumber: At the time of writing data Freeze can be 6, 7, 8, 9, 10, and 11, data Freeze.
 
 
 ```{r}
@@ -58,19 +58,19 @@ FGconnectionHandler <- create_fg_connection_handler_FromList(config)
 `FGconnectionHandler` is an object with that manage the connection to the FinnGen tables in BQ. 
 
 First thing to do is to check the status of the connection. 
-`FGdb$connectionStatusLog` not only shows if the connection is correct, but also if the `tempEmulationSchema` works, and all tables in the sandboxToolsSchema and   medicalCodesSchema schemas, 
+`FGdb$connectionStatusLog` not only shows if the connection is correct, but also if the `tempEmulationSchema` works, and all tables in the sandboxToolsSchema and   medicalCodesSchema scheme, 
 
 ```{r}
 FGconnectionHandler$connectionStatusLog
 ```
 
-It checks if the connection is established, if it is possible to create temporary tables, and gets a list of all the tables in the  sandboxToolsSchema and   medicalCodesSchema schemas. 
+It checks if the connection is established, if it is possible to create temporary tables, and gets a list of all the tables in the  sandboxToolsSchema and   medicalCodesSchema scheme. 
 
 
 # Using FGconnectionHandler
 
-`FGdb$connectionStatusLog` contains a list of the existing table in the sandboxToolsSchema and   medicalCodesSchema schemas. 
-It is recomended to use the latests version of these tables. 
+`FGdb$connectionStatusLog` contains a list of the existing table in the sandboxToolsSchema and   medicalCodesSchema scheme. 
+It is recommended to use the latest version of these tables. 
 
 ```{r}
 FGconnectionHandler$getTblsandboxToolsSchema |> names()
@@ -84,7 +84,7 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
   dplyr::filter(code1 == "J45" & source == "INPAT")
 ```
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
 FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(code1 == "J45" & source == "INPAT") |> 
@@ -108,7 +108,7 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))
 ```
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
 FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))  |> 
@@ -117,7 +117,7 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
 
 As an example we can plot the age of smoking status of all the subjects with an asthma diagnose: 
 
-We get the asthma subjects by filtering the service sector data, and join the finngen_info data to get the smoke2, smoke3
+We get the asthma subjects by filtering the service sector data, and join the `finngen_info` data to get the smoke2, smoke3
 
 ```{r}
 FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
@@ -131,7 +131,7 @@ FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed
   
 ```
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
 FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))|> 
