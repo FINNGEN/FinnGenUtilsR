@@ -78,7 +78,7 @@ fg_bq_append_concept_info_data <- function(
 
 #' fg_dbplyr_append_concept_info_data
 #'
-#' @param tbl a tbl object with the data
+#' @param dbplyr_table a tbl object with the data
 #' @param omop_schema string with the schema where the omop tables are stored
 #'
 #' @return tbl with added columns
