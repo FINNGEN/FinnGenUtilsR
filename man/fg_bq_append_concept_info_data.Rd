@@ -12,6 +12,8 @@ fg_bq_append_concept_info_data(bq_project_id, bq_table, omop_schema, ...)
 \item{bq_table}{an object of type <bq_table> with a table in longitudinal_data format}
 
 \item{omop_schema}{string with the schema where the omop tables are stored}
+
+\item{...}{see \code{fg_append_concept_info_data_sql} for the mapping options}
 }
 \value{
 bq_table with added columns

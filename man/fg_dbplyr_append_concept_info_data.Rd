@@ -10,6 +10,8 @@ fg_dbplyr_append_concept_info_data(dbplyr_table, omop_schema, ...)
 \item{dbplyr_table}{a tbl object with the data}
 
 \item{omop_schema}{string with the schema where the omop tables are stored}
+
+\item{...}{see \code{fg_append_concept_info_data_sql} for the mapping options}
 }
 \value{
 tbl with added columns
