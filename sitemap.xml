@@ -14,13 +14,16 @@
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/createSandboxAPIConnection.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/create_fg_connection_handler_FromList.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_append_code_info_to_longitudinal_data_sql.html</loc></url>
+<url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_append_concept_info_data_sql.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_append_provider_info_to_service_sector_data_sql.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_append_visit_type_info_to_service_sector_data_sql.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_append_code_info_to_longitudinal_data.html</loc></url>
+<url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_append_concept_info_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_append_provider_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_append_visit_type_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_connection_handler.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_code_info_to_longitudinal_data.html</loc></url>
+<url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_concept_info_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_provider_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_visit_type_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_get_bq_config.html</loc></url>

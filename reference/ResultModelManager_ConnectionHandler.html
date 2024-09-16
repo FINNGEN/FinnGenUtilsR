@@ -9,7 +9,7 @@ Allows a connection to cleanly be opened and closed and stored within class/obje
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@ Allows a connection to cleanly be opened and closed and stored within class/obje
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal and service sector codes</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal, service sector, or lab codes</a></li>
     <li><a class="dropdown-item" href="../articles/tutorial_add_info_FGconnectionHandler.html">USING FGconnectionHandler: Adding names to longitudinal and service sector codes</a></li>
     <li><a class="dropdown-item" href="../articles/tutorial_connection_handler.html">Tutorial connection to FinnGen BQ tables using FGconnectionHandler</a></li>
   </ul></li>
@@ -280,8 +280,8 @@ query Function</p></dd>
 
 </div><p></p><hr><a id="method-ConnectionHandler-queryFunction"></a><div class="section">
 <h3 id="method-queryfunction-">Method <code>queryFunction()</code><a class="anchor" aria-label="anchor" href="#method-queryfunction-"></a></h3>
-<p>queryFunction that can be overriden with subclasses (e.g. use different base function or intercept query)
-Does not translate or render sql.</p><div class="section">
+<p>queryFunction that can be override with subclasses (e.g. use different base function or intercept query)
+Does not translate or render SQL.</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ResultModelManager_ConnectionHandler</span><span class="op">$</span><span class="fu">queryFunction</span><span class="op">(</span></span>
 <span>  <span class="va">sql</span>,</span>
@@ -292,7 +292,7 @@ Does not translate or render sql.</p><div class="section">
 <div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>sql</code></dt>
-<dd><p>sql query string</p></dd>
+<dd><p>SQL query string</p></dd>
 
 
 <dt><code>snakeCaseToCamelCase</code></dt>
@@ -305,8 +305,8 @@ execute Function</p></dd>
 
 </div><p></p><hr><a id="method-ConnectionHandler-executeFunction"></a><div class="section">
 <h3 id="method-executefunction-">Method <code>executeFunction()</code><a class="anchor" aria-label="anchor" href="#method-executefunction-"></a></h3>
-<p>exec query Function that can be overriden with subclasses (e.g. use different base function or intercept query)
-Does not translate or render sql.</p><div class="section">
+<p>exec query Function that can be override with subclasses (e.g. use different base function or intercept query)
+Does not translate or render SQL.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ResultModelManager_ConnectionHandler</span><span class="op">$</span><span class="fu">executeFunction</span><span class="op">(</span><span class="va">sql</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -314,7 +314,7 @@ Does not translate or render sql.</p><div class="section">
 <div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>sql</code></dt>
-<dd><p>sql query string</p></dd>
+<dd><p>SQL query string</p></dd>
 
 
 </dl><p></p></div>

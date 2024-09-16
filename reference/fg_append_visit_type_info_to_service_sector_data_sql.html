@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal and service sector codes</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal, service sector, or lab codes</a></li>
     <li><a class="dropdown-item" href="../articles/tutorial_add_info_FGconnectionHandler.html">USING FGconnectionHandler: Adding names to longitudinal and service sector codes</a></li>
     <li><a class="dropdown-item" href="../articles/tutorial_connection_handler.html">Tutorial connection to FinnGen BQ tables using FGconnectionHandler</a></li>
   </ul></li>
@@ -48,6 +48,8 @@
 <span>  <span class="va">service_sector_data_table</span>,</span>
 <span>  <span class="va">fg_codes_info_table</span>,</span>
 <span>  prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  add_is_clinic_visist <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  add_is_follow_up_visit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  new_colums_sufix <span class="op">=</span> <span class="st">""</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -66,6 +68,14 @@
 
 <dt id="arg-prioritise-src-contact-urgency-over-src-service-sector">prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector<a class="anchor" aria-label="anchor" href="#arg-prioritise-src-contact-urgency-over-src-service-sector"></a></dt>
 <dd><p>Some hilmo visits are including both coding systems, SRC|ServiceSector and SRC|Contact|Urgency, if TRUE the second is used</p></dd>
+
+
+<dt id="arg-add-is-clinic-visist">add_is_clinic_visist<a class="anchor" aria-label="anchor" href="#arg-add-is-clinic-visist"></a></dt>
+<dd><p>add a column indicating if the visit is a clinic visit</p></dd>
+
+
+<dt id="arg-add-is-follow-up-visit">add_is_follow_up_visit<a class="anchor" aria-label="anchor" href="#arg-add-is-follow-up-visit"></a></dt>
+<dd><p>add a column indicating if the visit is a follow up visit</p></dd>
 
 
 <dt id="arg-new-colums-sufix">new_colums_sufix<a class="anchor" aria-label="anchor" href="#arg-new-colums-sufix"></a></dt>

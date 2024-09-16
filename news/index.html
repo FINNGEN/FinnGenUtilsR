@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal and service sector codes</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal, service sector, or lab codes</a></li>
     <li><a class="dropdown-item" href="../articles/tutorial_add_info_FGconnectionHandler.html">USING FGconnectionHandler: Adding names to longitudinal and service sector codes</a></li>
     <li><a class="dropdown-item" href="../articles/tutorial_connection_handler.html">Tutorial connection to FinnGen BQ tables using FGconnectionHandler</a></li>
   </ul></li>
@@ -38,11 +38,18 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.1.0" id="finngenutilsr-310">FinnGenUtilsR 3.1.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-310"></a></h2>
+<ul><li>
+<code>fg_append_visit_type_info_to_service_sector_data_sql</code> now adds two columns to the data: <code>is_clinic_visit</code> and <code>is_follow_up_visit</code>
+</li>
+<li>new functions to append the omop lab test name to the Kanta data. See examples in the vignettes.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.0.0" id="finngenutilsr-300">FinnGenUtilsR 3.0.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-300"></a></h2>
 <ul><li>Make package compatible with Sandbox local CRAN</li>
 <li>Added functions to add info to longitudinal data using dbplyr</li>
 <li>Added tutorial to work with FGconnectionHandler and dbplyr</li>
-<li>Added Github acctions to r-check the package every week with latest dependencies</li>
+<li>Added Github actions to r-check the package every week with latest dependencies</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.1" id="finngenutilsr-221">FinnGenUtilsR 2.2.1<a class="anchor" aria-label="anchor" href="#finngenutilsr-221"></a></h2>
@@ -50,11 +57,11 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.0" id="finngenutilsr-220">FinnGenUtilsR 2.2.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-220"></a></h2>
-<ul><li>Added <code>FGconnectionHandler</code> and <code><a href="../reference/fg_get_bq_config.html">fg_get_bq_config()</a></code> to connect adn work with to FinnGen BQ databases as dataframes</li>
+<ul><li>Added <code>FGconnectionHandler</code> and <code><a href="../reference/fg_get_bq_config.html">fg_get_bq_config()</a></code> to connect and work with to FinnGen BQ databases as data frames</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="finngenutilsr-210">FinnGenUtilsR 2.1.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-210"></a></h2>
-<ul><li>Added <code>fg_get_cdm_config</code> function and “Tutorial using omop-cdm” vignette</li>
+<ul><li>Added <code>fg_get_cdm_config</code> function and “Tutorial using OMOP-CDM” vignette</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.1" id="finngenutilsr-201">FinnGenUtilsR 2.0.1<a class="anchor" aria-label="anchor" href="#finngenutilsr-201"></a></h2>
