@@ -22,20 +22,19 @@ library(FinnGenUtilsR)
 
 # Configuration 
 
-Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` to produce the connection configuration based on the sandbox number, and the dataFreeze you want to use.
+Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` to produce the connection configuration based on the sandbox number, and the data Freeze you want to use.
 
 
-- environment: You can find your sandbox number by looking at the url in your browser when connected to sandbox.
+- environment: You can find your sandbox number by looking at the URL in your browser when connected to sandbox.
 
 ![](pic/sandbox_number.png)
 
-- dataFreezeNumber: At the time of writing dataFreeze can be 6, 7, 8, 9, 10, and 11, dataFreeze.
-
+- dataFreezeNumber: At the time of writing data freeze can be 6, 7, 8, 9, 10, 11, and 12, data freeze.
 
 ```{r}
  config <- fg_get_bq_config(
    environment = "sandbox-6",
-   dataFreezeNumber = 11
+   dataFreezeNumber = 12
    )
 ```
 
@@ -43,7 +42,7 @@ Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` t
 ```{r, message=FALSE, echo=FALSE}
  config <- fg_get_bq_config(
    environment = "atlasDevelopment",
-   dataFreezeNumber = 11
+   dataFreezeNumber = 12
    )
 ```
 
@@ -58,19 +57,19 @@ FGconnectionHandler <- create_fg_connection_handler_FromList(config)
 `FGconnectionHandler` is an object with that manage the connection to the FinnGen tables in BQ. 
 
 First thing to do is to check the status of the connection. 
-`FGdb$connectionStatusLog` not only shows if the connection is correct, but also if the `tempEmulationSchema` works, and all tables in the sandboxToolsSchema and   medicalCodesSchema schemas, 
+`FGdb$connectionStatusLog` not only shows if the connection is correct, but also if the `tempEmulationSchema` works, and all tables in the sandboxToolsSchema and   medicalCodesSchema scheme, 
 
 ```{r}
 FGconnectionHandler$connectionStatusLog
 ```
 
-It checks if the connection is established, if it is possible to create temporary tables, and gets a list of all the tables in the  sandboxToolsSchema and   medicalCodesSchema schemas. 
+It checks if the connection is established, if it is possible to create temporary tables, and gets a list of all the tables in the  sandboxToolsSchema and   medicalCodesSchema scheme. 
 
 
 # Using FGconnectionHandler
 
-`FGdb$connectionStatusLog` contains a list of the existing table in the sandboxToolsSchema and   medicalCodesSchema schemas. 
-It is recomended to use the latests version of these tables. 
+`FGdb$connectionStatusLog` contains a list of the existing table in the sandboxToolsSchema and   medicalCodesSchema scheme. 
+It is recommended to use the latest version of these tables. 
 
 ```{r}
 FGconnectionHandler$getTblsandboxToolsSchema |> names()
@@ -80,13 +79,13 @@ Tables in the sandboxToolsSchema andmedicalCodesSchema can be used as if they we
 
 ```{r}
 # get events with code "J45" in INPAT
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(code1 == "J45" & source == "INPAT")
 ```
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(code1 == "J45" & source == "INPAT") |> 
   as.data.frame()|> rmarkdown::paged_table()
 ```
@@ -95,7 +94,7 @@ At the moment of writing does not allow for the use of `str_detect`
 
 ```{r error=TRUE}
 # get events with code "J45" and descendants
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(stringr::str_detect(code1, "^J45"))
 ```
 
@@ -104,40 +103,40 @@ A work around is to inject a sql statement instead (notice that this SQL is not 
 
 ```{r}
 # get events with code "J45" and descendants
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))
 ```
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))  |> 
   as.data.frame()|> rmarkdown::paged_table()
 ```
 
 As an example we can plot the age of smoking status of all the subjects with an asthma diagnose: 
 
-We get the asthma subjects by filtering the service sector data, and join the finngen_info data to get the smoke2, smoke3
+We get the asthma subjects by filtering the service sector data, and join the `finngen_info` data to get the smoke2, smoke3
 
 ```{r}
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))|> 
   dplyr::distinct(finngenid) |> 
   dplyr::left_join(
-    FGconnectionHandler$getTblsandboxToolsSchema$finngenid_info_r11_v1(), 
+    FGconnectionHandler$getTblsandboxToolsSchema$minimum_extended_r12_v1(), 
     by = "finngenid"
   ) |> 
   dplyr::count(smoke2, smoke3, sort = T)
   
 ```
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
-FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1() |> 
+FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
   dplyr::filter(dplyr::sql("code1 LIKE 'J45%'"))|> 
   dplyr::distinct(finngenid) |> 
   dplyr::left_join(
-    FGconnectionHandler$getTblsandboxToolsSchema$finngenid_info_r11_v1(), 
+    FGconnectionHandler$getTblsandboxToolsSchema$minimum_extended_r12_v1(), 
     by = "finngenid"
   ) |> 
   dplyr::count(smoke2, smoke3, sort = T) |> 

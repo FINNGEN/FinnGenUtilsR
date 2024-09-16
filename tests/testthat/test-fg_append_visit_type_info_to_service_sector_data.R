@@ -4,16 +4,15 @@
 #
 test_that("fg_dbplyr_append_provider_info_to_service_sector_data works", {
 
+  FGconnectionHandler <- create_fg_connection_handler_FromList(test_handler_config)
   on.exit({
     rm(FGconnectionHandler)
     gc()
   })
 
-  FGconnectionHandler <- create_fg_connection_handler_FromList(test_handler_config)
-
   tbl <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1()  |>
     dplyr::filter(finngenid == 'FG00000001') |>
-    fg_dbplyr_append_visit_type_info_to_service_sector_data(FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6())
+    fg_dbplyr_append_visit_type_info_to_service_sector_data(FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7())
 
 
   table <- tbl |> dplyr::collect()
@@ -21,7 +20,8 @@ test_that("fg_dbplyr_append_provider_info_to_service_sector_data works", {
   table |> checkmate::expect_tibble()
   c("fg_code5", "fg_code6", "fg_code8", "fg_code9",
     "visit_type_concept_class_id", "visit_type_name_en", "visit_type_name_fi",
-    "visit_type_code", "visit_type_omop_concept_id"  ) |>
+    "visit_type_code", "visit_type_omop_concept_id",
+    "is_clinic_visit", "is_follow_up_visit"  ) |>
     checkmate::expect_subset(table |> colnames())
 
 
@@ -48,7 +48,9 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data works", {
   res |> checkmate::expect_tibble()
   c("FG_CODE5", "FG_CODE6", "FG_CODE8","FG_CODE9",
     "visit_type_concept_class_id", "visit_type_name_en", "visit_type_name_fi",
-    "visit_type_code", "visit_type_omop_concept_id"  ) |>
+    "visit_type_code", "visit_type_omop_concept_id",
+    "is_clinic_visit", "is_follow_up_visit"
+  ) |>
     checkmate::expect_subset(res |> colnames())
 })
 
@@ -94,12 +96,14 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps PRIM_OUT COD
   res |>
     dplyr::arrange(FINNGENID) |>
     # dplyr::select(SOURCE, FG_CODE5, FG_CODE6, FG_CODE8, FG_CODE9, visit_type_concept_class_id, visit_type_code  ) |>
-    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code) |>
+    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code, is_clinic_visit, is_follow_up_visit) |>
     expect_equal(
       tibble::tibble(
         SOURCE = "PRIM_OUT",
         visit_type_concept_class_id = "SRC|Contact|Service",
-        visit_type_code = c("PRIM_OUT|0|0", "PRIM_OUT|0|T40", "PRIM_OUT|R20|0", "PRIM_OUT|R20|T40", "PRIM_OUT|R20|T40")
+        visit_type_code = c("PRIM_OUT|0|0", "PRIM_OUT|0|T40", "PRIM_OUT|R20|0", "PRIM_OUT|R20|T40", "PRIM_OUT|R20|T40"),
+        is_clinic_visit = c(FALSE, TRUE, NA, FALSE, FALSE),
+        is_follow_up_visit = c(FALSE, FALSE, FALSE, FALSE, FALSE)
       )
     )
 
@@ -144,12 +148,14 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE5"
   res |>
     dplyr::arrange(FINNGENID) |>
     # dplyr::select(SOURCE, FG_CODE5, FG_CODE6, FG_CODE8, FG_CODE9, visit_type_concept_class_id, visit_type_code  ) |>
-    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code) |>
+    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code, is_clinic_visit, is_follow_up_visit) |>
     expect_equal(
       tibble::tibble(
         SOURCE = c("INPAT", "OUTPAT", "OPER_IN", "OPER_OUT", "INPAT", "OUTPAT", "OPER_IN", "OPER_OUT"),
         visit_type_concept_class_id = "SRC|ServiceSector",
-        visit_type_code = c("INPAT|0", "OUTPAT|0", "OPER_IN|0", "OPER_OUT|0", "INPAT|1", "OUTPAT|1", "OPER_IN|93", "OPER_OUT|93")
+        visit_type_code = c("INPAT|0", "OUTPAT|0", "OPER_IN|0", "OPER_OUT|0", "INPAT|1", "OUTPAT|1", "OPER_IN|93", "OPER_OUT|93"),
+        is_clinic_visit = c(TRUE, TRUE, TRUE, TRUE, TRUE, NA, NA, TRUE),
+        is_follow_up_visit = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE)
       )
     )
 
@@ -194,13 +200,15 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps hilmo CODE98
 
   res |>
     dplyr::arrange(FINNGENID) |>
-    dplyr::select(SOURCE, FG_CODE5, FG_CODE6, FG_CODE8, FG_CODE9, visit_type_concept_class_id, visit_type_code) |>
-    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code) |>
+    #dplyr::select(SOURCE, FG_CODE5, FG_CODE6, FG_CODE8, FG_CODE9, visit_type_concept_class_id, visit_type_code) |>
+    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code, is_clinic_visit, is_follow_up_visit) |>
     expect_equal(
       tibble::tibble(
         SOURCE = "INPAT",
         visit_type_concept_class_id = c("SRC|ServiceSector", "SRC|Contact|Urgency", "SRC|Contact|Urgency", "SRC|Contact|Urgency", "SRC|Contact|Urgency"),
-        visit_type_code = c("INPAT|0", "INPAT|0|3", "INPAT|R80|0", "INPAT|R80|3", "INPAT|R80|3")
+        visit_type_code = c("INPAT|0", "INPAT|0|3", "INPAT|R80|0", "INPAT|R80|3", "INPAT|R80|3"),
+        is_clinic_visit = c(TRUE, NA, TRUE, TRUE, TRUE),
+        is_follow_up_visit = c(FALSE, FALSE, FALSE, FALSE, FALSE)
       )
     )
 
@@ -318,13 +326,66 @@ test_that("fg_bq_append_visit_type_info_to_service_sector_data maps SOURCE", {
   res |>
     dplyr::arrange(FINNGENID) |>
     # dplyr::select(SOURCE, FG_CODE5, FG_CODE6, FG_CODE8, FG_CODE9, visit_type_concept_class_id, visit_type_code  ) |>
-    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code) |>
+    dplyr::select(SOURCE, visit_type_concept_class_id, visit_type_code, is_clinic_visit, is_follow_up_visit) |>
     expect_equal(
       tibble::tibble(
         SOURCE = c("PURCH", "REIMB", "CANC", "DEATH"),
         visit_type_concept_class_id = "SRC",
-        visit_type_code = c("PURCH", "REIMB", "CANC", "DEATH")
+        visit_type_code = c("PURCH", "REIMB", "CANC", "DEATH"),
+        is_clinic_visit = c(NA, NA, NA, NA),
+        is_follow_up_visit = c(NA, NA, NA, NA)
       )
     )
 
+})
+
+
+
+#
+# isClinicVisit and isFollowUpVisit
+#
+
+test_that("fg_bq_append_visit_type_info_to_service_sector_data throws error when using a fg_code_info with version less than 7", {
+  sql <- paste0("
+    SELECT * FROM (
+      SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `CODE5`, `CODE6`, `CODE8`, `CODE9`) AS q04
+      FROM ", test_longitudinal_data_table, "
+    ) WHERE q04 = 1")
+
+  tb_servicesector_combinations <- bigrquery::bq_project_query(project_id, sql)
+
+
+
+  tb_with_translations <- fg_bq_append_visit_type_info_to_service_sector_data(
+    project_id, tb_servicesector_combinations,
+    "atlas-development-270609.medical_codes.fg_codes_info_v6"
+  ) |>
+    expect_error("fg_codes_info_table must be version 7 or above.")
+
+})
+
+test_that("fg_bq_append_visit_type_info_to_service_sector_data works with no extra columns selected", {
+
+  sql <- paste0("
+    SELECT * FROM (
+      SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY `SOURCE`, `CODE5`, `CODE6`, `CODE8`, `CODE9`) AS q04
+      FROM ", test_longitudinal_data_table, "
+    ) WHERE q04 = 1")
+
+  tb_servicesector_combinations <- bigrquery::bq_project_query(project_id, sql)
+
+  tb_with_translations <- fg_bq_append_visit_type_info_to_service_sector_data(
+    project_id, tb_servicesector_combinations,
+    "atlas-development-270609.medical_codes.fg_codes_info_v6",
+    add_is_clinic_visist = FALSE,
+    add_is_follow_up_visit = FALSE
+  )
+  res <- bigrquery::bq_table_download(tb_with_translations, n_max = 100)
+
+  res |> checkmate::expect_tibble()
+
+  # res has not the columsn
+  c("is_clinic_visit", "is_follow_up_visit") %in% colnames(res) |> expect_equal(c(FALSE, FALSE))
 })

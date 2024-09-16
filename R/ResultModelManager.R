@@ -224,9 +224,9 @@ ResultModelManager_ConnectionHandler <- R6::R6Class(
 
     #' query Function
     #' @description
-    #' queryFunction that can be overriden with subclasses (e.g. use different base function or intercept query)
-    #' Does not translate or render sql.
-    #' @param sql                                   sql query string
+    #' queryFunction that can be override with subclasses (e.g. use different base function or intercept query)
+    #' Does not translate or render SQL.
+    #' @param sql                                   SQL query string
     #' @param snakeCaseToCamelCase                  (Optional) Boolean. return the results columns in camel case (default)
     queryFunction = function(sql, snakeCaseToCamelCase = self$snakeCaseToCamelCase) {
       DatabaseConnector::querySql(self$getConnection(), sql, snakeCaseToCamelCase = snakeCaseToCamelCase)
@@ -234,9 +234,9 @@ ResultModelManager_ConnectionHandler <- R6::R6Class(
 
     #' execute Function
     #' @description
-    #' exec query Function that can be overriden with subclasses (e.g. use different base function or intercept query)
-    #' Does not translate or render sql.
-    #' @param sql                                   sql query string
+    #' exec query Function that can be override with subclasses (e.g. use different base function or intercept query)
+    #' Does not translate or render SQL.
+    #' @param sql                                   SQL query string
     executeFunction = function(sql) {
       DatabaseConnector::executeSql(self$getConnection(), sql)
     }
