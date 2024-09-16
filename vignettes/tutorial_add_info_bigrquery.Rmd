@@ -3,8 +3,10 @@ title: "USING BIGRQUERY PACKAGE: Adding names to longitudinal and service sector
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{tutorial_add_info_bigrquery}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -37,7 +39,8 @@ bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
 project_id <- "atlas-development-270609"
 
 test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r10.finngen_r10_service_sector_detailed_longitudinal_v2"
-fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v2"
+fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v7"
+vocab_omop_schema <- "atlas-development-270609.finngen_omop_r11"
 tmp_schema <- "sandbox"
 ```
 
@@ -166,6 +169,7 @@ In the service-sector data, information about the visit type is defined in CODE5
 `fg_bq_append_visit_type_info_to_service_sector_data` abstracts this nuances, and assign one visit type code per row. 
 Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. 
 
+By default, `fg_bq_append_visit_type_info_to_service_sector_data` will also include two columns `is_clinic_visit` and `is_follow_up_visit` that will be TRUE if the visit is a clinic visit or a follow-up visit, respectively. However, this works only if `fg_codes_info_table` version is v7 or higher. If you need to use lower versions set the parameters `add_is_clinic_visist` and `add_is_follow_up_visit` to FALSE. See the help for more details.
 
 ```{r}
 event_for_subject_1_with_visit_type <- fg_bq_append_visit_type_info_to_service_sector_data(
@@ -176,14 +180,14 @@ event_for_subject_1_with_visit_type <- fg_bq_append_visit_type_info_to_service_s
 
 ```{r}
 bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en)
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)
 ```
 
 
-(same table in html format for exporation)
+(same table in html format for exploration)
 ```{r echo=FALSE}
 bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en)|> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)|> 
   rmarkdown::paged_table()
 ```
 
