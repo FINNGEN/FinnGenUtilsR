@@ -99,15 +99,15 @@ ss_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
 
 Function `fg_dbplyr_append_code_info_to_longitudinal_data` adds new columns with information about the medical code used in each event/row.  
 
-We just need to indicate the table with the traslations. This is also available in the `FGconnectionHandler` object. 
+We just need to indicate the table with the translations. This is also available in the `FGconnectionHandler` object. 
 
-We recommend to take the one with the hihgset version number. `fg_codes_info_v6` on the moment of writing.
+We recommend to take the one with the highest version number.
 
 
 ```{r}
 ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
   )
 ```
  
@@ -135,7 +135,7 @@ For example:
 ```{r}
 fg_dbplyr_append_code_info_to_longitudinal_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6(), 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7(), 
     PURCH_map_to = "VNR", 
     ICD10fi_map_to = "CODE1" 
   ) |>
@@ -166,7 +166,7 @@ It is possible to truncate these medical codes before the information is added. 
 ```{r}
 fg_dbplyr_append_code_info_to_longitudinal_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6(), 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7(), 
   ICD10fi_precision = 3,
   ICD9fi_precision = 3,
   ICD8fi_precision = 3,
@@ -195,18 +195,23 @@ In the service-sector data, information about the visit type is defined in CODE5
 Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. 
 
 
+By default, `fg_bq_append_visit_type_info_to_service_sector_data` will also include two columns `is_clinic_visit` and `is_follow_up_visit` that will be TRUE if the visit is a clinic visit or a follow-up visit, respectively. However, this works only if `fg_codes_info_table` version is v7 or higher. If you need to use lower versions set the parameters `add_is_clinic_visist` and `add_is_follow_up_visit` to FALSE. See the help for more details.
+
 ```{r}
 fg_dbplyr_append_visit_type_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
   )|> 
-  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en)
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)
 ```
 
 (same table in html format for exporation)
 ```{r echo=FALSE}
-ss_subject_1_with_translations_tbl |>  
-  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+fg_dbplyr_append_visit_type_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
+  )|> 
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -221,7 +226,7 @@ In the service-sector data, information about the provider is defined in CODE6 t
 ```{r}
 fg_dbplyr_append_provider_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
   )|> 
   dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, provider_code, provider_name_en, provider_concept_class_id)
 ```
@@ -229,7 +234,7 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
 ```{r echo=FALSE}
 fg_dbplyr_append_provider_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6()
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
   )|> 
   dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, provider_code, provider_name_en, provider_concept_class_id) |> 
   as.data.frame() |> rmarkdown::paged_table()

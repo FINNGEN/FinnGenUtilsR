@@ -5,6 +5,8 @@
 #'
 #' @param prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector
 #' Some hilmo visits are including both coding systems, SRC|ServiceSector and SRC|Contact|Urgency, if TRUE the second is used
+#' @param add_is_clinic_visist add a column indicating if the visit is a clinic visit
+#' @param add_is_follow_up_visit add a column indicating if the visit is a follow up visit
 #'
 #' @param new_colums_sufix string indicating a prefix to add to the appended columns, default="".
 #'
@@ -20,11 +22,21 @@ fg_append_visit_type_info_to_service_sector_data_sql <- function(
     fg_codes_info_table,
     #
     prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector = TRUE,
+    add_is_clinic_visist = TRUE,
+    add_is_follow_up_visit = TRUE,
     #
     new_colums_sufix = "") {
   # VALIDATE PARAMETERS
   service_sector_data_table |> checkmate::assert_character()
   fg_codes_info_table |> checkmate::assert_character()
+
+  # error if fg_codes_info_table is under version v7
+  if(add_is_clinic_visist | add_is_follow_up_visit) {
+    version_number <- fg_codes_info_table |> stringr::str_extract("v[0-9]+") |> stringr::str_remove("v") |> as.numeric()
+    if (version_number < 7) {
+      stop("fg_codes_info_table must be version 7 or above.")
+    }
+  }
 
   new_colums_sufix |> checkmate::assert_character(len = 1)
 
@@ -36,6 +48,8 @@ fg_append_visit_type_info_to_service_sector_data_sql <- function(
       fg_codes_info_table = fg_codes_info_table,
       #
       prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector = prioritise_SRC_Contact_Urgency_over_SRC_Service_Sector,
+      add_is_clinic_visist = add_is_clinic_visist,
+      add_is_follow_up_visit = add_is_follow_up_visit,
       #
       new_colums_sufix = new_colums_sufix
     )

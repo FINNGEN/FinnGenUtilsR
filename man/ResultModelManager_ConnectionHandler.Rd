@@ -236,8 +236,8 @@ query Function}
 \if{html}{\out{<a id="method-ConnectionHandler-queryFunction"></a>}}
 \if{latex}{\out{\hypertarget{method-ConnectionHandler-queryFunction}{}}}
 \subsection{Method \code{queryFunction()}}{
-queryFunction that can be overriden with subclasses (e.g. use different base function or intercept query)
-Does not translate or render sql.
+queryFunction that can be override with subclasses (e.g. use different base function or intercept query)
+Does not translate or render SQL.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ResultModelManager_ConnectionHandler$queryFunction(
   sql,
@@ -248,7 +248,7 @@ Does not translate or render sql.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sql}}{sql query string}
+\item{\code{sql}}{SQL query string}
 
 \item{\code{snakeCaseToCamelCase}}{(Optional) Boolean. return the results columns in camel case (default)
 execute Function}
@@ -260,8 +260,8 @@ execute Function}
 \if{html}{\out{<a id="method-ConnectionHandler-executeFunction"></a>}}
 \if{latex}{\out{\hypertarget{method-ConnectionHandler-executeFunction}{}}}
 \subsection{Method \code{executeFunction()}}{
-exec query Function that can be overriden with subclasses (e.g. use different base function or intercept query)
-Does not translate or render sql.
+exec query Function that can be override with subclasses (e.g. use different base function or intercept query)
+Does not translate or render SQL.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ResultModelManager_ConnectionHandler$executeFunction(sql)}\if{html}{\out{</div>}}
 }
@@ -269,7 +269,7 @@ Does not translate or render sql.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sql}}{sql query string}
+\item{\code{sql}}{SQL query string}
 }
 \if{html}{\out{</div>}}
 }

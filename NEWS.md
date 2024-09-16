@@ -2,16 +2,16 @@
 - Make package compatible with Sandbox local CRAN
 - Added functions to add info to longitudinal data using dbplyr
 - Added tutorial to work with FGconnectionHandler and dbplyr
-- Added Github acctions to r-check the package every week with latest dependencies
+- Added Github actions to r-check the package every week with latest dependencies
 
 # FinnGenUtilsR 2.2.1
 - Fix bug in fg_get_bq_config
 
 # FinnGenUtilsR 2.2.0
-- Added `FGconnectionHandler` and `fg_get_bq_config()` to connect adn work with to FinnGen BQ databases as dataframes 
+- Added `FGconnectionHandler` and `fg_get_bq_config()` to connect and work with to FinnGen BQ databases as data frames 
 
 # FinnGenUtilsR 2.1.0
-- Added `fg_get_cdm_config` function and "Tutorial using omop-cdm" vignette
+- Added `fg_get_cdm_config` function and "Tutorial using OMOP-CDM" vignette
 
 # FinnGenUtilsR 2.0.1
 
