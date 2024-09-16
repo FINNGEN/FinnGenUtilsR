@@ -271,6 +271,7 @@ kanta_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
 Function `fg_dbplyr_append_concept_info_data` adds a new column with information about the OMOP_CONCEPT_ID name.
 
 ```{r}
+omop_schema <- "atlas-development-270609.etl_sam_r12_5k_omop"
 kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |> fg_dbplyr_append_concept_info_data(omop_schema)
 ```
 
@@ -283,6 +284,7 @@ kanta_subject_1_tbl_with_omop_name |>
 ```{r echo=FALSE}
 kanta_subject_1_tbl_with_omop_name |>  
   dplyr::select(finngenid, event_age, approx_event_datetime, test_name, test_id, omop_concept_id, omop_concept_name)  |> 
+  dplyr::collect() |> 
   rmarkdown::paged_table()
 ```
 

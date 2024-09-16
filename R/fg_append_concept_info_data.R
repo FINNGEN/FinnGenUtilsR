@@ -1,4 +1,4 @@
-#' fg_bq_append_concept_info_data_sql
+#' fg_append_concept_info_data_sql
 #'
 #' @param data_table string with the full path (project.schema.table) to the bq table with the data
 #' @param omop_schema string with the schema where the omop tables are stored
@@ -12,7 +12,7 @@
 #'
 #' @export
 #'
-fg_bq_append_concept_info_data_sql <- function(
+fg_append_concept_info_data_sql <- function(
     data_table,
     omop_schema,
     #
@@ -64,7 +64,7 @@ fg_bq_append_concept_info_data <- function(
   bq_table |> checkmate::assert_class("bq_table")
 
 
-  sql <- fg_bq_append_concept_info_data_sql(
+  sql <- fg_append_concept_info_data_sql(
     data_table = paste0(bq_table$project, ".", bq_table$dataset, ".", bq_table$table),
     omop_schema = omop_schema,
     ...
@@ -98,7 +98,7 @@ fg_dbplyr_append_concept_info_data <- function(
 
   connection = dbplyr_table$src$con
 
-  sql <- fg_bq_append_concept_info_data_sql(
+  sql <- fg_append_concept_info_data_sql(
     data_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_table)), ")"),
     omop_schema = omop_schema,
     ...
