@@ -4,12 +4,12 @@ Version: 3.0.0
 Authors@R: 
     person("Javier", "Gracia-Tabuenca", , "javier.graciatabuenca@tuni.fi", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2455-0598"))
-Description: Usefull functions in R to work with FinnGen data
+Description: Useful functions in R to work with FinnGen data
 License: MIT + file LICENSE
 Encoding: UTF-8
-Language: en
+Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports: 
     bigrquery,
     checkmate,
@@ -32,7 +32,9 @@ Suggests:
     lubridate,
     readr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    devtools,
+    spelling
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://finngen.github.io/FinnGenUtilsR/
