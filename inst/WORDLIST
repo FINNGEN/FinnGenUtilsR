@@ -18,6 +18,8 @@ Github
 ICD
 ICDO
 INPAT
+KANTA
+Kanta
 LogTibble
 MORPHO
 MORPO
@@ -71,7 +73,6 @@ inDatabaseSchema
 initConnection
 medicalCodesSchema
 omop
-overriden
 queryDb
 queryFunction
 runGWASAnalysis
@@ -79,6 +80,7 @@ sandboxAPI
 sandboxToolsSchema
 sql
 subclasses
+tbl
 tibble
 tibbles
 tmp
