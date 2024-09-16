@@ -1,5 +1,5 @@
 ---
-title: "USING BIGRQUERY PACKAGE: Adding names to longitudinal and service sector codes"
+title: "USING BIGRQUERY PACKAGE: Adding names to longitudinal, service sector, or lab codes"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{tutorial_add_info_bigrquery}
@@ -21,6 +21,8 @@ This tutorial show how to append additional information to a longitudinal or ser
 
 Information to add includes, name of the medical codes in English, name for the type of visit, name for the type of provider.
 
+This tutorial also included how to append additional information to the Kanta lab data. In particular, the name of the OMOP concept for the lab test.
+
 
 # Set up
 
@@ -36,13 +38,18 @@ library(FinnGenUtilsR)
 bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
 project_id <- "atlas-development-270609"
 
-test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r10.finngen_r10_service_sector_detailed_longitudinal_v2"
-fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v2"
+test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r12.finngen_r12_service_sector_detailed_longitudinal_v1"
+fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v7"
 tmp_schema <- "sandbox"
+
+kanta_lab_data_table <- "atlas-development-270609.sandbox_tools_r12.kanta_r12_v1"
+omop_schema <- "atlas-development-270609.etl_sam_r12_5k_omop"
+
 ```
 
+# SERVICE SECTOR
 
-# Generate a table in service sector format
+## Generate a table in service sector format
 
 For example we create a subset of the main service sector table by querying latest 20 events from subject "FG00000001": 
 
@@ -61,7 +68,7 @@ bq_table_download(event_for_subject_1)
 bq_table_download(event_for_subject_1) |> rmarkdown::paged_table()
 ```
 
-# Adding info to medical codes
+## Adding info to medical codes
 
 Function `fg_bq_append_code_info_to_longitudinal_data` adds new columns with information about the medical code used in each event/row.  
 
@@ -83,7 +90,7 @@ bq_table_download(event_for_subject_1_with_translations) |>
   rmarkdown::paged_table()
 ```
 
-## If an event/row uses more than one medical code 
+### If an event/row uses more than one medical code 
 
 Some events include more than one medical code, or more than one way to understand a medical code. 
 Parameters in `fg_bq_append_code_info_to_longitudinal_data` allows to chose how to name the medical code in this situations. 
@@ -121,7 +128,7 @@ Se the help, for more options
 ```
 
 
-## Reduce code precision
+### Reduce code precision
 
 ICD10fi, ICD9fi, ICD8fi, ATC, and NCSPfi, code systems reflect the hierarchy of the code by the first letters on them. 
 
@@ -158,7 +165,7 @@ bq_table_download(event_for_subject_1_with_translations) |>
 
 
 
-# Adding info to visit type 
+## Adding info to visit type 
 
 Function `fg_bq_append_visit_type_info_to_service_sector_data` adds new columns with information about the visit type.
 
@@ -189,7 +196,7 @@ bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |>
 
 
 
-# Adding info to provider type 
+## Adding info to provider type 
 
 Function `fg_bq_append_provider_info_to_service_sector_data` adds new columns with information about the personal or unit that provided the diagnose during the visit.
 
@@ -218,8 +225,48 @@ bigrquery::bq_table_download(event_for_subject_1_with_provider) |>
 ```
 
 
+# KANTA LAB DATA
+
+## Generate a table in service sector format
+
+For example we create a subset of the main service sector table by querying latest 20 events from subject "FG00000001": 
+
+```{r}
+sql <- paste("SELECT * FROM ", kanta_lab_data_table, "WHERE FINNGENID='FG00000001' ORDER BY APPROX_EVENT_DATETIME DESC LIMIT 20")
+kanta_events_for_subject_1 <- bq_project_query(project_id, sql)
+```
+
+We can see that this table does not currently have information about the OMOP_CONCEPT_ID: 
+
+```{r}
+bq_table_download(kanta_events_for_subject_1)
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(kanta_events_for_subject_1) |> rmarkdown::paged_table()
+```
 
 
+## Adding info to OMOP_CONCEPT_ID codes
+
+Function `fg_bq_append_concept_info_data` adds a new column with information about the OMOP_CONCEPT_ID name.
+
+```{r}
+event_for_subject_1_with_translations <- fg_bq_append_concept_info_data(
+  project_id, kanta_events_for_subject_1, omop_schema)
+```
+
+
+```{r}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME,  TEST_ID, OMOP_CONCEPT_ID, omop_concept_name) 
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME,  TEST_ID, OMOP_CONCEPT_ID, omop_concept_name)  |> 
+  rmarkdown::paged_table()
+```
 
 
 
