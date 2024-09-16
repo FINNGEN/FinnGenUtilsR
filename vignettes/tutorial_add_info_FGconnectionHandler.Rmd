@@ -46,7 +46,7 @@ To execute it in Sandbox, be sure to change the configuration to fit your needs.
 ```{r, eval=FALSE}
  config <- fg_get_bq_config(
    environment = "sandbox-6", # set your sandbox number
-   dataFreezeNumber = 12 # set the dataFreeze you want to use
+   dataFreezeNumber = 12 # set the data freeze you want to use
    )
 ```
 

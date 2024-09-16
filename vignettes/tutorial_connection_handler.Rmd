@@ -29,7 +29,7 @@ Similarly to `fg_get_cdm_config` (see vignette), we can use `fg_get_bq_config` t
 
 ![](pic/sandbox_number.png)
 
-- dataFreezeNumber: At the time of writing dataFreeze can be 6, 7, 8, 9, 10, 11, and 12, dataFreeze.
+- dataFreezeNumber: At the time of writing data freeze can be 6, 7, 8, 9, 10, 11, and 12, data freeze.
 
 ```{r}
  config <- fg_get_bq_config(

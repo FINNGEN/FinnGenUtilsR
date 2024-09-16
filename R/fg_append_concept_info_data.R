@@ -46,6 +46,7 @@ fg_append_concept_info_data_sql <- function(
 #' @param bq_project_id string with the bigquery project id
 #' @param bq_table an object of type <bq_table> with a table in longitudinal_data format
 #' @param omop_schema string with the schema where the omop tables are stored
+#' @param ... see `fg_append_concept_info_data_sql` for the mapping options
 #'
 #' @return bq_table with added columns
 #'
@@ -80,6 +81,7 @@ fg_bq_append_concept_info_data <- function(
 #'
 #' @param dbplyr_table a tbl object with the data
 #' @param omop_schema string with the schema where the omop tables are stored
+#' @param ... see `fg_append_concept_info_data_sql` for the mapping options
 #'
 #' @return tbl with added columns
 #'
