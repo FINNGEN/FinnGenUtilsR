@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+inst/doc
+docs
+
+MyCohortDiagnosticsResulst.sqlite
+export/*
+errorReportSql.txt
+
+renv/*
+renv.lock
+.Rprofile

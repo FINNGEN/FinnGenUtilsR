@@ -1,0 +1,297 @@
+---
+title: "USING FGconnectionHandler: Adding names to longitudinal and service sector codes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_add_info_FGconnectionHandler}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Intro
+
+This tutorial show how to append additional information to a longitudinal or service-sector table using `dplyr` package and the `FGconnectionHandler` object in the `FinnGenUtilsR` package. 
+
+Information to add includes, name of the medical codes in English, name for the type of visit, name for the type of provider.
+
+To understand what is the `FGconnectionHandler` is recommended to see the dedicate vignette `tutorial_connection_handler`.
+
+This tutorial also included how to append additional information to the Kanta lab data. In particular, the name of the OMOP concept for the lab test.
+
+# Set up
+
+```{r setup}
+library(dplyr)
+library(FinnGenUtilsR)
+```
+
+This tutorial has been developed using dummy data under the Atlas development project. 
+
+```{r}
+ config <- fg_get_bq_config(
+   environment = "atlasDevelopment",
+   dataFreezeNumber = 12
+   )
+```
+
+
+To execute it in Sandbox, be sure to change the configuration to fit your needs. 
+```{r, eval=FALSE}
+ config <- fg_get_bq_config(
+   environment = "sandbox-6", # set your sandbox number
+   dataFreezeNumber = 12 # set the data freeze you want to use
+   )
+```
+
+Create a `FGconnectionHandler` object with the connection configuration from `fg_get_bq_config`. 
+
+```{r}
+FGconnectionHandler <- create_fg_connection_handler_FromList(config)
+```
+
+We can check if the connection has been successful. 
+
+```{r}
+FGconnectionHandler$connectionStatusLog
+```
+
+We can access the service sector data using the connection object as follows: 
+
+```{r}
+service_sector_tbl <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1()
+```
+
+Where `service_sector_tbl` is a `tbl` object that can be used with `dplyr` functions. 
+
+# Generate a table in service sector format
+
+For example we create a subset of the main service sector table by filtering the patients with an asthma diagnose (J45) in the INPAT source. 
+
+
+**IMPORTANT:** this is important to notice that the tables coming from the `FGconnectionHandler` have all the columns in lower case.
+
+```{r}
+# get events with code "J45" in INPAT
+ss_subject_1_tbl  <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r12_service_sector_detailed_longitudinal_v1() |> 
+  dplyr::filter(finngenid == "FG00000001")
+```
+
+We can see that this table does not currently have information about the medical codes: 
+
+```{r}
+ss_subject_1_tbl
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
+```
+
+# SERVICE SECTOR
+
+## Adding info to medical codes
+
+Function `fg_dbplyr_append_code_info_to_longitudinal_data` adds new columns with information about the medical code used in each event/row.  
+
+We just need to indicate the table with the translations. This is also available in the `FGconnectionHandler` object. 
+
+We recommend to take the one with the highest version number.
+
+
+```{r}
+ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
+  )
+```
+ 
+```{r}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id) 
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+## If an event/row uses more than one medical code 
+
+Some events include more than one medical code, or more than one way to understand a medical code. 
+Parameters in `fg_dbplyr_append_code_info_to_longitudinal_data` allows to chose how to name the medical code in this situations. 
+
+For example: 
+
+ - PURCH_map_to = "VNR", tells to use the VNR code in PURCH register, instead of the default ATC
+ - ICD10fi_map_to = "CODE1", tells to use only the first code in ICD10fi, instead of the default CODE1*CODE2 combination code
+ 
+```{r}
+fg_dbplyr_append_code_info_to_longitudinal_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7(), 
+    PURCH_map_to = "VNR", 
+    ICD10fi_map_to = "CODE1" 
+  ) |>
+  filter(vocabulary_id == "ICD10fi" | vocabulary_id == "VNRfi") |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, vocabulary_id, code, name_en, name_fi, omop_concept_id) 
+```
+
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+Se the help, for more options
+
+```{r, eval=FALSE}
+?fg_append_code_info_to_longitudinal_data_sql
+```
+
+
+## Reduce code precision
+
+ICD10fi, ICD9fi, ICD8fi, ATC, and NCSPfi, code systems reflect the hierarchy of the code by the first letters on them. 
+
+It is possible to truncate these medical codes before the information is added. This in practice adds the code and names of the parent codes. 
+
+```{r}
+fg_dbplyr_append_code_info_to_longitudinal_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7(), 
+  ICD10fi_precision = 3,
+  ICD9fi_precision = 3,
+  ICD8fi_precision = 3,
+  ATC_precision = 3,
+  NCSPfi_precision = 2
+)|>
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, vocabulary_id, code, name_en, name_fi, omop_concept_id) 
+
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(finngenid, source, approx_event_day, code1, code2, code3, code, name_en, name_fi, omop_concept_id)  |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+We can see in column `code` the truncated code and in `name_en` the name of the truncated code. 
+
+
+# Adding info to visit type 
+
+Function `fg_dbplyr_append_visit_type_info_to_service_sector_data` adds new columns with information about the visit type.
+
+In the service-sector data, information about the visit type is defined in CODE5 to CODE9 depending on the SOURCE and time period. 
+`fg_dbplyr_append_visit_type_info_to_service_sector_data` abstracts this nuances, and assign one visit type code per row. 
+Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. 
+
+
+By default, `fg_bq_append_visit_type_info_to_service_sector_data` will also include two columns `is_clinic_visit` and `is_follow_up_visit` that will be TRUE if the visit is a clinic visit or a follow-up visit, respectively. However, this works only if `fg_codes_info_table` version is v7 or higher. If you need to use lower versions set the parameters `add_is_clinic_visist` and `add_is_follow_up_visit` to FALSE. See the help for more details.
+
+```{r}
+fg_dbplyr_append_visit_type_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
+  )|> 
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)
+```
+
+(same table in html format for exporation)
+```{r echo=FALSE}
+fg_dbplyr_append_visit_type_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
+  )|> 
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+# Adding info to provider type 
+
+Function `fg_dbplyr_append_provider_info_to_service_sector_data` adds new columns with information about the personal or unit that provided the diagnose during the visit.
+
+In the service-sector data, information about the provider is defined in CODE6 to CODE7 depending on the SOURCE. 
+`fg_dbplyr_append_provider_info_to_service_sector_data` abstracts this nuances, and assign one provider type code per row. 
+
+
+```{r}
+fg_dbplyr_append_provider_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
+  )|> 
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, provider_code, provider_name_en, provider_concept_class_id)
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+fg_dbplyr_append_provider_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v7()
+  )|> 
+  dplyr::select(finngenid, source, index, approx_event_day, code5, code6, code8, code9, provider_code, provider_name_en, provider_concept_class_id) |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+
+
+# KANTA LAB DATA
+
+## Generate a table in service sector format
+
+For example we create a subset of the main service sector table by querying latest 20 events from subject "FG00000001": 
+
+
+```{r}
+kanta_subject_1_tbl  <- FGconnectionHandler$getTblsandboxToolsSchema$kanta_r12_v1()|> 
+  dplyr::filter(finngenid == "FG00000001") |> 
+  dplyr::arrange(desc(approx_event_datetime)) 
+```
+
+We can see that this table does not currently have information about the medical codes: 
+
+```{r}
+kanta_subject_1_tbl
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+kanta_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
+```
+
+
+## Adding info to OMOP_CONCEPT_ID codes
+
+Function `fg_dbplyr_append_concept_info_data` adds a new column with information about the OMOP_CONCEPT_ID name.
+
+```{r}
+omop_schema <- "atlas-development-270609.etl_sam_r12_5k_omop"
+kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |> fg_dbplyr_append_concept_info_data(omop_schema)
+```
+
+
+```{r}
+kanta_subject_1_tbl_with_omop_name |>  
+  dplyr::select(finngenid, event_age, approx_event_datetime, test_name, test_id, omop_concept_id, omop_concept_name) 
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+kanta_subject_1_tbl_with_omop_name |>  
+  dplyr::select(finngenid, event_age, approx_event_datetime, test_name, test_id, omop_concept_id, omop_concept_name)  |> 
+  dplyr::collect() |> 
+  rmarkdown::paged_table()
+```
+
+
+
+
+
+
+
+

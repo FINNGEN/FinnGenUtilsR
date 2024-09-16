@@ -1,0 +1,276 @@
+---
+title: "USING BIGRQUERY PACKAGE: Adding names to longitudinal, service sector, or lab codes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_add_info_bigrquery}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Intro
+
+This tutorial show how to append additional information to a longitudinal or service-sector table in bigquery using the `bigrquery` package. 
+
+Information to add includes, name of the medical codes in English, name for the type of visit, name for the type of provider.
+
+This tutorial also included how to append additional information to the Kanta lab data. In particular, the name of the OMOP concept for the lab test.
+
+
+# Set up
+
+This tutorial has been developed using dummy data under the Atlas development project. 
+To execute it in Sandbox, be sure to change the following paths. 
+
+```{r setup}
+library(dplyr)
+library(bigrquery)
+library(FinnGenUtilsR)
+
+
+bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
+project_id <- "atlas-development-270609"
+
+test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_r12.finngen_r12_service_sector_detailed_longitudinal_v1"
+fg_codes_info_table <- "atlas-development-270609.medical_codes.fg_codes_info_v7"
+
+tmp_schema <- "sandbox"
+
+kanta_lab_data_table <- "atlas-development-270609.sandbox_tools_r12.kanta_r12_v1"
+omop_schema <- "atlas-development-270609.etl_sam_r12_5k_omop"
+
+```
+
+# SERVICE SECTOR
+
+## Generate a table in service sector format
+
+For example we create a subset of the main service sector table by querying latest 20 events from subject "FG00000001": 
+
+```{r}
+sql <- paste("SELECT * FROM ", test_longitudinal_data_table, "WHERE FINNGENID='FG00000001' ORDER BY APPROX_EVENT_DAY DESC LIMIT 20")
+event_for_subject_1 <- bq_project_query(project_id, sql)
+```
+
+We can see that this table does not currently have information about the medical codes: 
+
+```{r}
+bq_table_download(event_for_subject_1)
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1) |> rmarkdown::paged_table()
+```
+
+## Adding info to medical codes
+
+Function `fg_bq_append_code_info_to_longitudinal_data` adds new columns with information about the medical code used in each event/row.  
+
+```{r}
+event_for_subject_1_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+  project_id, event_for_subject_1, fg_codes_info_table)
+```
+
+For example: code, for the original code; name_en, for the name of the code in English; name_fi for the name of the code in Finnish; and omop_concept_id, to find additional info in Atlas. 
+
+```{r}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) 
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id)  |>
+  rmarkdown::paged_table()
+```
+
+### If an event/row uses more than one medical code 
+
+Some events include more than one medical code, or more than one way to understand a medical code. 
+Parameters in `fg_bq_append_code_info_to_longitudinal_data` allows to chose how to name the medical code in this situations. 
+
+For example: 
+
+ - PURCH_map_to = "VNR", tells to use the VNR code in PURCH register, instead of the default ATC
+ - ICD10fi_map_to = "CODE1", tells to use only the first code in ICD10fi, instead of the default CODE1*CODE2 combination code
+ 
+```{r}
+event_for_subject_1_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+  project_id, event_for_subject_1, fg_codes_info_table, 
+    PURCH_map_to = "VNR", 
+    ICD10fi_map_to = "CODE1"
+)
+one_patient_long_data <- bq_table_download(event_for_subject_1_with_translations)
+```
+
+```{r}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) 
+```
+
+(same table in html format for exploration)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id)  |> 
+  rmarkdown::paged_table()
+```
+
+Se the help, for more options
+
+```{r, eval=FALSE}
+?fg_append_code_info_to_longitudinal_data_sql
+```
+
+
+### Reduce code precision
+
+ICD10fi, ICD9fi, ICD8fi, ATC, and NCSPfi, code systems reflect the hierarchy of the code by the first letters on them. 
+
+It is possible to truncate these medical codes before the information is added. This in practice adds the code and names of the parent codes. 
+
+```{r}
+event_for_subject_1_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
+  project_id, event_for_subject_1, fg_codes_info_table, 
+  ICD10fi_precision = 3,
+  ICD9fi_precision = 3,
+  ICD8fi_precision = 3,
+  ATC_precision = 3,
+  NCSPfi_precision = 2
+)
+
+```
+
+We can see in column `code` the truncated code and in `name_en` the name of the truncated code. 
+
+```{r}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) 
+```
+
+
+
+
+(same table in html format for exploration)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id)  |>
+  rmarkdown::paged_table()
+```
+
+
+
+## Adding info to visit type 
+
+Function `fg_bq_append_visit_type_info_to_service_sector_data` adds new columns with information about the visit type.
+
+In the service-sector data, information about the visit type is defined in CODE5 to CODE9 depending on the SOURCE and time period. 
+`fg_bq_append_visit_type_info_to_service_sector_data` abstracts this nuances, and assign one visit type code per row. 
+Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. 
+
+By default, `fg_bq_append_visit_type_info_to_service_sector_data` will also include two columns `is_clinic_visit` and `is_follow_up_visit` that will be TRUE if the visit is a clinic visit or a follow-up visit, respectively. However, this works only if `fg_codes_info_table` version is v7 or higher. If you need to use lower versions set the parameters `add_is_clinic_visist` and `add_is_follow_up_visit` to FALSE. See the help for more details.
+
+```{r}
+event_for_subject_1_with_visit_type <- fg_bq_append_visit_type_info_to_service_sector_data(
+  project_id, event_for_subject_1, fg_codes_info_table
+  )
+```
+
+
+```{r}
+bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)
+```
+
+
+(same table in html format for exploration)
+```{r echo=FALSE}
+bigrquery::bq_table_download(event_for_subject_1_with_visit_type) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)|> 
+  rmarkdown::paged_table()
+```
+
+
+
+## Adding info to provider type 
+
+Function `fg_bq_append_provider_info_to_service_sector_data` adds new columns with information about the personal or unit that provided the diagnose during the visit.
+
+In the service-sector data, information about the provider is defined in CODE6 to CODE7 depending on the SOURCE. 
+`fg_bq_append_visit_type_info_to_service_sector_data` abstracts this nuances, and assign one provider type code per row. 
+
+
+```{r}
+event_for_subject_1_with_provider <- fg_bq_append_provider_info_to_service_sector_data(
+  project_id, event_for_subject_1, fg_codes_info_table
+  )
+```
+
+
+```{r}
+bigrquery::bq_table_download(event_for_subject_1_with_provider) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id)
+```
+
+
+
+(same table in html format for exploration)
+```{r echo=FALSE}
+bigrquery::bq_table_download(event_for_subject_1_with_provider) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> rmarkdown::paged_table()
+```
+
+
+# KANTA LAB DATA
+
+## Generate a table in service sector format
+
+For example we create a subset of the main service sector table by querying latest 20 events from subject "FG00000001": 
+
+```{r}
+sql <- paste("SELECT * FROM ", kanta_lab_data_table, "WHERE FINNGENID='FG00000001' ORDER BY APPROX_EVENT_DATETIME DESC LIMIT 20")
+kanta_events_for_subject_1 <- bq_project_query(project_id, sql)
+```
+
+We can see that this table does not currently have information about the OMOP_CONCEPT_ID: 
+
+```{r}
+bq_table_download(kanta_events_for_subject_1)
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(kanta_events_for_subject_1) |> rmarkdown::paged_table()
+```
+
+
+## Adding info to OMOP_CONCEPT_ID codes
+
+Function `fg_bq_append_concept_info_data` adds a new column with information about the OMOP_CONCEPT_ID name.
+
+```{r}
+event_for_subject_1_with_translations <- fg_bq_append_concept_info_data(
+  project_id, kanta_events_for_subject_1, omop_schema)
+```
+
+
+```{r}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME,  TEST_ID, OMOP_CONCEPT_ID, omop_concept_name) 
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+bq_table_download(event_for_subject_1_with_translations) |>  
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME,  TEST_ID, OMOP_CONCEPT_ID, omop_concept_name)  |> 
+  rmarkdown::paged_table()
+```
+
+
+
