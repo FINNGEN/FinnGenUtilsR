@@ -71,7 +71,7 @@ SELECT
   END AS is_follow_up_visit@new_colums_sufix}
   FROM visit_type_fg_codes_preprocessed AS ssfgpre
 LEFT JOIN @fg_codes_info_table as fgc
-ON ssfgpre.SOURCE IS NOT DISTINCT FROM fgc.SOURCE AND
+ON ssfgpre.SOURCE = fgc.SOURCE AND
    ssfgpre.FG_CODE5 IS NOT DISTINCT FROM fgc.FG_CODE5 AND
    ssfgpre.FG_CODE6 IS NOT DISTINCT FROM fgc.FG_CODE6 AND
    ssfgpre.FG_CODE8 IS NOT DISTINCT FROM fgc.FG_CODE8 AND
