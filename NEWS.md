@@ -1,3 +1,6 @@
+# FinnGenUtilsR 3.1.1
+- hotfix: `fg_append_visit_type_info_to_service_sector_data_sql` error with large data
+
 # FinnGenUtilsR 3.1.0
 - `fg_append_visit_type_info_to_service_sector_data_sql` now adds two columns to the data: `is_clinic_visit` and `is_follow_up_visit`
 - new functions to append the omop lab test name to the Kanta data. See examples in the vignettes. 
