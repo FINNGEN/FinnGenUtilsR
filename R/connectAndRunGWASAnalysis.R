@@ -125,8 +125,9 @@ runGWASAnalysis <- function(
   body = list(data=json, phenofile=httr::upload_file(tmp_path_phenofile))
 
   logTibble = connection_sandboxAPI$conn_status_tibble$logTibble
+  id = which(logTibble$step == "Test connection Sandbox API")[1]
 
-  if(logTibble$type == "ERROR"){
+  if(logTibble$type[id] == "ERROR"){
     res <- list(
       status = FALSE,
       message = "Connection in connection_sandboxAPI not stablised"
