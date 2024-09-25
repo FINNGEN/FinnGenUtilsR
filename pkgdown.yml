@@ -1,11 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   tutorial_add_info_bigrquery: tutorial_add_info_bigrquery.html
   tutorial_add_info_FGconnectionHandler: tutorial_add_info_FGconnectionHandler.html
   tutorial_connection_handler: tutorial_connection_handler.html
-last_built: 2024-09-16T18:38Z
+last_built: 2024-09-25T05:30Z
 urls:
   reference: https://finngen.github.io/FinnGenUtilsR/reference
   article: https://finngen.github.io/FinnGenUtilsR/articles
