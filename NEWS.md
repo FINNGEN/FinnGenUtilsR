@@ -1,3 +1,6 @@
+# FinnGenUtilsR 3.1.2
+- hot fix: change in sangbox API name and notification email
+  
 # FinnGenUtilsR 3.1.1
 - hot fix: `fg_append_visit_type_info_to_service_sector_data_sql` error with large data
 

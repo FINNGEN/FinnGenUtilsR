@@ -37,8 +37,8 @@ createSandboxAPIConnection <- function(base_url, token) {
     error_message <- as.character(res_content)[1]
   }else{
     res_content <- httr::content(res)
-    name <- res_content$Name
-    notification_email <- res_content$NotificationEmail
+    name <- res_content$name
+    notification_email <- res_content$notification_email
   }
 
   # status tibble
