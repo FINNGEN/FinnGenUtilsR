@@ -91,8 +91,8 @@ runGWASAnalysis <- function(
     release = "Regenie12"
 ) {
 
-  if(!stringr::str_detect(phenotype_name, "^[[:upper:]|[:digit:]]+$")){
-    stop("phenotype_name must contain only in capital letters or numbers" )
+  if(!stringr::str_detect(phenotype_name, "^[A-Za-z][A-Za-z0-9_]*$")){
+    stop("phenotype_name must start with a letter and contain only letters, numbers, or underscores")
   }
 
   # create phenofile
