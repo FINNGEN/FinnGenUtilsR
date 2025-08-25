@@ -1,3 +1,6 @@
+# FinnGenUtilsR 3.1.3
+- Improvement: Allow lower case and underscores for custom gwas phenotype names
+
 # FinnGenUtilsR 3.1.2
 - hot fix: change in sangbox API name and notification email
   
