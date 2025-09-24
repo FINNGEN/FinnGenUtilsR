@@ -26,5 +26,5 @@ install.packages("FinnGenUtilsR")
 
 ## Example
 
-See vignettes or articles in [github-page](https://finngen.github.io/FinnGenUtilsR/)
+See vignettes or articles in [github-page](https://finngen.github.io/FinnGenUtilsR/).
  
