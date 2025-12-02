@@ -3,8 +3,8 @@
 -- omop_schema:
 -- schema where the omop tables are stored
 --
--- fg_codes_info_table :
--- full path to the table with the codes info
+-- finngen_vnr :
+-- full path to the table with VNR info
 --
 -- gap_days :
 -- INTEGER capturing gap days between drug exposure, default=30.
@@ -110,7 +110,8 @@ FROM drug_era AS t
 LEFT JOIN (
   SELECT c.concept_id, c.concept_code, c.concept_name, fv.ATC
   FROM @schema_omop.concept AS c
-  LEFT JOIN @fg_codes_info_table AS fv
+  LEFT JOIN (SELECT DISTINCT VNR, ATC
+             FROM @finngen_vnr) AS fv
   ON LPAD(SAFE_CAST(fv.VNR AS STRING),6,'0') = c.concept_code
 ) AS vnrs
 ON vnrs.concept_id = t.drug_concept_id

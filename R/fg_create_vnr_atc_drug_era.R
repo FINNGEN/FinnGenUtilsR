@@ -1,7 +1,7 @@
 #' fg_create_vnr_atc_drug_era_sql
 #'
 #' @param omop_schema string with the schema where the omop tables are stored
-#' @param fg_codes_info_table full path to the table with the codes info
+#' @param finngen_vnr full path to the table with the VNR info
 #'
 #' @param gap_days integer indicating gap between drug exposures of a drug for a patient, default=30.
 #'
@@ -14,12 +14,12 @@
 #'
 fg_create_vnr_atc_drug_era_sql <- function(
     omop_schema,
-    fg_codes_info_table,
+    finngen_vnr,
     #
     gap_days = 30) {
   # VALIDATE PARAMETERS
   omop_schema |> checkmate::assert_character()
-  fg_codes_info_table |> checkmate::assert_character()
+  finngen_vnr |> checkmate::assert_character()
 
   gap_days |> checkmate::assert_int()
 
@@ -28,7 +28,7 @@ fg_create_vnr_atc_drug_era_sql <- function(
     SqlRender::readSql() |>
     SqlRender::render(
       omop_schema = omop_schema,
-      fg_codes_info_table = fg_codes_info_table,
+      finngen_vnr = finngen_vnr,
       #
       gap_days = gap_days
     )
@@ -45,7 +45,7 @@ fg_create_vnr_atc_drug_era_sql <- function(
 #'
 #' @param bq_project_id string with the bigquery project id
 #' @param omop_schema string with the schema where the omop tables are stored
-#' @param fg_codes_info_table string with the full path (project.schema.table) to the bq table with the fg_codes_info
+#' @param finngen_vnr string with the full path (project.schema.table) to the bq table with the finngen_vnr_v2
 #' @param ... see `fg_create_vnr_atc_drug_era_sql` for the mapping options
 #'
 #' @return bq_table with added columns
@@ -58,14 +58,14 @@ fg_create_vnr_atc_drug_era_sql <- function(
 fg_create_vnr_atc_drug_era <- function(
     bq_project_id,
     omop_schema,
-    fg_codes_info_table,
+    finngen_vnr,
     ...) {
   # validate
   bq_project_id |> checkmate::assert_subset(bigrquery::bq_projects())
 
   sql <- fg_create_vnr_atc_drug_era_sql(
     omop_schema = omop_schema,
-    fg_codes_info_table = fg_codes_info_table,
+    finngen_vnr = finngen_vnr,
     ...
   )
 
