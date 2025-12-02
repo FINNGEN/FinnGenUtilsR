@@ -1,6 +1,5 @@
-# FinnGenUtilsR 3.2.0
-- `fg_create_vnr_atc_drug_era` create drug era table from drug exposure table based on VNR codes
-- example vignette for `fg_create_vnr_atc_drug_era` is added to the package
+# FinnGenUtilsR 3.1.3
+- Improvement: Allow lower case and underscores for custom gwas phenotype names
 
 # FinnGenUtilsR 3.1.2
 - hot fix: change in sangbox API name and notification email
