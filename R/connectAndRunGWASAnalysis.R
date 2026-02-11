@@ -262,7 +262,7 @@ runRegenieStandardPipeline <- function(
   if (!stringr::str_detect(phenotype_name, "^[A-Za-z][A-Za-z0-9_]*$")) {
     stop("phenotype_name must start with a letter and contain only letters, numbers, or underscores")
   }
-  if (missing(standard_pipeline_id) || is.null(standard_pipeline_id) || standard_pipeline_id == "") {
+  if (is.null(standard_pipeline_id) || standard_pipeline_id == "") {
     stop("standard_pipeline_id is required and must be a non-empty string")
   }
   if (length(cases_finngenids) == 0 || length(controls_finngenids) == 0) {
