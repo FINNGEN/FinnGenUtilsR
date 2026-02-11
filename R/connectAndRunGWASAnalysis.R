@@ -185,7 +185,7 @@ runGWASAnalysis <- function(
 #' @importFrom stringr str_detect str_c
 runRegenieStandardPipeline <- function(
     connection_sandboxAPI,
-    standard_pipeline_id,
+    standard_pipeline_id = "5718330904150016",
     cases_finngenids,
     controls_finngenids,
     phenotype_name,
