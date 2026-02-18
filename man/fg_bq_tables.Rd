@@ -2,9 +2,9 @@
 % Please edit documentation in R/fg_bigquery.R
 \name{fg_bq_tables}
 \alias{fg_bq_tables}
-\title{fg_bq_tables}
+\title{FinnGen BigQuery Tables Handler}
 \description{
-Class for handling BigQuery tables information including environment and data freeze
+R6 class for handling BigQuery tables information including environment and data freeze
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -16,6 +16,8 @@ Class for handling BigQuery tables information including environment and data fr
 \item{\code{dataFreeze}}{Data freeze identifier (e.g., "r13", "dev") (read-only).}
 
 \item{\code{tables}}{Tibble containing table paths information (read-only).}
+
+\item{\code{tbl}}{List of dplyr table objects (read-only).}
 }
 \if{html}{\out{</div>}}
 }

@@ -12,8 +12,9 @@
 #'
 #' @return sql script ready to be ran
 #'
-#' @importFrom checkmate assert_character assert_subset assert_number
+#' @importFrom checkmate assert_character
 #' @importFrom SqlRender readSql render
+#' @importFrom stringr str_extract str_remove
 #'
 #' @export
 #'

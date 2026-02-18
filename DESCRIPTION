@@ -12,20 +12,23 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Imports: 
     bigrquery,
+    CDMConnector,
     checkmate,
     DatabaseConnector,
     DBI,
+    dbplyr,
     dplyr,
+    glue,
+    httr,
+    jsonlite,
+    purrr,
     R6,
+    readr,
+    rlang,
     SqlRender,
     stringr,
     tibble,
-    yaml,
-    rlang,
-    dbplyr,
-    httr,
-    jsonlite, 
-    readr
+    yaml
 Suggests: 
     knitr,
     lubridate,

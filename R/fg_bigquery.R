@@ -7,6 +7,7 @@
 #' @field environment Environment identifier (e.g., "build", "prod") (read-only).
 #' @field dataFreeze Data freeze identifier (e.g., "r13", "dev") (read-only).
 #' @field tables Tibble containing table paths information (read-only).
+#' @field tbl List of dplyr table objects (read-only).
 #'
 #' @importFrom R6 R6Class
 #' @importFrom checkmate assertString assertTibble assertClass
