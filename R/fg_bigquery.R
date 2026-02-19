@@ -1,3 +1,16 @@
+get_fg_bq_tables <- function(
+  environment,
+  dataFreeze = NULL,
+  tablesPathsTibble = NULL
+) {
+  fg_bq_tables$new(
+    environment = environment,
+    dataFreeze = dataFreeze,
+    tablesPathsTibble = tablesPathsTibble
+  )
+}
+
+
 #' FinnGen BigQuery Tables Handler
 #'
 #' @description
@@ -17,6 +30,7 @@
 #' @importFrom readr read_csv cols col_character col_integer
 #' @importFrom stringr str_extract str_replace str_subset
 #' @importFrom glue glue
+#' @importFrom bigrquery bq_project_query
 #'
 #' @export
 fg_bq_tables <- R6::R6Class(
@@ -25,7 +39,7 @@ fg_bq_tables <- R6::R6Class(
     .connection = NULL,
     .environment = NULL,
     .dataFreeze = NULL,
-    .tables = NULL,
+    .tablePaths = NULL,
     .tbl = NULL
   ),
   active = list(
@@ -38,8 +52,8 @@ fg_bq_tables <- R6::R6Class(
     dataFreeze = function() {
       return(private$.dataFreeze)
     },
-    tables = function() {
-      return(private$.tablePath)
+    tablePaths = function() {
+      return(private$.tablePaths)
     },
     tbl = function() {
       return(private$.tbl)
@@ -59,12 +73,12 @@ fg_bq_tables <- R6::R6Class(
       dataFreeze = NULL,
       tablesPathsTibble = NULL
     ) {
-      # environment |> .assertEnvironment()  done in fg_connection
-      connection <- fg_connection(environment)
-
       if(environment == "sandbox-XX"){
         environment <- "build"
       }
+
+      # environment |> .assertEnvironment()  done in fg_connection
+      connection <- fg_connection(environment)
 
       if (is.null(dataFreeze)) {
         if (environment == "review") {
@@ -88,7 +102,7 @@ fg_bq_tables <- R6::R6Class(
       }
 
       # Table paths
-      tablePath <- tablesPathsTibble |>
+      tablePaths <- tablesPathsTibble |>
         dplyr::transmute(
           table_id,
           full_path = purrr::map(
@@ -131,8 +145,49 @@ fg_bq_tables <- R6::R6Class(
       private$.connection <- connection
       private$.environment <- environment
       private$.dataFreeze <- dataFreeze
-      private$.tablePath <- tablePath
+      private$.tablePaths <- tablePaths
       private$.tbl <- tbl
+    },
+
+    #' Print method
+    #' @description
+    #' Prints information about the fg_bq_tables object
+    print = function() {
+      cat("FinnGen BigQuery Tables Handler\n")
+      cat("================================\n\n")
+      
+      cat("Environment:     ", private$.environment, "\n")
+      cat("Data Freeze:     ", private$.dataFreeze, "\n")
+      cat("Project:         ", private$.connection@project, "\n")
+      cat("Billing Project: ", private$.connection@billing, "\n\n")
+      
+      cat("Available Tables:\n")
+      cat("-----------------\n")
+      for (i in seq_along(private$.tablePaths)) {
+        cat(sprintf("  %-35s %s\n", 
+                    names(private$.tablePaths)[i], 
+                    private$.tablePaths[[i]]))
+      }
+      
+      invisible(self)
+    },
+
+    #' Query method
+    #' @description
+    #' Execute a SQL query against BigQuery
+    #'
+    #' @param sql Character string containing the SQL query to execute
+    #' @param ... Additional arguments passed to bigrquery::bq_project_query()
+    #'
+    #' @return A BigQuery table reference that can be downloaded with bq_table_download()
+    query = function(sql, ...) {
+      checkmate::assertString(sql)
+      
+      bigrquery::bq_project_query(
+        x = private$.connection@project,
+        query = sql,
+        ...
+      )
     }
   )
 )
