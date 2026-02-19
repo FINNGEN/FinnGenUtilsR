@@ -4,10 +4,10 @@
 \alias{.assertEnvironment}
 \title{Assert Environment}
 \usage{
-.assertEnvironment(enviroment)
+.assertEnvironment(environment)
 }
 \arguments{
-\item{enviroment}{Environment identifier to validate}
+\item{environment}{Environment identifier to validate}
 }
 \value{
 NULL (called for side effects)

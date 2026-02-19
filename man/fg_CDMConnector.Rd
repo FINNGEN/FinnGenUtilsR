@@ -4,12 +4,12 @@
 \alias{fg_CDMConnector}
 \title{Connect to FinnGen OMOP CDM}
 \usage{
-fg_CDMConnector(environment = NULL, dataFreeze_version = NULL, ...)
+fg_CDMConnector(environment = NULL, cdmDataFreezeVersion = NULL, ...)
 }
 \arguments{
 \item{environment}{Environment identifier (e.g., "build", "review", or "sandbox-XX")}
 
-\item{dataFreeze_version}{Data freeze version (e.g., "r13_v3", "dev"). If NULL, latest version is used.}
+\item{cdmDataFreezeVersion}{Data freeze version (e.g., "r13_v3", "dev"). If NULL, latest version is used.}
 
 \item{...}{Additional arguments passed to CDMConnector::cdmFromCon}
 }

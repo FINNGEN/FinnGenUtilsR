@@ -4,12 +4,12 @@
 \alias{.assertDataFreezeVersion}
 \title{Assert Data Freeze Version}
 \usage{
-.assertDataFreezeVersion(connection, dataFreeze_version)
+.assertDataFreezeVersion(connection, cdmDataFreezeVersion)
 }
 \arguments{
 \item{connection}{BigQuery connection object}
 
-\item{dataFreeze_version}{Data freeze version to validate}
+\item{cdmDataFreezeVersion}{Data freeze version to validate}
 }
 \value{
 NULL (called for side effects)

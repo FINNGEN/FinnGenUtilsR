@@ -7,16 +7,16 @@
 \usage{
 fg_dbplyr_append_visit_type_info_to_service_sector_data(
   dbplyr_table,
-  dbplyr_fg_codes_info_table,
+  fg_bq_tables,
   ...
 )
 }
 \arguments{
 \item{dbplyr_table}{an object of type \if{html}{\out{<tbl>}} representing a table in longitudinal_data format}
 
-\item{dbplyr_fg_codes_info_table}{string with the full path (schema.table) to the database table with the fg_codes_info}
-
 \item{...}{see \url{fg_append_visit_type_info_to_service_sector_data_sql} for the mapping options}
+
+\item{dbplyr_fg_codes_info_table}{string with the full path (schema.table) to the database table with the fg_codes_info}
 }
 \value{
 \if{html}{\out{<tbl>}} with added columns

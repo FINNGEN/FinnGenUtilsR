@@ -4,10 +4,10 @@
 \alias{fg_connection}
 \title{Create FinnGen BigQuery Connection}
 \usage{
-fg_connection(enviroment)
+fg_connection(environment)
 }
 \arguments{
-\item{enviroment}{Environment identifier (e.g., "build", "review", or "sandbox-XX")}
+\item{environment}{Environment identifier (e.g., "build", "review", or "sandbox-XX")}
 }
 \value{
 A BigQuery connection object

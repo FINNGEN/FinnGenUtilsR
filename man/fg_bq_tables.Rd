@@ -6,6 +6,16 @@
 \description{
 R6 class for handling BigQuery tables information including environment and data freeze
 }
+\details{
+\subsection{Methods}{
+
+\code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)} Initialize a new object.
+
+\code{$print()} Print information about the object.
+
+\code{$query(sql, ...)} Execute a SQL query against BigQuery. Returns a BigQuery table reference.
+}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
@@ -15,7 +25,7 @@ R6 class for handling BigQuery tables information including environment and data
 
 \item{\code{dataFreeze}}{Data freeze identifier (e.g., "r13", "dev") (read-only).}
 
-\item{\code{tables}}{Tibble containing table paths information (read-only).}
+\item{\code{tablePaths}}{Named list containing table paths (read-only).}
 
 \item{\code{tbl}}{List of dplyr table objects (read-only).}
 }
@@ -25,6 +35,8 @@ R6 class for handling BigQuery tables information including environment and data
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-fg_bq_tables-new}{\code{fg_bq_tables$new()}}
+\item \href{#method-fg_bq_tables-print}{\code{fg_bq_tables$print()}}
+\item \href{#method-fg_bq_tables-query}{\code{fg_bq_tables$query()}}
 \item \href{#method-fg_bq_tables-clone}{\code{fg_bq_tables$clone()}}
 }
 }
@@ -32,7 +44,7 @@ R6 class for handling BigQuery tables information including environment and data
 \if{html}{\out{<a id="method-fg_bq_tables-new"></a>}}
 \if{latex}{\out{\hypertarget{method-fg_bq_tables-new}{}}}
 \subsection{Method \code{new()}}{
-Creates a new fg_bq_tables object
+Initialize method - Creates a new fg_bq_tables object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{fg_bq_tables$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)}\if{html}{\out{</div>}}
 }
@@ -45,10 +57,40 @@ Creates a new fg_bq_tables object
 \item{\code{dataFreeze}}{(Optional) Data freeze identifier (default is NULL)}
 
 \item{\code{tablesPathsTibble}}{(Optional) Tibble containing table paths (default is NULL)}
-
-\item{\code{connection}}{BigQuery connection object}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-fg_bq_tables-print"></a>}}
+\if{latex}{\out{\hypertarget{method-fg_bq_tables-print}{}}}
+\subsection{Method \code{print()}}{
+Print method - Prints information about the fg_bq_tables object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{fg_bq_tables$print()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-fg_bq_tables-query"></a>}}
+\if{latex}{\out{\hypertarget{method-fg_bq_tables-query}{}}}
+\subsection{Method \code{query()}}{
+Query method - Execute a SQL query against BigQuery
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{fg_bq_tables$query(sql, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql}}{Character string containing the SQL query to execute}
+
+\item{\code{...}}{Additional arguments passed to bigrquery::bq_project_query()}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A BigQuery table reference that can be downloaded with bq_table_download()
 }
 }
 \if{html}{\out{<hr>}}

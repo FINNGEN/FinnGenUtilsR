@@ -1,3 +1,15 @@
+#' Get FinnGen BigQuery Tables
+#'
+#' @description
+#' Creates a new fg_bq_tables object
+#'
+#' @param environment Environment identifier (e.g., "build", "prod")
+#' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
+#' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+#'
+#' @return An fg_bq_tables R6 object
+#'
+#' @export
 get_fg_bq_tables <- function(
   environment,
   dataFreeze = NULL,
@@ -19,8 +31,23 @@ get_fg_bq_tables <- function(
 #' @field connection BigQuery connection object (read-only).
 #' @field environment Environment identifier (e.g., "build", "prod") (read-only).
 #' @field dataFreeze Data freeze identifier (e.g., "r13", "dev") (read-only).
-#' @field tables Tibble containing table paths information (read-only).
+#' @field tablePaths Named list containing table paths (read-only).
 #' @field tbl List of dplyr table objects (read-only).
+#'
+#' @param environment Environment identifier (e.g., "build", "prod")
+#' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
+#' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+#' @param sql Character string containing the SQL query to execute
+#' @param ... Additional arguments passed to bigrquery::bq_project_query()
+#'
+#' @details
+#' ## Methods
+#' 
+#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)} Initialize a new object.
+#' 
+#' \code{$print()} Print information about the object.
+#' 
+#' \code{$query(sql, ...)} Execute a SQL query against BigQuery. Returns a BigQuery table reference.
 #'
 #' @importFrom R6 R6Class
 #' @importFrom checkmate assertString assertTibble assertClass
@@ -60,11 +87,9 @@ fg_bq_tables <- R6::R6Class(
     }
   ),
   public = list(
-    #' Initialize method
     #' @description
-    #' Creates a new fg_bq_tables object
+    #' Initialize method - Creates a new fg_bq_tables object
     #'
-    #' @param connection BigQuery connection object
     #' @param environment Environment identifier (e.g., "build", "prod")
     #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
     #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
@@ -168,9 +193,8 @@ fg_bq_tables <- R6::R6Class(
       )
     },
 
-    #' Print method
     #' @description
-    #' Prints information about the fg_bq_tables object
+    #' Print method - Prints information about the fg_bq_tables object
     print = function() {
       cat("FinnGen BigQuery Tables Handler\n")
       cat("================================\n\n")
@@ -193,9 +217,8 @@ fg_bq_tables <- R6::R6Class(
       invisible(self)
     },
 
-    #' Query method
     #' @description
-    #' Execute a SQL query against BigQuery
+    #' Query method - Execute a SQL query against BigQuery
     #'
     #' @param sql Character string containing the SQL query to execute
     #' @param ... Additional arguments passed to bigrquery::bq_project_query()
