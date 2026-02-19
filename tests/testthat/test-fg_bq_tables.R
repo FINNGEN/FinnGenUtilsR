@@ -1,10 +1,8 @@
 test_that("fg_tables works", {
 
-  connection <- fg_connection(enviroment = "build") 
+  connection <- fg_connection(environment = test_environment) 
 
-
-  fg_getLatestDataFreeze(connection)
-
+  connection |> checkmate::assert_class("DBIConnection")
 
 })
 

@@ -2,7 +2,7 @@
 
 #' Create FinnGen BigQuery Connection
 #'
-#' @param enviroment Environment identifier (e.g., "build", "review", or "sandbox-XX")
+#' @param environment Environment identifier (e.g., "build", "review", or "sandbox-XX")
 #'
 #' @return A BigQuery connection object
 #'
@@ -11,17 +11,17 @@
 #'
 #' @export
 fg_connection <- function(
-  enviroment
+  environment
 ) {
   #
   # Validation
   #
-  .assertEnvironment(enviroment)
+  .assertEnvironment(environment)
 
   #
   # Function
   #
-  if (enviroment == "build") {
+  if (environment == "build") {
     if (
       is.null(Sys.getenv("GCP_SERVICE_KEY")) ||
         Sys.getenv("GCP_SERVICE_KEY") == ""
@@ -32,7 +32,7 @@ fg_connection <- function(
     billing_project_id <- "atlas-development-270609"
     project_id <- "atlas-development-270609"
     dataset_id <- "sandbox"
-  } else if (enviroment == "review") {
+  } else if (environment == "review") {
     billing_project_id <- "fg-production-sandbox-46"
     project_id <- "finngen-production-library"
     dataset_id <- "sandbox"
@@ -57,7 +57,7 @@ fg_connection <- function(
 
 #' Assert Environment
 #'
-#' @param enviroment Environment identifier to validate
+#' @param environment Environment identifier to validate
 #'
 #' @return NULL (called for side effects)
 #'
@@ -65,9 +65,9 @@ fg_connection <- function(
 #'
 #' @keywords internal
 .assertEnvironment <- function(
-  enviroment
+  environment
 ) {
-  enviroment |>
+  environment |>
     checkmate::assertString(
       pattern = "^(sandbox-[0-9]+|build|review)$"
     )
