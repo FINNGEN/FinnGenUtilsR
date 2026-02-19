@@ -74,8 +74,8 @@ fg_bq_tables <- R6::R6Class(
       tablesPathsTibble = NULL
     ) {
       start_time <- Sys.time()
-      
-      if(environment == "sandbox-XX"){
+
+      if (environment == "sandbox-XX") {
         environment <- "build"
       }
 
@@ -154,9 +154,18 @@ fg_bq_tables <- R6::R6Class(
       private$.dataFreeze <- dataFreeze
       private$.tablePaths <- tablePaths
       private$.tbl <- tbl
-      
-      elapsed_time <- round(as.numeric(difftime(Sys.time(), start_time, units = "secs")), 2)
-      message("Successfully connected to ", length(tbl), " tables in ", elapsed_time, " seconds")
+
+      elapsed_time <- round(
+        as.numeric(difftime(Sys.time(), start_time, units = "secs")),
+        2
+      )
+      message(
+        "Successfully connected to ",
+        length(tbl),
+        " tables in ",
+        elapsed_time,
+        " seconds"
+      )
     },
 
     #' Print method
@@ -165,20 +174,22 @@ fg_bq_tables <- R6::R6Class(
     print = function() {
       cat("FinnGen BigQuery Tables Handler\n")
       cat("================================\n\n")
-      
+
       cat("Environment:     ", private$.environment, "\n")
       cat("Data Freeze:     ", private$.dataFreeze, "\n")
       cat("Project:         ", private$.connection@project, "\n")
       cat("Billing Project: ", private$.connection@billing, "\n\n")
-      
+
       cat("Available Tables:\n")
       cat("-----------------\n")
       for (i in seq_along(private$.tablePaths)) {
-        cat(sprintf("  %-35s %s\n", 
-                    names(private$.tablePaths)[i], 
-                    private$.tablePaths[[i]]))
+        cat(sprintf(
+          "  %-35s %s\n",
+          names(private$.tablePaths)[i],
+          private$.tablePaths[[i]]
+        ))
       }
-      
+
       invisible(self)
     },
 
@@ -192,7 +203,7 @@ fg_bq_tables <- R6::R6Class(
     #' @return A BigQuery table reference that can be downloaded with bq_table_download()
     query = function(sql, ...) {
       checkmate::assertString(sql)
-      
+
       bigrquery::bq_project_query(
         x = private$.connection@project,
         query = sql,
@@ -352,45 +363,33 @@ fg_getLatestTablePaths <- function(
     )
 
   tablesPathsTibble <- tablesPathsTibble |>
-    # append data freeze to the table path
     dplyr::mutate(
       full_path = purrr::map_chr(
-        table_path_template,
-        function(table_path_template) {
-          glue::glue(
-            table_path_template,
-            datafreeze = dataFreeze,
-            version = "{version}"
-          )
-        }
-      )
-    ) |>
-    # find latest version for each table
-    dplyr::mutate(
-      latestVersion = purrr::map2_chr(
         table_id,
-        full_path,
-        function(table_id, full_path) {
+        function(table_id) {
+          template <- tablesPathsTibble$table_path_template[
+            tablesPathsTibble$table_id == table_id
+          ]
           if (dataFreeze == "dev") {
-            return("dev")
+            version <- "dev"
+          } else {
+            version <- .lastTableVersion(
+              connection,
+              glue::glue(
+                template,
+                datafreeze = dataFreeze,
+                version = "{version}"
+              )
+            )
           }
-          table_name <- stringr::str_extract(full_path, "[^.]+$") |> stringr::str_replace("\\{version\\}", "")
-          lastVersion <- .lastTableVersion(connection, full_path)
-          message("  - ", table_id, ": ", table_name, lastVersion)
-          return(lastVersion)
-        }
-      )
-    ) |>
-    # construct full table path with latest version
-    dplyr::mutate(
-      full_path = purrr::map2_chr(
-        full_path,
-        latestVersion,
-        function(full_path, latestVersion) {
-          glue::glue(
-            full_path,
-            version = latestVersion
-          )
+          a <- glue::glue(
+            template,
+            datafreeze = dataFreeze,
+            version = version
+          ) |>
+            as.character()
+          message("  - ", table_id, ": ", a)
+          return(a)
         }
       )
     ) |>
@@ -404,13 +403,12 @@ fg_getLatestTablePaths <- function(
     tablesPathsTibble <- tablesPathsTibble |>
       dplyr::mutate(
         full_path = stringr::str_replace(full_path, "dev_dev", "dev"),
-        full_path = stringr::str_replace(full_path, "medical_codes", "medical_codes_dev")
+        full_path = stringr::str_replace(
+          full_path,
+          "medical_codes",
+          "medical_codes_dev"
+        )
       )
-    
-    # Show table list for dev freeze
-    for (i in seq_len(nrow(tablesPathsTibble))) {
-      message("  - ", tablesPathsTibble$table_id[i], ": ", tablesPathsTibble$full_path[i])
-    }
   }
 
   return(tablesPathsTibble)
@@ -434,21 +432,30 @@ fg_getLatestTablePaths <- function(
 ) {
   project_id <- connection@project
   dataset_id <- stringr::str_extract(full_path, "^[^.]+")
-  table_id <- stringr::str_extract(full_path, "(?<=\\.)[^.]+$") |>
-    stringr::str_replace("\\{version\\}", "")
 
-  dataSetTables <- bigrquery::bq_dataset_tables(
-    bigrquery::bq_dataset(
-      project = project_id,
-      dataset = dataset_id
-    )
-  ) |>
-    purrr::map_chr(~ .x$table)
+  if (grepl("finngen_omop", dataset_id)) {
+    lastVersion <- bigrquery::bq_project_datasets(project_id) |>
+      purrr::map_chr(~ .x$dataset) |>
+      stringr::str_subset("^finngen_omop") |>
+      stringr::str_extract("[^_]+$") |>
+      .lastNumberSuffix(prefix = "v")
+  } else {
+    table_id <- stringr::str_extract(full_path, "(?<=\\.)[^.]+$") |>
+      stringr::str_replace("\\{version\\}", "")
 
-  lastVersion <- dataSetTables |>
-    stringr::str_subset(paste0("^", table_id)) |>
-    stringr::str_extract("[^_]+$") |>
-    .lastNumberSuffix(prefix = "v")
+    dataSet <- bigrquery::bq_dataset_tables(
+      bigrquery::bq_dataset(
+        project = project_id,
+        dataset = dataset_id
+      )
+    ) |>
+      purrr::map_chr(~ .x$table)
+
+    lastVersion <- dataSet |>
+      stringr::str_subset(paste0("^", table_id)) |>
+      stringr::str_extract("[^_]+$") |>
+      .lastNumberSuffix(prefix = "v")
+  }
 
   return(lastVersion)
 }

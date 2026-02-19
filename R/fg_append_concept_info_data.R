@@ -80,7 +80,7 @@ fg_bq_append_concept_info_data <- function(
 #' fg_dbplyr_append_concept_info_data
 #'
 #' @param dbplyr_table a tbl object with the data
-#' @param omop_schema string with the schema where the omop tables are stored
+#' @param fg_bq_tables an object of type fg_bq_tables with the bigquery tables
 #' @param ... see `fg_append_concept_info_data_sql` for the mapping options
 #'
 #' @return tbl with added columns
@@ -93,29 +93,19 @@ fg_bq_append_concept_info_data <- function(
 #'
 fg_dbplyr_append_concept_info_data <- function(
     dbplyr_table,
-    omop_schema,
+    fg_bq_tables,
     ...) {
   # validate
   dbplyr_table |> checkmate::assert_class("tbl")
-  c('omop_concept_id') |> checkmate::assert_subset(dbplyr_table |> colnames())
+  c('OMOP_CONCEPT_ID') |> checkmate::assert_subset(dbplyr_table |> colnames())
 
-  connection <- dbplyr_table$src$con
+  fg_bq_tables |> checkmate::assert_class("fg_bq_tables")
 
-  dbplyr_table_computed <- dplyr::compute(dbplyr_table)
-  dbplyr_table_path <- dbplyr_table_computed$lazy_query$x |> as.character()
-  bq_table <- bigrquery::as_bq_table(dbplyr_table_path)
-
-  bq_result <- fg_bq_append_concept_info_data(
-    bq_project_id = connection@project,
-    bq_table = bq_table,
-    omop_schema = omop_schema,
-    ...
-  )
-
-  new_dbplyr_table <- dplyr::tbl(
-    connection,
-    I(paste0(bq_result$project, ".", bq_result$dataset, ".", bq_result$table))
-  )
+  new_dbplyr_table <- dbplyr_table |>
+    left_join(
+      fg_bq_tables$tbl$omop_concept |> dplyr::select(concept_id, concept_name),
+      by = c("OMOP_CONCEPT_ID" = "concept_id")
+    ) 
 
   return(new_dbplyr_table)
 }

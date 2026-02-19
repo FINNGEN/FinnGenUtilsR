@@ -97,12 +97,13 @@ fg_bq_append_provider_info_to_service_sector_data <- function(
 
 fg_dbplyr_append_provider_info_to_service_sector_data <- function(
     dbplyr_table,
-    dbplyr_fg_codes_info_table,
+    fg_bq_tables,
     ...) {
   # validate
   dbplyr_table |> checkmate::assert_class("tbl")
-  dbplyr_fg_codes_info_table |> checkmate::assert_class("tbl")
-  c('CODE5', 'CODE6', 'CODE8', 'CODE9') |> checkmate::assert_subset(dbplyr_table |> colnames())
+  fg_bq_tables |> checkmate::assert_class("fg_bq_tables")
+
+  bq_fg_codes_info_table <- fg_bq_tables$tbl$fg_codes_info
 
   connection <- dbplyr_table$src$con
 

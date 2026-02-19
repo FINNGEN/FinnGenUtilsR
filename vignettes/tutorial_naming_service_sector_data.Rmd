@@ -169,7 +169,7 @@ By default, `fg_bq_append_visit_type_info_to_service_sector_data` will also incl
 ```{r}
 fg_dbplyr_append_visit_type_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info
+  fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)
 ```
@@ -178,7 +178,7 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
 ```{r echo=FALSE}
 fg_dbplyr_append_visit_type_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info
+  fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
   as.data.frame() |> rmarkdown::paged_table()
@@ -195,7 +195,7 @@ In the service-sector data, information about the provider is defined in CODE6 t
 ```{r}
 fg_dbplyr_append_provider_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info
+  fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id)
 ```
@@ -203,7 +203,7 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
 ```{r echo=FALSE}
 fg_dbplyr_append_provider_info_to_service_sector_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info
+  fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
   as.data.frame() |> rmarkdown::paged_table()

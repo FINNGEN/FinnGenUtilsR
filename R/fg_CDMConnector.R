@@ -1,7 +1,7 @@
 #' Connect to FinnGen OMOP CDM
 #'
 #' @param environment Environment identifier (e.g., "build", "review", or "sandbox-XX")
-#' @param dataFreeze_version Data freeze version (e.g., "r13_v3", "dev"). If NULL, latest version is used.
+#' @param cdmDataFreezeVersion Data freeze version (e.g., "r13_v3", "dev"). If NULL, latest version is used.
 #' @param ... Additional arguments passed to CDMConnector::cdmFromCon
 #'
 #' @return A CDM reference object
@@ -11,20 +11,20 @@
 #' @export
 fg_CDMConnector <- function(
   environment = NULL,
-  dataFreeze_version = NULL,
+  cdmDataFreezeVersion = NULL,
   ...
 ){
 
   # Making a connection object that is used to connect to the tables:
   connection <- fg_connection(environment)
 
-  if (is.null(dataFreeze_version)) {
+  if (is.null(cdmDataFreezeVersion)) {
     if (environment == "review") {
-      dataFreeze_version <- 'dev'
+      cdmDataFreezeVersion <- 'dev'
     } else if (environment == "build") {
-      dataFreeze_version <- 'dev'
+      cdmDataFreezeVersion <- 'dev'
     } else {
-      dataFreeze_version <- cdm_getLatestDataFreezeAndVersion(connection)
+      cdmDataFreezeVersion <- cdm_getLatestDataFreezeAndVersion(connection)
     }
   }
 
@@ -34,7 +34,7 @@ fg_CDMConnector <- function(
   dataset_id <- connection@dataset
 
 
-  cdmSchema <- paste0(billing_project_id, ".finngen_omop_",dataFreeze_version)
+  cdmSchema <- paste0(billing_project_id, ".finngen_omop_",cdmDataFreezeVersion)
   writeSchema <- paste0(project_id, ".", dataset_id)
 
 
@@ -87,7 +87,7 @@ cdm_getLatestDataFreezeAndVersion <- function(
 #' Assert Data Freeze Version
 #'
 #' @param connection BigQuery connection object
-#' @param dataFreeze_version Data freeze version to validate
+#' @param cdmDataFreezeVersion Data freeze version to validate
 #'
 #' @return NULL (called for side effects)
 #'
@@ -97,9 +97,9 @@ cdm_getLatestDataFreezeAndVersion <- function(
 #' @keywords internal
 .assertDataFreezeVersion <- function(
   connection,
-  dataFreeze_version
+  cdmDataFreezeVersion
 ) {
-  dataFreeze_version |>  checkmate::assertString(pattern =  "^r[0-9]+_v[0-9]+$|^dev$")
+  cdmDataFreezeVersion |>  checkmate::assertString(pattern =  "^r[0-9]+_v[0-9]+$|^dev$")
 
   validDataFreezeVersions <- datasets |>
     stringr::str_extract("(?<=finngen_omop_)[^\")]*") |>
@@ -109,7 +109,7 @@ cdm_getLatestDataFreezeAndVersion <- function(
   dataFreezeNotValid <- setdiff(dataFreeze, validDataFreezeVersions)
   if (length(dataFreezeNotValid) > 0) {
     stop(
-      "Invalid dataFreeze_version: ",
+      "Invalid cdmDataFreezeVersion: ",
       paste(dataFreezeNotValid, collapse = ", "),
       ". Valid data freezes are: ",
       paste(validDataFreezeVersions, collapse = ", "),

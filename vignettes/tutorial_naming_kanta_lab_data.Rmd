@@ -1,5 +1,5 @@
 ---
-title: "Working with Kanta Lab Data"
+title: "Adding Names to Kanta Lab Data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{tutorial_kanta_lab_data}
@@ -48,18 +48,21 @@ For example we create a subset of the main Kanta table by querying latest events
 
 ```{r}
 kanta_subject_1_tbl <- fgbq$tbl$kanta |> 
-  dplyr::filter(FINNGENID == "FG00000001") |> 
-  dplyr::arrange(desc(APPROX_EVENT_DATETIME)) 
+  filter(FINNGENID == "FG00000001") |> 
+  arrange(desc(APPROX_EVENT_DATETIME)) 
 ```
 
 We can see that this table contains OMOP_CONCEPT_ID but not the names of the concepts: 
 
 ```{r}
-kanta_subject_1_tbl
+kanta_subject_1_tbl |> 
+  select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID)
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
-kanta_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
+kanta_subject_1_tbl |>
+    select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID) |>
+     as.data.frame() |> rmarkdown::paged_table()
 ```
 
 
@@ -68,19 +71,23 @@ kanta_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
 Function `fg_dbplyr_append_concept_info_data` adds a new column with information about the OMOP_CONCEPT_ID name.
 
 ```{r}
-omop_schema <- "atlas-development-270609.etl_sam_r12_5k_omop"
-kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |> fg_dbplyr_append_concept_info_data(omop_schema)
+kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |> 
+   fg_dbplyr_append_concept_info_data(fg_bq_tables = fgbq)
 ```
 
 
 ```{r}
 kanta_subject_1_tbl_with_omop_name |>  
-  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, omop_concept_name) 
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) 
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
 kanta_subject_1_tbl_with_omop_name |>  
-  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, omop_concept_name) |> 
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) |> 
   dplyr::collect() |> 
   rmarkdown::paged_table()
 ```
+
+
+# Alternative: Running SQL Queries
+You can also run SQL queries directly on the BigQuery tables. See the `tutorial_service_sector_data` vignette for examples of how to do this with the service sector data, but the same principles apply to the Kanta lab data.

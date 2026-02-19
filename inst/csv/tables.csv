@@ -14,3 +14,4 @@ code_prevalence_stratified,sandbox_tools_{datafreeze}.code_prevalence_stratified
 endpoint_cohorts,sandbox_tools_{datafreeze}.endpoint_cohorts_{datafreeze}_{version},12
 fg_codes_info,medical_codes.fg_codes_info_{version},0
 finngen_vnrs,medical_codes.finngen_vnr_{version},0
+omop_concept,finngen_omop_{datafreeze}_{version}.concept,0
