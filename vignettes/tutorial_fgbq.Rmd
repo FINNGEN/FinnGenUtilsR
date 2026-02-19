@@ -145,6 +145,16 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   rmarkdown::paged_table()
 ```
 
+## Collect results into R
+Once you have reduce the size of the total data you can download it into memeory using `collect()`. For example:  
+
+```{r}
+ss_only_asthma  |> fgbq$service_sector_detailed_longitudinal |> 
+  filter(stringr::str_detect(CODE1, "^J45")) |> 
+  filter(EVENT_AGE > 50) |>
+  collect()
+```
+
 ## Running SQL Queries
 
 However, if dbplyr is not sufficient, you can still use the `query()` method to directly run SQL queries against the BigQuery tables. For example:

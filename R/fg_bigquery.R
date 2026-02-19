@@ -73,11 +73,14 @@ fg_bq_tables <- R6::R6Class(
       dataFreeze = NULL,
       tablesPathsTibble = NULL
     ) {
+      start_time <- Sys.time()
+      
       if(environment == "sandbox-XX"){
         environment <- "build"
       }
 
       # environment |> .assertEnvironment()  done in fg_connection
+      message("Connecting to BigQuery...")
       connection <- fg_connection(environment)
 
       if (is.null(dataFreeze)) {
@@ -86,14 +89,17 @@ fg_bq_tables <- R6::R6Class(
         } else if (environment == "build") {
           dataFreeze <- 'dev'
         } else {
+          message("Finding latest data freeze...")
           dataFreeze <- fg_getLatestDataFreeze(
             connection = connection
           )
         }
       }
+      message("Using data freeze: ", dataFreeze)
       .assertDataFreeze(connection, dataFreeze)
 
       if (is.null(tablesPathsTibble)) {
+        message("Finding latest table versions...")
         tablesPathsTibble <- fg_getLatestTablePaths(
           connection = connection,
           dataFreeze = dataFreeze,
@@ -114,6 +120,7 @@ fg_bq_tables <- R6::R6Class(
         ) |>
         tibble::deframe()
 
+      message("Creating table connections (this may take a moment)...")
       tbl <- tablesPathsTibble |>
         dplyr::mutate(
           table_dplyr = purrr::map(
@@ -147,6 +154,9 @@ fg_bq_tables <- R6::R6Class(
       private$.dataFreeze <- dataFreeze
       private$.tablePaths <- tablePaths
       private$.tbl <- tbl
+      
+      elapsed_time <- round(as.numeric(difftime(Sys.time(), start_time, units = "secs")), 2)
+      message("Successfully connected to ", length(tbl), " tables in ", elapsed_time, " seconds")
     },
 
     #' Print method
@@ -357,13 +367,16 @@ fg_getLatestTablePaths <- function(
     ) |>
     # find latest version for each table
     dplyr::mutate(
-      latestVersion = purrr::map_chr(
+      latestVersion = purrr::map2_chr(
+        table_id,
         full_path,
-        function(full_path) {
+        function(table_id, full_path) {
           if (dataFreeze == "dev") {
             return("dev")
           }
+          table_name <- stringr::str_extract(full_path, "[^.]+$") |> stringr::str_replace("\\{version\\}", "")
           lastVersion <- .lastTableVersion(connection, full_path)
+          message("  - ", table_id, ": ", table_name, lastVersion)
           return(lastVersion)
         }
       )
@@ -393,6 +406,11 @@ fg_getLatestTablePaths <- function(
         full_path = stringr::str_replace(full_path, "dev_dev", "dev"),
         full_path = stringr::str_replace(full_path, "medical_codes", "medical_codes_dev")
       )
+    
+    # Show table list for dev freeze
+    for (i in seq_len(nrow(tablesPathsTibble))) {
+      message("  - ", tablesPathsTibble$table_id[i], ": ", tablesPathsTibble$full_path[i])
+    }
   }
 
   return(tablesPathsTibble)

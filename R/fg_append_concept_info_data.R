@@ -86,7 +86,8 @@ fg_bq_append_concept_info_data <- function(
 #' @return tbl with added columns
 #'
 #' @importFrom checkmate assert_subset assert_class
-#' @importFrom dplyr collect
+#' @importFrom dplyr compute tbl
+#' @importFrom bigrquery as_bq_table
 #'
 #' @export
 #'
@@ -98,15 +99,23 @@ fg_dbplyr_append_concept_info_data <- function(
   dbplyr_table |> checkmate::assert_class("tbl")
   c('omop_concept_id') |> checkmate::assert_subset(dbplyr_table |> colnames())
 
-  connection = dbplyr_table$src$con
+  connection <- dbplyr_table$src$con
 
-  sql <- fg_append_concept_info_data_sql(
-    data_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_table)), ")"),
+  dbplyr_table_computed <- dplyr::compute(dbplyr_table)
+  dbplyr_table_path <- dbplyr_table_computed$lazy_query$x |> as.character()
+  bq_table <- bigrquery::as_bq_table(dbplyr_table_path)
+
+  bq_result <- fg_bq_append_concept_info_data(
+    bq_project_id = connection@project,
+    bq_table = bq_table,
     omop_schema = omop_schema,
     ...
   )
 
-  new_dbplyr_table  <-  dplyr::tbl(connection, dbplyr::sql(sql))
+  new_dbplyr_table <- dplyr::tbl(
+    connection,
+    I(paste0(bq_result$project, ".", bq_result$dataset, ".", bq_result$table))
+  )
 
   return(new_dbplyr_table)
 }

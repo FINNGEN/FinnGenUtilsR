@@ -33,7 +33,6 @@ To execute it in Sandbox, be sure to change the following paths.
 
 ```{r setup}
 library(dplyr)
-library(bigrquery)
 library(FinnGenUtilsR)
 
 

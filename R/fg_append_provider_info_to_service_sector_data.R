@@ -89,7 +89,8 @@ fg_bq_append_provider_info_to_service_sector_data <- function(
 #'
 #' @importFrom checkmate assert_class
 #' @importFrom dbplyr sql_render build_sql
-#' @importFrom dplyr tbl
+#' @importFrom dplyr tbl compute
+#' @importFrom bigrquery as_bq_table
 #'
 #' @export
 #'
@@ -100,18 +101,28 @@ fg_dbplyr_append_provider_info_to_service_sector_data <- function(
     ...) {
   # validate
   dbplyr_table |> checkmate::assert_class("tbl")
-  c('code5', 'code6', 'code8', 'code9') |> checkmate::assert_subset(dbplyr_table |> colnames())
+  dbplyr_fg_codes_info_table |> checkmate::assert_class("tbl")
+  c('CODE5', 'CODE6', 'CODE8', 'CODE9') |> checkmate::assert_subset(dbplyr_table |> colnames())
 
-  connection = dbplyr_table$src$con
+  connection <- dbplyr_table$src$con
 
-  sql <- fg_append_provider_info_to_service_sector_data_sql(
-    service_sector_data_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_table)), ")"),
-    fg_codes_info_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_fg_codes_info_table)), ")"),
+  dbplyr_table_computed <- dplyr::compute(dbplyr_table)
+  dbplyr_table_path <- dbplyr_table_computed$lazy_query$x |> as.character()
+  bq_table <- bigrquery::as_bq_table(dbplyr_table_path)
+
+  bq_fg_codes_info_table <- dbplyr_fg_codes_info_table$lazy_query$x |> as.character()
+
+  bq_result <- fg_bq_append_provider_info_to_service_sector_data(
+    bq_project_id = connection@project,
+    bq_table = bq_table,
+    fg_codes_info_table = bq_fg_codes_info_table,
     ...
   )
 
-  new_dbplyr_table  <-  dplyr::tbl(connection, dbplyr::sql(sql))
+  new_dbplyr_table <- dplyr::tbl(
+    connection,
+    I(paste0(bq_result$project, ".", bq_result$dataset, ".", bq_result$table))
+  )
 
   return(new_dbplyr_table)
-
 }
