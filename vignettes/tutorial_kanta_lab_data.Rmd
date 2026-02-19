@@ -1,0 +1,86 @@
+---
+title: "Working with Kanta Lab Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_kanta_lab_data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Intro
+
+This tutorial demonstrates how to work with Kanta laboratory data using the `FinnGenUtilsR` package. The Kanta lab data contains laboratory measurements with OMOP concept mappings, and this tutorial shows how to append human-readable names to these OMOP concept IDs.
+
+To understand what the `fgbq` object is, see the dedicated vignette `tutorial_fgbq`.
+
+# Set up
+
+```{r setup}
+library(dplyr)
+library(FinnGenUtilsR)
+```
+
+Connect to the latest versions of BigQuery tables using `get_fg_bq_tables()`.
+Remember to change the environment to your sandbox, or set other data freeze versions if needed (see `tutorial_fgbq` vignette for more details).
+
+```{r}
+fgbq <- get_fg_bq_tables(
+  environment = "sandbox-XX"
+)
+```
+
+We can access the Kanta lab data using the `fgbq` object as follows: 
+
+```{r}
+fgbq$tbl$kanta
+```
+
+# Generate a table for analysis
+
+For example we create a subset of the main Kanta table by querying latest events from subject "FG00000001": 
+
+```{r}
+kanta_subject_1_tbl <- fgbq$tbl$kanta |> 
+  dplyr::filter(FINNGENID == "FG00000001") |> 
+  dplyr::arrange(desc(APPROX_EVENT_DATETIME)) 
+```
+
+We can see that this table contains OMOP_CONCEPT_ID but not the names of the concepts: 
+
+```{r}
+kanta_subject_1_tbl
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+kanta_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
+```
+
+
+## Adding info to OMOP_CONCEPT_ID codes
+
+Function `fg_dbplyr_append_concept_info_data` adds a new column with information about the OMOP_CONCEPT_ID name.
+
+```{r}
+omop_schema <- "atlas-development-270609.etl_sam_r12_5k_omop"
+kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |> fg_dbplyr_append_concept_info_data(omop_schema)
+```
+
+
+```{r}
+kanta_subject_1_tbl_with_omop_name |>  
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, omop_concept_name) 
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+kanta_subject_1_tbl_with_omop_name |>  
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, omop_concept_name) |> 
+  dplyr::collect() |> 
+  rmarkdown::paged_table()
+```
