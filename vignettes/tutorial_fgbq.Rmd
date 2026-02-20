@@ -82,12 +82,13 @@ names(fgbq$tbl)
 Access individual tables using the `$tbl` field:
 
 ```{r}
-fgbq$tbl$service_sector_detailed_longitudinal
+fgbq$tbl$service_sector_detailed_longitudinal |> head()
 ```
 
 (same table in html format for exploration)
 ```{r echo=FALSE}
 fgbq$tbl$service_sector_detailed_longitudinal |> 
+  head() |> 
   as.data.frame() |> 
   rmarkdown::paged_table()
 ```
@@ -113,7 +114,8 @@ Or other tidyverse functions like `stringr::str_detect()`
 # This will error
 fgbq$tbl$service_sector_detailed_longitudinal |> 
   filter(stringr::str_detect(CODE1, "^J45")) |> 
-  count(CODE1)
+  count(CODE1) |> 
+  head()
 ```
 
 ## Joining Tables
@@ -128,7 +130,8 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
     fgbq$tbl$minimum_extended, 
     by = "FINNGENID"
   ) |> 
-  count(SMOKE2, SMOKE3, sort = TRUE)
+  count(SMOKE2, SMOKE3, sort = TRUE) |> 
+  head()
 ```
 
 (same table in html format for exploration)
@@ -141,6 +144,8 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
     by = "finngenid"
   ) |> 
   count(smoke2, smoke3, sort = TRUE) |> 
+  collect() |> 
+  head() |> 
   as.data.frame() |> 
   rmarkdown::paged_table()
 ```
@@ -149,10 +154,11 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
 Once you have reduce the size of the total data you can download it into memeory using `collect()`. For example:  
 
 ```{r}
-ss_only_asthma  |> fgbq$service_sector_detailed_longitudinal |> 
+fgbq$tbl$service_sector_detailed_longitudinal |> 
   filter(stringr::str_detect(CODE1, "^J45")) |> 
   filter(EVENT_AGE > 50) |>
-  collect()
+  collect() |> 
+  head()
 ```
 
 ## Running SQL Queries

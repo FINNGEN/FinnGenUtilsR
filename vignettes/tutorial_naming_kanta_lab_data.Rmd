@@ -39,7 +39,7 @@ fgbq <- get_fg_bq_tables(
 We can access the Kanta lab data using the `fgbq` object as follows: 
 
 ```{r}
-fgbq$tbl$kanta
+fgbq$tbl$kanta |> head()
 ```
 
 # Generate a table for analysis
@@ -56,12 +56,14 @@ We can see that this table contains OMOP_CONCEPT_ID but not the names of the con
 
 ```{r}
 kanta_subject_1_tbl |> 
-  select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID)
+  select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID) |> 
+  head()
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
 kanta_subject_1_tbl |>
     select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID) |>
+    head() |> 
      as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -78,13 +80,15 @@ kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |>
 
 ```{r}
 kanta_subject_1_tbl_with_omop_name |>  
-  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) 
+  dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) |> 
+  head()
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
 kanta_subject_1_tbl_with_omop_name |>  
   dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) |> 
   dplyr::collect() |> 
+  head() |> 
   rmarkdown::paged_table()
 ```
 

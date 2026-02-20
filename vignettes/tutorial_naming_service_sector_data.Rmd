@@ -44,7 +44,7 @@ fgbq <- get_fg_bq_tables(
 We can access the service sector data using the `fgbq` object as follows: 
 
 ```{r}
-fgbq$tbl$service_sector_detailed_longitudinal
+fgbq$tbl$service_sector_detailed_longitudinal |> head()
 ```
 
 # Generate a table in service sector format
@@ -53,18 +53,18 @@ For example we create a subset of the main service sector table by filtering eve
 
 ```{r}
 # Get events for subject FG00000001
-ss_subject_1 <- fgbq$tbl$service_sector_detailed_longitudinal |> 
+ss_subject_1_tbl <- fgbq$tbl$service_sector_detailed_longitudinal |> 
   dplyr::filter(FINNGENID == "FG00000001")
 ```
 
 We can see that this table does not currently have information about the medical codes: 
 
 ```{r}
-ss_subject_1
+ss_subject_1_tbl |> head()
 ```
 (same table in html format for exporation)
 ```{r echo=FALSE}
-ss_subject_1_tbl |> as.data.frame() |> rmarkdown::paged_table()
+ss_subject_1_tbl |> head() |> as.data.frame() |> rmarkdown::paged_table()
 ```
 
 ## Adding info to medical codes
@@ -82,12 +82,14 @@ ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal
  
 ```{r}
 ss_subject_1_with_translations_tbl |>  
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) 
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head()
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
 ss_subject_1_with_translations_tbl |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -109,13 +111,15 @@ fg_dbplyr_append_code_info_to_longitudinal_data(
   ICD10fi_map_to = "CODE1" 
 ) |>
   filter(vocabulary_id == "ICD10fi" | vocabulary_id == "VNRfi") |>  
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) 
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
+  head()
 ```
 
 (same table in html format for exploration)
 ```{r echo=FALSE}
 ss_subject_1_with_translations_tbl |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -142,13 +146,15 @@ fg_dbplyr_append_code_info_to_longitudinal_data(
   ATC_precision = 3,
   NCSPfi_precision = 2
 ) |>
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) 
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
+  head()
 
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
 ss_subject_1_with_translations_tbl |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -171,7 +177,8 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
   ss_subject_1_tbl, 
   fg_bq_tables = fgbq
 ) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
+  head()
 ```
 
 (same table in html format for exploration)
@@ -181,6 +188,8 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
   fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
+  collect() |> 
+  head() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -197,7 +206,8 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
   ss_subject_1_tbl, 
   fg_bq_tables = fgbq
 ) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id)
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
+  head()
 ```
 (same table in html format for exploration)
 ```{r echo=FALSE}
@@ -206,6 +216,8 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
   fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
+  collect() |> 
+  head() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -263,5 +275,6 @@ result_bq_table <- fg_bq_append_code_info_to_longitudinal_data(
 
 # The result is a new temporary table in BigQuery
 result_bq_table |> bq_table_download() |>  
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id)
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
+  head()
 ```
