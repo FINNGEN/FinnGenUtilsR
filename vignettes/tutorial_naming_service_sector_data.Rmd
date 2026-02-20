@@ -76,7 +76,7 @@ We just need to indicate the table with the translations. This is also available
 ```{r}
 ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info
+  fg_bq_tables = fgbq
 )
 ```
  
@@ -106,7 +106,7 @@ For example:
 ```{r}
 fg_dbplyr_append_code_info_to_longitudinal_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info, 
+  fg_bq_tables = fgbq,
   PURCH_map_to = "VNR", 
   ICD10fi_map_to = "CODE1" 
 ) |>
@@ -139,7 +139,7 @@ It is possible to truncate these medical codes before the information is added. 
 ```{r}
 fg_dbplyr_append_code_info_to_longitudinal_data(
   ss_subject_1_tbl, 
-  fgbq$tbl$fg_codes_info, 
+  fg_bq_tables = fgbq, 
   ICD10fi_precision = 3,
   ICD9fi_precision = 3,
   ICD8fi_precision = 3,
