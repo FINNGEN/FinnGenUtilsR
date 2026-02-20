@@ -82,36 +82,48 @@ fg_bq_append_provider_info_to_service_sector_data <- function(
 #' Wrap around fg_append_provider_info_to_service_sector_data_sql to work with dbplyr package
 #'
 #' @param dbplyr_table an object of type <tbl> representing a table in longitudinal_data format
-#' @param dbplyr_fg_codes_info_table string with the full path (schema.table) to the database table with the fg_codes_info
+#' @param fg_bq_tables an object of type <fg_bq_tables> containing the fg_codes_info table
 #' @param ... see [fg_append_code_info_to_longitudinal_data_sql](fg_append_code_info_to_longitudinal_data_sql) for the mapping options
 #'
 #' @return <tbl> with added columns
 #'
 #' @importFrom checkmate assert_class
 #' @importFrom dbplyr sql_render build_sql
-#' @importFrom dplyr tbl
+#' @importFrom dplyr tbl compute
+#' @importFrom bigrquery as_bq_table
 #'
 #' @export
 #'
 
 fg_dbplyr_append_provider_info_to_service_sector_data <- function(
     dbplyr_table,
-    dbplyr_fg_codes_info_table,
+    fg_bq_tables,
     ...) {
   # validate
   dbplyr_table |> checkmate::assert_class("tbl")
-  c('code5', 'code6', 'code8', 'code9') |> checkmate::assert_subset(dbplyr_table |> colnames())
+  fg_bq_tables |> checkmate::assert_class("fg_bq_tables")
 
-  connection = dbplyr_table$src$con
+  dbplyr_fg_codes_info_table <- fg_bq_tables$tbl$fg_codes_info
 
-  sql <- fg_append_provider_info_to_service_sector_data_sql(
-    service_sector_data_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_table)), ")"),
-    fg_codes_info_table = paste0( "( ", as.character(dbplyr::sql_render(dbplyr_fg_codes_info_table)), ")"),
+  connection <- dbplyr_table$src$con
+
+  dbplyr_table_computed <- dplyr::compute(dbplyr_table)
+  dbplyr_table_path <- dbplyr_table_computed$lazy_query$x |> as.character()
+  bq_table <- bigrquery::as_bq_table(dbplyr_table_path)
+
+  bq_fg_codes_info_table <- dbplyr_fg_codes_info_table$lazy_query$x |> as.character()
+
+  bq_result <- fg_bq_append_provider_info_to_service_sector_data(
+    bq_project_id = connection@project,
+    bq_table = bq_table,
+    fg_codes_info_table = bq_fg_codes_info_table,
     ...
   )
 
-  new_dbplyr_table  <-  dplyr::tbl(connection, dbplyr::sql(sql))
+  new_dbplyr_table <- dplyr::tbl(
+    connection,
+    I(paste0(bq_result$project, ".", bq_result$dataset, ".", bq_result$table))
+  )
 
   return(new_dbplyr_table)
-
 }

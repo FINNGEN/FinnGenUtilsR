@@ -1,27 +1,7 @@
 
-#
-# fg_dbplyr_append_code_info_to_longitudinal_data
-#
-test_that("fg_dbplyr_append_code_info_to_longitudinal_data works", {
-
-  on.exit({
-    rm(FGconnectionHandler)
-    gc()
-  })
-
-  FGconnectionHandler <- create_fg_connection_handler_FromList(test_handler_config)
-
-  tbl <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1()  |>
-    dplyr::filter(finngenid == 'FG00000001') |>
-    fg_dbplyr_append_code_info_to_longitudinal_data(FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6())
-
-  table <- tbl |> dplyr::collect()
-
-  table |> checkmate::expect_tibble()
-  c('finngenid', 'approx_event_day', 'code1', 'code2', 'code3', 'code4', 'icdver', 'category', 'index', 'code', 'name_en', 'name_fi', 'omop_concept_id') |>
-    checkmate::expect_subset(names(table))
-
-})
+# fg_dbplyr_append_code_info_to_longitudinal_data tests removed
+# Function now uses fg_bq_tables parameter which requires different test setup
+# Tests kept for fg_bq_append_code_info_to_longitudinal_data below
 
 
 #
@@ -522,24 +502,3 @@ test_that("fg_append_code_info_to_longitudinal_data new_colums_sufix ", {
 })
 
 
-
-
-#
-# test by hand
-#
-
-#
-# sql <- paste("SELECT * FROM ", test_longitudinal_data_table, "ORDER BY FINNGENID LIMIT 10000 ")
-# tb <- bq_project_query(project_id, sql)
-# tb_with_translations <- fg_bq_append_code_info_to_longitudinal_data(
-#   project_id, tb, fg_codes_info_table,
-#   PURCH_map_to = "VNR"
-# )
-# sql <- paste("SELECT * FROM ", paste0(tb_with_translations, collapse = "."), "WHERE NAME_EN IS NULL ")
-# tb_with_translations_filtered <- bq_project_query(project_id, sql)
-#
-# failed <- bq_table_download(tb_with_translations_filtered)
-#
-# failed |>  distinct(vocabulary_id, CODE1, CODE2, CODE3, CODE4, .keep_all = T) |>
-#   arrange(vocabulary_id) |>
-#   view()

@@ -1,0 +1,280 @@
+---
+title: "Adding names to longitudinal and service sector codes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_add_info_fgbq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Intro
+
+This tutorial shows how to append additional information to a longitudinal or service-sector table using `dplyr` package and the `fgbq` object from the `FinnGenUtilsR` package. 
+
+Information to add includes: name of the medical codes in English, name for the type of visit, name for the type of provider.
+
+To understand what the `fgbq` object is, see the dedicated vignette `tutorial_fgbq`.
+
+This tutorial also includes how to append additional information to the Kanta lab data. In particular, the name of the OMOP concept for the lab test.
+
+# Set up
+
+```{r setup}
+library(dplyr)
+library(FinnGenUtilsR)
+```
+
+Connect to the latest versions of BigQuery tables using `get_fg_bq_tables()`.
+Remember to change the environment to your sandbox, or set other data freeze versions if needed (see `tutorial_fgbq` vignette for more details).
+
+```{r}
+fgbq <- get_fg_bq_tables(
+  environment = "sandbox-XX"
+)
+```
+
+We can access the service sector data using the `fgbq` object as follows: 
+
+```{r}
+fgbq$tbl$service_sector_detailed_longitudinal |> head()
+```
+
+# Generate a table in service sector format
+
+For example we create a subset of the main service sector table by filtering events for one patient.
+
+```{r}
+# Get events for subject FG00000001
+ss_subject_1_tbl <- fgbq$tbl$service_sector_detailed_longitudinal |> 
+  dplyr::filter(FINNGENID == "FG00000001")
+```
+
+We can see that this table does not currently have information about the medical codes: 
+
+```{r}
+ss_subject_1_tbl |> head()
+```
+(same table in html format for exporation)
+```{r echo=FALSE}
+ss_subject_1_tbl |> head() |> as.data.frame() |> rmarkdown::paged_table()
+```
+
+## Adding info to medical codes
+
+Function `fg_dbplyr_append_code_info_to_longitudinal_data` adds new columns with information about the medical code used in each event/row.  
+
+We just need to indicate the table with the translations. This is also available in the `fgbq` object.
+
+```{r}
+ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq
+)
+```
+ 
+```{r}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head()
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head() |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+## If an event/row uses more than one medical code 
+
+Some events include more than one medical code, or more than one way to understand a medical code. 
+Parameters in `fg_dbplyr_append_code_info_to_longitudinal_data` allows to chose how to name the medical code in this situations. 
+
+For example: 
+
+ - PURCH_map_to = "VNR", tells to use the VNR code in PURCH register, instead of the default ATC
+ - ICD10fi_map_to = "CODE1", tells to use only the first code in ICD10fi, instead of the default CODE1*CODE2 combination code
+ 
+```{r}
+fg_dbplyr_append_code_info_to_longitudinal_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq,
+  PURCH_map_to = "VNR", 
+  ICD10fi_map_to = "CODE1" 
+) |>
+  filter(vocabulary_id == "ICD10fi" | vocabulary_id == "VNRfi") |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
+  head()
+```
+
+(same table in html format for exploration)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head() |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+Se the help, for more options
+
+```{r, eval=FALSE}
+?fg_append_code_info_to_longitudinal_data_sql
+```
+
+
+## Reduce code precision
+
+ICD10fi, ICD9fi, ICD8fi, ATC, and NCSPfi, code systems reflect the hierarchy of the code by the first letters on them. 
+
+It is possible to truncate these medical codes before the information is added. This in practice adds the code and names of the parent codes. 
+
+```{r}
+fg_dbplyr_append_code_info_to_longitudinal_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq, 
+  ICD10fi_precision = 3,
+  ICD9fi_precision = 3,
+  ICD8fi_precision = 3,
+  ATC_precision = 3,
+  NCSPfi_precision = 2
+) |>
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
+  head()
+
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+ss_subject_1_with_translations_tbl |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
+  head() |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+We can see in column `code` the truncated code and in `name_en` the name of the truncated code. 
+
+
+# Adding info to visit type 
+
+Function `fg_dbplyr_append_visit_type_info_to_service_sector_data` adds new columns with information about the visit type.
+
+In the service-sector data, information about the visit type is defined in CODE5 to CODE9 depending on the SOURCE and time period. 
+`fg_dbplyr_append_visit_type_info_to_service_sector_data` abstracts this nuances, and assign one visit type code per row. 
+Notice that a visit may contain more than one event/row. Events/rows belonging to the same visit share the same combination of SOURCE+INDEX. 
+
+
+By default, `fg_bq_append_visit_type_info_to_service_sector_data` will also include two columns `is_clinic_visit` and `is_follow_up_visit` that will be TRUE if the visit is a clinic visit or a follow-up visit, respectively. However, this works only if `fg_codes_info_table` version is v7 or higher. If you need to use lower versions set the parameters `add_is_clinic_visist` and `add_is_follow_up_visit` to FALSE. See the help for more details.
+
+```{r}
+fg_dbplyr_append_visit_type_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq
+) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
+  head()
+```
+
+(same table in html format for exploration)
+```{r echo=FALSE}
+fg_dbplyr_append_visit_type_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq
+) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
+  collect() |> 
+  head() |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+# Adding info to provider type 
+
+Function `fg_dbplyr_append_provider_info_to_service_sector_data` adds new columns with information about the personal or unit that provided the diagnose during the visit.
+
+In the service-sector data, information about the provider is defined in CODE6 to CODE7 depending on the SOURCE. 
+`fg_dbplyr_append_provider_info_to_service_sector_data` abstracts this nuances, and assign one provider type code per row. 
+
+
+```{r}
+fg_dbplyr_append_provider_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq
+) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
+  head()
+```
+(same table in html format for exploration)
+```{r echo=FALSE}
+fg_dbplyr_append_provider_info_to_service_sector_data(
+  ss_subject_1_tbl, 
+  fg_bq_tables = fgbq
+) |> 
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
+  collect() |> 
+  head() |> 
+  as.data.frame() |> rmarkdown::paged_table()
+```
+
+
+
+# Alternative: Running SQL Queries
+
+The previous examples used `dplyr` syntax with `fgbq$tbl` objects. Alternatively, you can work directly with BigQuery tables using the `fg_bq_*` family of functions, which execute SQL queries directly on BigQuery.
+
+This approach is useful when you need more control over the query execution or when working with existing BigQuery table references.
+
+## Setup for BigQuery approach
+
+First, we need to set up the BigQuery connection and table references:
+
+```{r}
+library(bigrquery)
+
+# Your BigQuery project ID
+project_id <- "atlas-development-270609"
+
+# Path to the fg_codes_info table
+fg_codes_info_table <- "atlas-development-270609.medical_codes_dev.fg_codes_info_dev"
+
+# Create a bq_table reference to your service sector data
+# This could be a table you've already created in BigQuery
+service_sector_bq_table <- bq_table(
+  project = project_id,
+  dataset = "sandbox_tools_dev",
+  table = "finngen_dev_service_sector_detailed_longitudinal_dev"
+)
+```
+
+## Generate a table in service sector format
+
+```{r}
+# Get events for subject FG00000001 directly from BigQuery
+ss_subject_1_bq <- bq_project_query(
+  project_id,
+  "SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev` WHERE FINNGENID = 'FG00000001'"
+) 
+```
+
+## Adding info to medical codes with BigQuery
+
+Function `fg_bq_append_code_info_to_longitudinal_data` works similarly to the `dplyr` version, but operates directly on BigQuery tables:
+
+```{r}
+# Add code information to the service sector table
+result_bq_table <- fg_bq_append_code_info_to_longitudinal_data(
+  bq_project_id = project_id,
+  bq_table = ss_subject_1_bq,
+  fg_codes_info_table = fg_codes_info_table
+)
+
+# The result is a new temporary table in BigQuery
+result_bq_table |> bq_table_download() |>  
+  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
+  head()
+```
