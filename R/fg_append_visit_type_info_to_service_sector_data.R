@@ -93,10 +93,10 @@ fg_bq_append_visit_type_info_to_service_sector_data <- function(
 
 #' fg_dbplyr_append_visit_type_info_to_service_sector_data
 #'
-#' Wrap around fg_append_provider_info_to_service_sector_data_sql to work with dbplyr package
+#' Wrap around fg_append_visit_type_info_to_service_sector_data_sql to work with dbplyr package
 #'
 #' @param dbplyr_table an object of type <tbl> representing a table in longitudinal_data format
-#' @param dbplyr_fg_codes_info_table string with the full path (schema.table) to the database table with the fg_codes_info
+#' @param fg_bq_tables an object of type <fg_bq_tables> containing the fg_codes_info table
 #' @param ... see [fg_append_visit_type_info_to_service_sector_data_sql](fg_append_visit_type_info_to_service_sector_data_sql) for the mapping options
 #'
 #' @return <tbl> with added columns

@@ -14,13 +14,13 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
 \arguments{
 \item{dbplyr_table}{an object of type \if{html}{\out{<tbl>}} representing a table in longitudinal_data format}
 
-\item{...}{see \url{fg_append_visit_type_info_to_service_sector_data_sql} for the mapping options}
+\item{fg_bq_tables}{an object of type <fg_bq_tables> containing the fg_codes_info table}
 
-\item{dbplyr_fg_codes_info_table}{string with the full path (schema.table) to the database table with the fg_codes_info}
+\item{...}{see \url{fg_append_visit_type_info_to_service_sector_data_sql} for the mapping options}
 }
 \value{
 \if{html}{\out{<tbl>}} with added columns
 }
 \description{
-Wrap around fg_append_provider_info_to_service_sector_data_sql to work with dbplyr package
+Wrap around fg_append_visit_type_info_to_service_sector_data_sql to work with dbplyr package
 }
