@@ -4,12 +4,12 @@
 \alias{fg_dbplyr_append_concept_info_data}
 \title{fg_dbplyr_append_concept_info_data}
 \usage{
-fg_dbplyr_append_concept_info_data(dbplyr_table, omop_schema, ...)
+fg_dbplyr_append_concept_info_data(dbplyr_table, fg_bq_tables, ...)
 }
 \arguments{
 \item{dbplyr_table}{a tbl object with the data}
 
-\item{omop_schema}{string with the schema where the omop tables are stored}
+\item{fg_bq_tables}{an object of type fg_bq_tables with the bigquery tables}
 
 \item{...}{see \code{fg_append_concept_info_data_sql} for the mapping options}
 }

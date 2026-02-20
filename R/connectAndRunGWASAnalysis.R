@@ -31,7 +31,7 @@ createSandboxAPIConnection <- function(base_url, token) {
   name = ""
   notification_email = ""
   if (class(e)[1] == "character") {
-    error_message <- stringr::str_c("Could not connect to sangbox API url: ", url, " token:", token, " Error: ", e)
+    error_message <- stringr::str_c("Could not connect to sandbox API url: ", url, " token:", token, " Error: ", e)
   }else if(httr::status_code(res) != 200){
     res_content <- httr::content(res)
     error_message <- as.character(res_content)[1]

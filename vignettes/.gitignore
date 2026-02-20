@@ -1,0 +1,8 @@
+*.html
+*.R
+*.pdf
+*.md
+*.knit.md
+*.utf8.md
+*_cache/
+*_files/
