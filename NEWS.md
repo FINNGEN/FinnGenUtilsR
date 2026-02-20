@@ -1,3 +1,6 @@
+# FinnGenUtilsR 4.0.1
+- Updates GWAS to run from standard API
+
 # FinnGenUtilsR 4.0.0
 - Refactor: Now we use an fg_table R6 object that finds automatically the connection parameters, last datafreeze and last table versions, or a specific datafreeze if needed.
 - fg_table provides a dbplyr interface to the BQ tables to seemingly use them as tibbles.

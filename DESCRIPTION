@@ -1,6 +1,6 @@
 Package: FinnGenUtilsR
 Title: FinnGenUtilsR
-Version: 4.0.0
+Version: 4.0.1
 Authors@R: 
     person("Javier", "Gracia-Tabuenca", , "javier.graciatabuenca@tuni.fi", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2455-0598"))
@@ -14,7 +14,6 @@ Imports:
     bigrquery,
     CDMConnector,
     checkmate,
-    DatabaseConnector,
     DBI,
     dbplyr,
     dplyr,
@@ -24,15 +23,12 @@ Imports:
     purrr,
     R6,
     readr,
-    rlang,
     SqlRender,
     stringr,
-    tibble,
-    yaml
+    tibble
 Suggests: 
     knitr,
     lubridate,
-    readr,
     rmarkdown,
     testthat (>= 3.0.0),
     devtools,
