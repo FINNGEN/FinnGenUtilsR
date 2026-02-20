@@ -34,6 +34,7 @@ bigquery
 bigrquery
 bq
 cdmFromCon
+datafreeze
 dbplyr
 dev
 dplyr
@@ -48,3 +49,4 @@ runGWASAnalysis
 sandboxAPI
 sql
 tbl
+tibbles
