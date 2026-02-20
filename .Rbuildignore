@@ -7,3 +7,6 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+
+^dev$
+^errorReportSql.txt$
