@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,9 +18,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_add_info_bigrquery.html">USING BIGRQUERY PACKAGE: Adding names to longitudinal, service sector, or lab codes</a></li>
-    <li><a class="dropdown-item" href="../articles/tutorial_add_info_FGconnectionHandler.html">USING FGconnectionHandler: Adding names to longitudinal and service sector codes</a></li>
-    <li><a class="dropdown-item" href="../articles/tutorial_connection_handler.html">Tutorial connection to FinnGen BQ tables using FGconnectionHandler</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tutorial_naming_kanta_lab_data.html">Adding Names to Kanta Lab Data</a></li>
+    <li><a class="dropdown-item" href="../articles/tutorial_naming_service_sector_data.html">Adding names to longitudinal and service sector codes</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -38,12 +37,23 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.0.1" id="finngenutilsr-401">FinnGenUtilsR 4.0.1<a class="anchor" aria-label="anchor" href="#finngenutilsr-401"></a></h2>
+<ul><li>Updates GWAS to run from standard API</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.0.0" id="finngenutilsr-400">FinnGenUtilsR 4.0.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-400"></a></h2>
+<ul><li>Refactor: Now we use an fg_table R6 object that finds automatically the connection parameters, last datafreeze and last table versions, or a specific datafreeze if needed.</li>
+<li>fg_table provides a dbplyr interface to the BQ tables to seemingly use them as tibbles.</li>
+<li>Raw SQL queries can still be executed using the fg_table object.</li>
+<li>All appending name functions now work for fg_table.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.1.3" id="finngenutilsr-313">FinnGenUtilsR 3.1.3<a class="anchor" aria-label="anchor" href="#finngenutilsr-313"></a></h2>
 <ul><li>Improvement: Allow lower case and underscores for custom gwas phenotype names</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.1.2" id="finngenutilsr-312">FinnGenUtilsR 3.1.2<a class="anchor" aria-label="anchor" href="#finngenutilsr-312"></a></h2>
-<ul><li>hot fix: change in sangbox API name and notification email</li>
+<ul><li>hot fix: change in sandbox API name and notification email</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.1.1" id="finngenutilsr-311">FinnGenUtilsR 3.1.1<a class="anchor" aria-label="anchor" href="#finngenutilsr-311"></a></h2>
@@ -69,7 +79,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.0" id="finngenutilsr-220">FinnGenUtilsR 2.2.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-220"></a></h2>
-<ul><li>Added <code>FGconnectionHandler</code> and <code><a href="../reference/fg_get_bq_config.html">fg_get_bq_config()</a></code> to connect and work with to FinnGen BQ databases as data frames</li>
+<ul><li>Added <code>FGconnectionHandler</code> and <code>fg_get_bq_config()</code> to connect and work with to FinnGen BQ databases as data frames</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="finngenutilsr-210">FinnGenUtilsR 2.1.0<a class="anchor" aria-label="anchor" href="#finngenutilsr-210"></a></h2>
@@ -98,7 +108,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
