@@ -188,8 +188,8 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
   fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
-  collect() |> 
   head() |> 
+  collect() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 
@@ -216,8 +216,8 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
   fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
-  collect() |> 
   head() |> 
+  collect() |> 
   as.data.frame() |> rmarkdown::paged_table()
 ```
 

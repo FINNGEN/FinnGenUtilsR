@@ -87,8 +87,8 @@ kanta_subject_1_tbl_with_omop_name |>
 ```{r echo=FALSE}
 kanta_subject_1_tbl_with_omop_name |>  
   dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) |> 
-  dplyr::collect() |> 
   head() |> 
+  dplyr::collect() |> 
   rmarkdown::paged_table()
 ```
 

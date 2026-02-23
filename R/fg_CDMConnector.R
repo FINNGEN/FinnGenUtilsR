@@ -6,14 +6,16 @@
 #'
 #' @return A CDM reference object
 #'
-#' @importFrom CDMConnector cdmFromCon
-#'
 #' @export
 fg_CDMConnector <- function(
   environment = NULL,
   cdmDataFreezeVersion = NULL,
   ...
 ){
+
+  if (!requireNamespace("CDMConnector", quietly = TRUE)) {
+    stop("Package 'CDMConnector' is required but not installed. Please install it to use this function.")
+  }
 
   # Making a connection object that is used to connect to the tables:
   connection <- fg_connection(environment)
@@ -36,6 +38,7 @@ fg_CDMConnector <- function(
 
   cdmSchema <- paste0(billing_project_id, ".finngen_omop_",cdmDataFreezeVersion)
   writeSchema <- paste0(project_id, ".", dataset_id)
+
 
 
   cdm <- CDMConnector::cdmFromCon(
