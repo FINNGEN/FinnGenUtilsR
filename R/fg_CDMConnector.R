@@ -6,8 +6,6 @@
 #'
 #' @return A CDM reference object
 #'
-#' @importFrom CDMConnector cdmFromCon
-#'
 #' @export
 fg_CDMConnector <- function(
   environment = NULL,
