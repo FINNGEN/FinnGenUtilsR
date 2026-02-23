@@ -61,7 +61,7 @@ fgbq <- get_fg_bq_tables(
 #>   - finngen_vnrs: medical_codes.finngen_vnr_dev
 #>   - omop_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to 16 tables in 7.15 seconds
+#> Successfully connected to 16 tables in 8.21 seconds
 ```
 
 We can access the service sector data using the `fgbq` object as
@@ -297,12 +297,12 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
 #> # Database: BigQueryConnection
 #>   FINNGENID  SOURCE INDEX APPROX_EVENT_DAY CODE5 CODE6 CODE8 CODE9 provider_code
 #>   <chr>      <chr>  <chr> <date>           <chr> <chr> <chr> <chr> <chr>        
-#> 1 FG00000001 PURCH  54    2021-10-25       NA    NA    NA    NA    NA           
-#> 2 FG00000001 PURCH  75    2022-07-01       NA    NA    NA    NA    NA           
-#> 3 FG00000001 PURCH  167   2010-10-01       NA    NA    NA    NA    NA           
-#> 4 FG00000001 PURCH  208   2013-11-22       NA    NA    NA    NA    NA           
-#> 5 FG00000001 PURCH  233   2014-06-16       NA    NA    NA    NA    NA           
-#> 6 FG00000001 PURCH  244   2015-09-26       NA    NA    NA    NA    NA           
+#> 1 FG00000001 PURCH  39    2020-03-13       NA    NA    NA    NA    NA           
+#> 2 FG00000001 PURCH  91    2022-05-09       NA    NA    NA    NA    NA           
+#> 3 FG00000001 PURCH  92    2022-10-07       NA    NA    NA    NA    NA           
+#> 4 FG00000001 PURCH  144   2008-03-06       NA    NA    NA    NA    NA           
+#> 5 FG00000001 PURCH  145   2008-03-12       NA    NA    NA    NA    NA           
+#> 6 FG00000001 PURCH  169   2010-08-09       NA    NA    NA    NA    NA           
 #> # ℹ 2 more variables: provider_name_en <chr>, provider_concept_class_id <chr>
 ```
 

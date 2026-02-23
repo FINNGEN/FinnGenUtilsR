@@ -55,7 +55,7 @@ fgbq <- get_fg_bq_tables(
 #>   - finngen_vnrs: medical_codes.finngen_vnr_dev
 #>   - omop_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to 16 tables in 7.79 seconds
+#> Successfully connected to 16 tables in 8.06 seconds
 ```
 
 We can access the Kanta lab data using the `fgbq` object as follows:
