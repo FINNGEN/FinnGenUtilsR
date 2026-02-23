@@ -1,8 +1,18 @@
+# FinnGenUtilsR 4.0.1
+- Updates GWAS to run from standard API
+
+# FinnGenUtilsR 4.0.0
+- Refactor: Now we use an fg_table R6 object that finds automatically the connection parameters, last datafreeze and last table versions, or a specific datafreeze if needed.
+- fg_table provides a dbplyr interface to the BQ tables to seemingly use them as tibbles.
+- Raw SQL queries can still be executed using the fg_table object.
+- All appending name functions now work for fg_table.
+
+
 # FinnGenUtilsR 3.1.3
 - Improvement: Allow lower case and underscores for custom gwas phenotype names
 
 # FinnGenUtilsR 3.1.2
-- hot fix: change in sangbox API name and notification email
+- hot fix: change in sandbox API name and notification email
   
 # FinnGenUtilsR 3.1.1
 - hot fix: `fg_append_visit_type_info_to_service_sector_data_sql` error with large data

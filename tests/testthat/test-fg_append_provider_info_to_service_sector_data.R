@@ -1,34 +1,3 @@
-
-
-#
-# fg_dbplyr_append_provider_info_to_service_sector_data
-#
-test_that("fg_dbplyr_append_provider_info_to_service_sector_data works", {
-
-  on.exit({
-    rm(FGconnectionHandler)
-    gc()
-  })
-
-  FGconnectionHandler <- create_fg_connection_handler_FromList(test_handler_config)
-
-  tbl <- FGconnectionHandler$getTblsandboxToolsSchema$finngen_r11_service_sector_detailed_longitudinal_v1()  |>
-    dplyr::filter(finngenid == 'FG00000001') |>
-    fg_dbplyr_append_provider_info_to_service_sector_data(FGconnectionHandler$getTblmedicalCodesSchema$fg_codes_info_v6())
-
-
-  table <- tbl |> dplyr::collect()
-
-  table |> checkmate::expect_tibble()
-  c("source", "fg_code6", "fg_code7",
-    "provider_concept_class_id", "provider_name_en", "provider_name_fi",
-    "provider_code", "provider_omop_concept_id" ) |>
-    checkmate::expect_subset(table |> colnames())
-
-
-})
-
-
 #
 # fg_bq_append_provider_info_to_service_sector_data_sql
 #
