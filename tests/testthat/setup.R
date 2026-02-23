@@ -10,6 +10,6 @@ test_longitudinal_data_table <- "atlas-development-270609.sandbox_tools_dev.finn
 fg_codes_info_table <- "atlas-development-270609.medical_codes_dev.fg_codes_info_dev"
 tmp_schema <- "sandbox"
 
-# Enviroment
+# Environment
 test_environment <- "build"
 
