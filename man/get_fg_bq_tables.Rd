@@ -4,7 +4,12 @@
 \alias{get_fg_bq_tables}
 \title{Get FinnGen BigQuery Tables}
 \usage{
-get_fg_bq_tables(environment, dataFreeze = NULL, tablesPathsTibble = NULL)
+get_fg_bq_tables(
+  environment,
+  dataFreeze = NULL,
+  tablesPathsTibble = NULL,
+  includeCDMTables = FALSE
+)
 }
 \arguments{
 \item{environment}{Environment identifier (e.g., "build", "prod")}
@@ -12,6 +17,8 @@ get_fg_bq_tables(environment, dataFreeze = NULL, tablesPathsTibble = NULL)
 \item{dataFreeze}{(Optional) Data freeze identifier (default is NULL)}
 
 \item{tablesPathsTibble}{(Optional) Tibble containing table paths (default is NULL)}
+
+\item{includeCDMTables}{(Optional) Whether to include OMOP CDM tables (default is FALSE)}
 }
 \value{
 An fg_bq_tables R6 object

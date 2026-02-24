@@ -2,7 +2,7 @@
 
 #' Create FinnGen BigQuery Connection
 #'
-#' @param environment Environment identifier (e.g., "build", "review", or "sandbox-XX")
+#' @param environment Environment identifier (e.g., "build", "preview", or "sandbox-XX")
 #'
 #' @return A BigQuery connection object
 #'
@@ -31,21 +31,18 @@ fg_connection <- function(
     bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
     billing_project_id <- "atlas-development-270609"
     project_id <- "atlas-development-270609"
-    dataset_id <- "sandbox"
-  } else if (environment == "review") {
+  } else if (environment == "preview") {
     billing_project_id <- "fg-production-sandbox-46"
-    project_id <- "finngen-production-library"
-    dataset_id <- "sandbox"
+    project_id <- "fg-production-sandbox-46"
   } else {
-    billing_project_id <- paste0("fg-production-", sandboxNumber)
+    sandboxNumber <- sub("sandbox-([0-9]+)", "\\1", environment)
+    billing_project_id <- paste0("fg-production-sandbox-", sandboxNumber)
     project_id <- "finngen-production-library"
-    dataset_id <- "sandbox"
   }
 
   connection <- DBI::dbConnect(
     bigrquery::bigquery(),
     project = project_id,
-    dataset = dataset_id,
     billing = billing_project_id,
     bigint = "integer64"
   )
@@ -69,6 +66,6 @@ fg_connection <- function(
 ) {
   environment |>
     checkmate::assertString(
-      pattern = "^(sandbox-[0-9]+|build|review)$"
+      pattern = "^(sandbox-[0-9]+|build|preview)$"
     )
 }

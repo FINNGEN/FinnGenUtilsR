@@ -13,3 +13,5 @@ errorReportSql.txt
 renv/*
 renv.lock
 .Rprofile
+
+*.tar.gz

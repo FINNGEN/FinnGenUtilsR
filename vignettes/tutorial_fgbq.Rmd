@@ -30,7 +30,7 @@ The minimum required argument is the `environment` which specifies where you run
 
 ![](pic/sandbox_number.png)
 
-Moreover, for internal use it is possible to specify 'build' or 'review' as environment.
+Moreover, for internal use it is possible to specify 'build' or 'preview' as environment.
 
 ## Create Connection to BigQuery Tables
 
@@ -58,7 +58,7 @@ fgbq
 ```
 
 This shows:
-- Environment (e.g., build, sandbox, review)
+- Environment (e.g., build, sandbox, preview)
 - Data Freeze version (e.g., dev, r13_v3)
 - Project ID
 - Billing Project ID
