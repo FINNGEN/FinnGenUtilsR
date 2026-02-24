@@ -339,6 +339,7 @@ fg_getLatestDataFreeze <- function(
 #' @param connection BigQuery connection object
 #' @param dataFreeze Data freeze identifier
 #' @param skipDataFreezeValidation Whether to skip data freeze validation
+#' @param includeCDMTables Whether to include OMOP CDM tables (default is FALSE)
 #'
 #' @return Tibble with table_id and full_path columns
 #'

@@ -7,7 +7,8 @@
 fg_getLatestTablePaths(
   connection,
   dataFreeze,
-  skipDataFreezeValidation = FALSE
+  skipDataFreezeValidation = FALSE,
+  includeCDMTables = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ fg_getLatestTablePaths(
 \item{dataFreeze}{Data freeze identifier}
 
 \item{skipDataFreezeValidation}{Whether to skip data freeze validation}
+
+\item{includeCDMTables}{Whether to include OMOP CDM tables (default is FALSE)}
 }
 \value{
 Tibble with table_id and full_path columns
