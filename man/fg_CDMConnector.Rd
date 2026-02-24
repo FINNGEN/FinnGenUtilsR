@@ -7,7 +7,7 @@
 fg_CDMConnector(environment = NULL, cdmDataFreezeVersion = NULL, ...)
 }
 \arguments{
-\item{environment}{Environment identifier (e.g., "build", "review", or "sandbox-XX")}
+\item{environment}{Environment identifier (e.g., "build", "preview", or "sandbox-XX")}
 
 \item{cdmDataFreezeVersion}{Data freeze version (e.g., "r13_v3", "dev"). If NULL, latest version is used.}
 

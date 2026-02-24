@@ -6,6 +6,7 @@
 #' @param environment Environment identifier (e.g., "build", "prod")
 #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
 #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+#' @param includeCDMTables (Optional) Whether to include OMOP CDM tables (default is FALSE)
 #'
 #' @return An fg_bq_tables R6 object
 #'
@@ -13,12 +14,14 @@
 get_fg_bq_tables <- function(
   environment,
   dataFreeze = NULL,
-  tablesPathsTibble = NULL
+  tablesPathsTibble = NULL,
+  includeCDMTables = FALSE
 ) {
   fg_bq_tables$new(
     environment = environment,
     dataFreeze = dataFreeze,
-    tablesPathsTibble = tablesPathsTibble
+    tablesPathsTibble = tablesPathsTibble,
+    includeCDMTables = includeCDMTables
   )
 }
 
@@ -37,16 +40,17 @@ get_fg_bq_tables <- function(
 #' @param environment Environment identifier (e.g., "build", "prod")
 #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
 #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+#' @param includeCDMTables (Optional) Whether to include OMOP CDM tables (default is FALSE)
 #' @param sql Character string containing the SQL query to execute
 #' @param ... Additional arguments passed to bigrquery::bq_project_query()
 #'
 #' @details
 #' ## Methods
-#' 
-#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)} Initialize a new object.
-#' 
+#'
+#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, includeCDMTables = FALSE)} Initialize a new object.
+#'
 #' \code{$print()} Print information about the object.
-#' 
+#'
 #' \code{$query(sql, ...)} Execute a SQL query against BigQuery. Returns a BigQuery table reference.
 #'
 #' @importFrom R6 R6Class
@@ -93,10 +97,12 @@ fg_bq_tables <- R6::R6Class(
     #' @param environment Environment identifier (e.g., "build", "prod")
     #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
     #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+    #' @param includeCDMTables (Optional) Whether to include OMOP CDM tables (default is FALSE)
     initialize = function(
       environment,
       dataFreeze = NULL,
-      tablesPathsTibble = NULL
+      tablesPathsTibble = NULL,
+      includeCDMTables = FALSE
     ) {
       start_time <- Sys.time()
 
@@ -109,7 +115,7 @@ fg_bq_tables <- R6::R6Class(
       connection <- fg_connection(environment)
 
       if (is.null(dataFreeze)) {
-        if (environment == "review") {
+        if (environment == "preview") {
           dataFreeze <- 'dev'
         } else if (environment == "build") {
           dataFreeze <- 'dev'
@@ -128,7 +134,8 @@ fg_bq_tables <- R6::R6Class(
         tablesPathsTibble <- fg_getLatestTablePaths(
           connection = connection,
           dataFreeze = dataFreeze,
-          skipDataFreezeValidation = TRUE
+          skipDataFreezeValidation = TRUE,
+          includeCDMTables = includeCDMTables
         )
       }
 
@@ -151,20 +158,22 @@ fg_bq_tables <- R6::R6Class(
           table_dplyr = purrr::map(
             full_path,
             function(full_path) {
+              tbl <- NULL
               tryCatch(
-                dplyr::tbl(
+                tbl <- dplyr::tbl(
                   connection,
                   I(paste0(connection@project, ".", full_path))
                 ),
                 error = function(e) {
-                  stop(
-                    "Error table : ",
+                  warning(
+                    "Could not connect to table: ",
                     full_path,
-                    "Error message: ",
+                    "\nMessage: ",
                     e$message
                   )
                 }
               )
+              return(tbl)
             }
           )
         ) |>
@@ -330,6 +339,7 @@ fg_getLatestDataFreeze <- function(
 #' @param connection BigQuery connection object
 #' @param dataFreeze Data freeze identifier
 #' @param skipDataFreezeValidation Whether to skip data freeze validation
+#' @param includeCDMTables Whether to include OMOP CDM tables (default is FALSE)
 #'
 #' @return Tibble with table_id and full_path columns
 #'
@@ -344,7 +354,8 @@ fg_getLatestDataFreeze <- function(
 fg_getLatestTablePaths <- function(
   connection,
   dataFreeze,
-  skipDataFreezeValidation = FALSE
+  skipDataFreezeValidation = FALSE,
+  includeCDMTables = FALSE
 ) {
   # connection
   connection |> checkmate::assertClass("BigQueryConnection")
@@ -372,6 +383,12 @@ fg_getLatestTablePaths <- function(
       first_data_freeze = readr::col_integer()
     )
   )
+
+  # Filter out CDM tables if not requested
+  if (!includeCDMTables) {
+    tablesPathsTibble <- tablesPathsTibble |>
+      dplyr::filter(!grepl("^cdm_", table_id) | table_id == "cdm_concept")
+  }
 
   tablesPathsTibble <- tablesPathsTibble |>
     dplyr::filter(

@@ -1,3 +1,5 @@
+# FinnGenUtilsR 4.0.2
+
 # FinnGenUtilsR 4.0.1
 - Updates GWAS to run from standard API
 

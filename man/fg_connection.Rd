@@ -7,7 +7,7 @@
 fg_connection(environment)
 }
 \arguments{
-\item{environment}{Environment identifier (e.g., "build", "review", or "sandbox-XX")}
+\item{environment}{Environment identifier (e.g., "build", "preview", or "sandbox-XX")}
 }
 \value{
 A BigQuery connection object
