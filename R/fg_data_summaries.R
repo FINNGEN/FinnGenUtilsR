@@ -450,10 +450,10 @@ fg_omop_summaries <- function(
           vocab_stats <- fg_bq_tables$tbl[[domain$table_id]] |>
             dplyr::left_join(
               fg_bq_tables$tbl$cdm_concept |>
-                dplyr::select(concept_id, vocabulary_id),
+                dplyr::select(concept_id, vocabulary_id, concept_class_id),
               by = setNames("concept_id", domain$source_concept_col)
             ) |>
-            dplyr::count(vocabulary_id, sort = TRUE) |>
+            dplyr::count(vocabulary_id, concept_class_id, sort = TRUE) |>
             dplyr::collect()
           
           # Join with vocabulary table only for non-NA vocabulary_id
@@ -466,8 +466,17 @@ fg_omop_summaries <- function(
             )
           
           if (nrow(vocab_stats) > 0) {
-            # Sort by count descending
+            # For FGVisitType, create vocab_id with concept_class, for others group by vocab
             vocab_stats <- vocab_stats |>
+              dplyr::mutate(
+                display_vocab_id = ifelse(
+                  vocabulary_id == "FGVisitType" & !is.na(concept_class_id),
+                  paste0("FGVisitType:", concept_class_id),
+                  vocabulary_id
+                )
+              ) |>
+              dplyr::group_by(display_vocab_id, vocabulary_id, vocabulary_name) |>
+              dplyr::summarise(n = sum(n), .groups = "drop") |>
               dplyr::arrange(desc(n))
             
             md_lines <- c(
@@ -482,7 +491,7 @@ fg_omop_summaries <- function(
               vocab_id <- ifelse(
                 is.na(vocab_stats$vocabulary_id[i]),
                 "NA",
-                as.character(vocab_stats$vocabulary_id[i])
+                as.character(vocab_stats$display_vocab_id[i])
               )
               vocab_name <- ifelse(
                 is.na(vocab_stats$vocabulary_id[i]),
