@@ -1,6 +1,6 @@
 table_id,table_path_template,first_data_freeze
 minimum_extended,sandbox_tools_{datafreeze}.minimum_extended_{datafreeze}_{version},11
-service_sector_detailed_longitudinal,sandbox_tools_{datafreeze}.finngen_{datafreeze}_service_sector_detailed_longitudinal_{version},11
+service_sector_detailed_longitudinal,sandbox_tools_{datafreeze}.finngen_{datafreeze}_service_sector_detailed_longitudinal,11
 kanta,sandbox_tools_{datafreeze}.kanta_{datafreeze}_{version},12
 kidney,sandbox_tools_{datafreeze}.kidney_{datafreeze}_{version},12
 vision,sandbox_tools_{datafreeze}.vision_{datafreeze}_{version},12
