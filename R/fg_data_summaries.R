@@ -297,7 +297,7 @@ fg_omop_summaries <- function(
       
       # Patients by sex
       sex_stats <- fg_bq_tables$tbl$cdm_person |>
-        dplyr::count(gender_concept_id, sort = TRUE) |>
+        dplyr::count(gender_concept_id) |>
         dplyr::left_join(
           fg_bq_tables$tbl$cdm_concept |> 
             dplyr::select(concept_id, concept_name),
@@ -400,7 +400,7 @@ fg_omop_summaries <- function(
                 dplyr::select(visit_occurrence_id, visit_source_concept_id),
               by = "visit_occurrence_id"
             ) |>
-            dplyr::count(visit_source_concept_id, sort = TRUE) |>
+            dplyr::count(visit_source_concept_id) |>
             dplyr::left_join(
               fg_bq_tables$tbl$cdm_concept |>
                 dplyr::select(concept_id, concept_name),
@@ -453,7 +453,7 @@ fg_omop_summaries <- function(
                 dplyr::select(concept_id, vocabulary_id, concept_class_id),
               by = setNames("concept_id", domain$source_concept_col)
             ) |>
-            dplyr::count(vocabulary_id, concept_class_id, sort = TRUE) |>
+            dplyr::count(vocabulary_id, concept_class_id) |>
             dplyr::collect()
           
           # Join with vocabulary table only for non-NA vocabulary_id
