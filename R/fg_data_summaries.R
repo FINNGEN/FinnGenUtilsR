@@ -14,7 +14,7 @@
 #' @importFrom dplyr tally n_distinct summarise collect across where
 #' @importFrom purrr map_chr
 #' @importFrom glue glue
-#' @importFrom rmarkdown render
+#' @importFrom utils head
 #'
 #' @export
 fg_register_data_summaries <- function(
@@ -226,7 +226,7 @@ fg_register_data_summaries <- function(
 #' @importFrom checkmate assert_class assertString
 #' @importFrom dplyr tally n_distinct summarise collect count left_join
 #' @importFrom glue glue
-#' @importFrom rmarkdown render
+#' @importFrom stats setNames
 #'
 #' @export
 fg_omop_summaries <- function(

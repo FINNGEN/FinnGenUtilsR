@@ -62,6 +62,8 @@ get_fg_bq_tables <- function(
 #' @importFrom stringr str_extract str_replace str_subset
 #' @importFrom glue glue
 #' @importFrom bigrquery bq_project_query
+#' @importFrom stats na.omit
+#' @importFrom utils tail
 #'
 #' @export
 fg_bq_tables <- R6::R6Class(
@@ -240,13 +242,13 @@ fg_bq_tables <- R6::R6Class(
         
         if (table_exists) {
           cat(sprintf(
-            "  ✓ %-33s %s\n",
+            "  \\u2713 %-33s %s\n",
             table_name,
             private$.tablePaths[[i]]
           ))
         } else {
           cat(sprintf(
-            "  \033[31m✗ %-33s %s\033[0m\n",
+            "  \033[31m\\u2717 %-33s %s\033[0m\n",
             table_name,
             private$.tablePaths[[i]]
           ))

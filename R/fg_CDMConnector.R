@@ -60,6 +60,7 @@ fg_CDMConnector <- function(
 #' @importFrom bigrquery bq_project_datasets
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_extract str_starts
+#' @importFrom stats na.omit
 #'
 #' @export
 cdm_getLatestDataFreezeAndVersion <- function(
