@@ -62,6 +62,8 @@ get_fg_bq_tables <- function(
 #' @importFrom stringr str_extract str_replace str_subset
 #' @importFrom glue glue
 #' @importFrom bigrquery bq_project_query
+#' @importFrom stats na.omit
+#' @importFrom utils tail
 #'
 #' @export
 fg_bq_tables <- R6::R6Class(
@@ -153,6 +155,9 @@ fg_bq_tables <- R6::R6Class(
         tibble::deframe()
 
       message("Creating table connections (this may take a moment)...")
+      
+      failed_tables <- character(0)
+      
       tbl <- tablesPathsTibble |>
         dplyr::mutate(
           table_dplyr = purrr::map(
@@ -165,12 +170,7 @@ fg_bq_tables <- R6::R6Class(
                   I(paste0(connection@project, ".", full_path))
                 ),
                 error = function(e) {
-                  warning(
-                    "Could not connect to table: ",
-                    full_path,
-                    "\nMessage: ",
-                    e$message
-                  )
+                  failed_tables <<- c(failed_tables, full_path)
                 }
               )
               return(tbl)
@@ -193,13 +193,34 @@ fg_bq_tables <- R6::R6Class(
         as.numeric(difftime(Sys.time(), start_time, units = "secs")),
         2
       )
-      message(
-        "Successfully connected to ",
-        length(tbl),
-        " tables in ",
-        elapsed_time,
-        " seconds"
-      )
+      
+      # Count successful and failed connections
+      n_successful <- sum(sapply(tbl, function(x) !is.null(x)))
+      n_failed <- length(tbl) - n_successful
+      
+      if (n_failed == 0) {
+        message(
+          "Successfully connected to all ",
+          n_successful,
+          " tables in ",
+          elapsed_time,
+          " seconds"
+        )
+      } else {
+        message(
+          "Connected to ",
+          n_successful,
+          " tables (",
+          n_failed,
+          " failed) in ",
+          elapsed_time,
+          " seconds"
+        )
+        if (n_failed > 0) {
+          failed_table_names <- names(tbl)[sapply(tbl, is.null)]
+          message("Failed tables: \033[31m", paste(failed_table_names, collapse = ", "), "\033[0m")
+        }
+      }
     },
 
     #' @description
@@ -216,11 +237,22 @@ fg_bq_tables <- R6::R6Class(
       cat("Available Tables:\n")
       cat("-----------------\n")
       for (i in seq_along(private$.tablePaths)) {
-        cat(sprintf(
-          "  %-35s %s\n",
-          names(private$.tablePaths)[i],
-          private$.tablePaths[[i]]
-        ))
+        table_name <- names(private$.tablePaths)[i]
+        table_exists <- !is.null(private$.tbl[[table_name]])
+        
+        if (table_exists) {
+          cat(sprintf(
+            "  \\u2713 %-33s %s\n",
+            table_name,
+            private$.tablePaths[[i]]
+          ))
+        } else {
+          cat(sprintf(
+            "  \033[31m\\u2717 %-33s %s\033[0m\n",
+            table_name,
+            private$.tablePaths[[i]]
+          ))
+        }
       }
 
       invisible(self)

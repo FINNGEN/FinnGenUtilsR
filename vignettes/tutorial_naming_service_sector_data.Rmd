@@ -247,7 +247,7 @@ fg_codes_info_table <- "atlas-development-270609.medical_codes_dev.fg_codes_info
 service_sector_bq_table <- bq_table(
   project = project_id,
   dataset = "sandbox_tools_dev",
-  table = "finngen_dev_service_sector_detailed_longitudinal_dev"
+  table = "finngen_dev_service_sector_detailed_longitudinal"
 )
 ```
 
@@ -257,7 +257,7 @@ service_sector_bq_table <- bq_table(
 # Get events for subject FG00000001 directly from BigQuery
 ss_subject_1_bq <- bq_project_query(
   project_id,
-  "SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev` WHERE FINNGENID = 'FG00000001'"
+  "SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal` WHERE FINNGENID = 'FG00000001'"
 ) 
 ```
 

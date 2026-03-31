@@ -4,8 +4,9 @@ Version: 4.0.2
 Authors@R: 
     person("Javier", "Gracia-Tabuenca", , "javier.graciatabuenca@tuni.fi", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2455-0598"))
-Description: Useful functions in R to work with FinnGen data
+Description: Useful functions in R to work with FinnGen data.
 License: MIT + file LICENSE
+Depends: R (>= 4.1.0)
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
@@ -22,13 +23,14 @@ Imports:
     purrr,
     R6,
     readr,
+    rlang,
+    rmarkdown,
     SqlRender,
     stringr,
     tibble
 Suggests: 
     knitr,
     lubridate,
-    rmarkdown,
     testthat (>= 3.0.0),
     devtools,
     spelling,
