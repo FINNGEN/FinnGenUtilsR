@@ -6,7 +6,7 @@
 #' @param environment Environment identifier (e.g., "build", "prod")
 #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
 #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
-#' @param includeCDMTables (Optional) Whether to include OMOP CDM tables (default is FALSE)
+#' @param tablesGroup (Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
 #'
 #' @return An fg_bq_tables R6 object
 #'
@@ -15,13 +15,13 @@ get_fg_bq_tables <- function(
   environment,
   dataFreeze = NULL,
   tablesPathsTibble = NULL,
-  includeCDMTables = FALSE
+  tablesGroup = "register"
 ) {
   fg_bq_tables$new(
     environment = environment,
     dataFreeze = dataFreeze,
     tablesPathsTibble = tablesPathsTibble,
-    includeCDMTables = includeCDMTables
+    tablesGroup = tablesGroup
   )
 }
 
@@ -40,14 +40,14 @@ get_fg_bq_tables <- function(
 #' @param environment Environment identifier (e.g., "build", "prod")
 #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
 #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
-#' @param includeCDMTables (Optional) Whether to include OMOP CDM tables (default is FALSE)
+#' @param tablesGroup (Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
 #' @param sql Character string containing the SQL query to execute
 #' @param ... Additional arguments passed to bigrquery::bq_project_query()
 #'
 #' @details
 #' ## Methods
 #'
-#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, includeCDMTables = FALSE)} Initialize a new object.
+#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, tablesGroup = "register")} Initialize a new object.
 #'
 #' \code{$print()} Print information about the object.
 #'
@@ -99,12 +99,12 @@ fg_bq_tables <- R6::R6Class(
     #' @param environment Environment identifier (e.g., "build", "prod")
     #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
     #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
-    #' @param includeCDMTables (Optional) Whether to include OMOP CDM tables (default is FALSE)
+    #' @param tablesGroup (Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
     initialize = function(
       environment,
       dataFreeze = NULL,
       tablesPathsTibble = NULL,
-      includeCDMTables = FALSE
+      tablesGroup = "register"
     ) {
       start_time <- Sys.time()
 
@@ -137,7 +137,7 @@ fg_bq_tables <- R6::R6Class(
           connection = connection,
           dataFreeze = dataFreeze,
           skipDataFreezeValidation = TRUE,
-          includeCDMTables = includeCDMTables
+          tablesGroup = tablesGroup
         )
       }
 
@@ -242,13 +242,13 @@ fg_bq_tables <- R6::R6Class(
         
         if (table_exists) {
           cat(sprintf(
-            "  \\u2713 %-33s %s\n",
+            "  ✓ %-33s %s\n",
             table_name,
             private$.tablePaths[[i]]
           ))
         } else {
           cat(sprintf(
-            "  \033[31m\\u2717 %-33s %s\033[0m\n",
+            "  \033[31m✗ %-33s %s\033[0m\n",
             table_name,
             private$.tablePaths[[i]]
           ))
@@ -371,7 +371,7 @@ fg_getLatestDataFreeze <- function(
 #' @param connection BigQuery connection object
 #' @param dataFreeze Data freeze identifier
 #' @param skipDataFreezeValidation Whether to skip data freeze validation
-#' @param includeCDMTables Whether to include OMOP CDM tables (default is FALSE)
+#' @param tablesGroup Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
 #'
 #' @return Tibble with table_id and full_path columns
 #'
@@ -387,7 +387,7 @@ fg_getLatestTablePaths <- function(
   connection,
   dataFreeze,
   skipDataFreezeValidation = FALSE,
-  includeCDMTables = FALSE
+  tablesGroup = "register"
 ) {
   # connection
   connection |> checkmate::assertClass("BigQueryConnection")
@@ -416,11 +416,15 @@ fg_getLatestTablePaths <- function(
     )
   )
 
-  # Filter out CDM tables if not requested
-  if (!includeCDMTables) {
+  # Filter tables based on tablesGroup
+  if (tablesGroup == "register") {
     tablesPathsTibble <- tablesPathsTibble |>
       dplyr::filter(!grepl("^cdm_", table_id) | table_id == "cdm_concept")
+  } else if (tablesGroup == "cdm") {
+    tablesPathsTibble <- tablesPathsTibble |>
+      dplyr::filter(grepl("^cdm_", table_id))
   }
+  # "register_and_cdm" keeps all tables
 
   tablesPathsTibble <- tablesPathsTibble |>
     dplyr::filter(

@@ -8,7 +8,7 @@ fg_getLatestTablePaths(
   connection,
   dataFreeze,
   skipDataFreezeValidation = FALSE,
-  includeCDMTables = FALSE
+  tablesGroup = "register"
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ fg_getLatestTablePaths(
 
 \item{skipDataFreezeValidation}{Whether to skip data freeze validation}
 
-\item{includeCDMTables}{Whether to include OMOP CDM tables (default is FALSE)}
+\item{tablesGroup}{Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'}
 }
 \value{
 Tibble with table_id and full_path columns

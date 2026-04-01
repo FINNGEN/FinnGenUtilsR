@@ -9,7 +9,7 @@ R6 class for handling BigQuery tables information including environment and data
 \details{
 \subsection{Methods}{
 
-\code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, includeCDMTables = FALSE)} Initialize a new object.
+\code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, tablesGroup = "register")} Initialize a new object.
 
 \code{$print()} Print information about the object.
 
@@ -50,7 +50,7 @@ Initialize method - Creates a new fg_bq_tables object
   environment,
   dataFreeze = NULL,
   tablesPathsTibble = NULL,
-  includeCDMTables = FALSE
+  tablesGroup = "register"
 )}\if{html}{\out{</div>}}
 }
 
@@ -63,7 +63,7 @@ Initialize method - Creates a new fg_bq_tables object
 
 \item{\code{tablesPathsTibble}}{(Optional) Tibble containing table paths (default is NULL)}
 
-\item{\code{includeCDMTables}}{(Optional) Whether to include OMOP CDM tables (default is FALSE)}
+\item{\code{tablesGroup}}{(Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'}
 }
 \if{html}{\out{</div>}}
 }

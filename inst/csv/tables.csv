@@ -57,3 +57,5 @@ cdm_source_to_concept_map,finngen_omop_{datafreeze}_{version}.source_to_concept_
 cdm_drug_strength,finngen_omop_{datafreeze}_{version}.drug_strength,0
 cdm_cohort,finngen_omop_{datafreeze}_{version}.cohort,0
 cdm_cohort_definition,finngen_omop_{datafreeze}_{version}.cohort_definition,0
+cdm_results_co2_codewas_counts,finngen_omop_results_{datafreeze}_{version}.person_code_counts,0
+cdm_results_co2_ehrbrowser_counts,finngen_omop_results_{datafreeze}_{version}.code_counts,0
