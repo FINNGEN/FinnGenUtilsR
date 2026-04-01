@@ -421,6 +421,11 @@ fg_getLatestTablePaths <- function(
       dplyr::filter(grepl("^cdm_", table_id))
   }
   # "register_and_cdm" keeps all tables
+  dataFreezeNumber <- ifelse(
+    dataFreeze == "dev",
+    Inf,
+    as.numeric(stringr::str_remove(dataFreeze, "^r"))
+  )
 
   tablesPathsTibble <- tablesPathsTibble |>
     dplyr::filter(
