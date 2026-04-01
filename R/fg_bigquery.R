@@ -108,11 +108,12 @@ fg_bq_tables <- R6::R6Class(
     ) {
       start_time <- Sys.time()
 
+      # Validate tablesGroup
+      tablesGroup |> checkmate::assertChoice(c("register", "cdm", "register_and_cdm"))
+
       if (environment == "sandbox-XX") {
         environment <- "build"
       }
-
-      # environment |> .assertEnvironment()  done in fg_connection
       message("Connecting to BigQuery...")
       connection <- fg_connection(environment)
 
@@ -397,13 +398,8 @@ fg_getLatestTablePaths <- function(
     .assertDataFreeze(connection, dataFreeze)
   }
 
-  if (dataFreeze == "dev") {
-    dataFreezeNumber <- Inf
-  } else {
-    dataFreezeNumber <- dataFreeze |>
-      stringr::str_remove("^r") |>
-      as.integer()
-  }
+  # Validate tablesGroup
+  tablesGroup |> checkmate::assertChoice(c("register", "cdm", "register_and_cdm"))
 
   # table paths
   validTablesPath <- system.file("csv/tables.csv", package = "FinnGenUtilsR")
