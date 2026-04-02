@@ -1,9 +1,6 @@
 # FinnGenUtilsR 4.0.3
-
-# FinnGenUtilsR 4.0.2
-
-# FinnGenUtilsR 4.0.1
 - Updates GWAS to run from standard API
+- Other fixes after production checked
 
 # FinnGenUtilsR 4.0.0
 - Refactor: Now we use an fg_table R6 object that finds automatically the connection parameters, last datafreeze and last table versions, or a specific datafreeze if needed.
