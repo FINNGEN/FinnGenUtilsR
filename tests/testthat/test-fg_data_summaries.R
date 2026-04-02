@@ -35,7 +35,7 @@ test_that("fg_omop_summaries creates a file", {
   fg <- get_fg_bq_tables(
     environment = test_environment, 
     dataFreeze = "dev",
-    includeCDMTables = TRUE
+    tablesGroup = "cdm"
   )
   
   # Create temporary output path

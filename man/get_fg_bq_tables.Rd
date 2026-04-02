@@ -8,7 +8,7 @@ get_fg_bq_tables(
   environment,
   dataFreeze = NULL,
   tablesPathsTibble = NULL,
-  includeCDMTables = FALSE
+  tablesGroup = "register"
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ get_fg_bq_tables(
 
 \item{tablesPathsTibble}{(Optional) Tibble containing table paths (default is NULL)}
 
-\item{includeCDMTables}{(Optional) Whether to include OMOP CDM tables (default is FALSE)}
+\item{tablesGroup}{(Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'}
 }
 \value{
 An fg_bq_tables R6 object

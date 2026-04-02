@@ -36,6 +36,7 @@ WDL
 bigquery
 bigrquery
 bq
+cdm
 cdmFromCon
 conn
 datafreeze
