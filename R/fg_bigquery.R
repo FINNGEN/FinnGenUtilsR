@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #' Get FinnGen BigQuery Tables
 #'
 #' @description
@@ -243,13 +245,13 @@ fg_bq_tables <- R6::R6Class(
         
         if (table_exists) {
           cat(sprintf(
-            "  ✓ %-33s %s\n",
+            "  [v] %-33s %s\n",
             table_name,
             private$.tablePaths[[i]]
           ))
         } else {
           cat(sprintf(
-            "  \033[31m✗ %-33s %s\033[0m\n",
+            "  [x] %-33s %s\n",
             table_name,
             private$.tablePaths[[i]]
           ))
