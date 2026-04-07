@@ -7,7 +7,8 @@
 fg_getLatestTablePaths(
   connection,
   dataFreeze,
-  skipDataFreezeValidation = FALSE
+  skipDataFreezeValidation = FALSE,
+  tablesGroup = "register"
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ fg_getLatestTablePaths(
 \item{dataFreeze}{Data freeze identifier}
 
 \item{skipDataFreezeValidation}{Whether to skip data freeze validation}
+
+\item{tablesGroup}{Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'}
 }
 \value{
 Tibble with table_id and full_path columns

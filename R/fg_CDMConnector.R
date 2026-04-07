@@ -1,6 +1,6 @@
 #' Connect to FinnGen OMOP CDM
 #'
-#' @param environment Environment identifier (e.g., "build", "review", or "sandbox-XX")
+#' @param environment Environment identifier (e.g., "build", "preview", or "sandbox-XX")
 #' @param cdmDataFreezeVersion Data freeze version (e.g., "r13_v3", "dev"). If NULL, latest version is used.
 #' @param ... Additional arguments passed to CDMConnector::cdmFromCon
 #'
@@ -21,7 +21,7 @@ fg_CDMConnector <- function(
   connection <- fg_connection(environment)
 
   if (is.null(cdmDataFreezeVersion)) {
-    if (environment == "review") {
+    if (environment == "preview") {
       cdmDataFreezeVersion <- 'dev'
     } else if (environment == "build") {
       cdmDataFreezeVersion <- 'dev'
@@ -36,9 +36,8 @@ fg_CDMConnector <- function(
   dataset_id <- connection@dataset
 
 
-  cdmSchema <- paste0(billing_project_id, ".finngen_omop_",cdmDataFreezeVersion)
-  writeSchema <- paste0(project_id, ".", dataset_id)
-
+  cdmSchema <- paste0(project_id, ".finngen_omop_",cdmDataFreezeVersion)
+  writeSchema <- paste0(billing_project_id, ".", dataset_id)
 
 
   cdm <- CDMConnector::cdmFromCon(
@@ -61,6 +60,7 @@ fg_CDMConnector <- function(
 #' @importFrom bigrquery bq_project_datasets
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_extract str_starts
+#' @importFrom stats na.omit
 #'
 #' @export
 cdm_getLatestDataFreezeAndVersion <- function(

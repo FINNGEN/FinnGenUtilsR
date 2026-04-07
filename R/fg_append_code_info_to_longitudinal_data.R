@@ -34,7 +34,7 @@
 #' @return sql script ready to be ran
 #'
 #' @importFrom checkmate assert_character assert_subset assert_number
-#' @importFrom SqlRender readSql render
+#' @importFrom SqlRender readSql
 #'
 #' @export
 #'

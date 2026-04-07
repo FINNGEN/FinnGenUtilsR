@@ -8,7 +8,7 @@
 #' @return sql script ready to be ran
 #'
 #' @importFrom checkmate assert_character assert_subset assert_number
-#' @importFrom SqlRender readSql render
+#' @importFrom SqlRender readSql
 #'
 #' @export
 #'
@@ -103,7 +103,7 @@ fg_dbplyr_append_concept_info_data <- function(
 
   new_dbplyr_table <- dbplyr_table |>
     left_join(
-      fg_bq_tables$tbl$omop_concept |> dplyr::select(concept_id, concept_name),
+      fg_bq_tables$tbl$cdm_concept |> dplyr::select(concept_id, concept_name),
       by = c("OMOP_CONCEPT_ID" = "concept_id")
     ) 
 

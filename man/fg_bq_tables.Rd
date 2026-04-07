@@ -9,7 +9,7 @@ R6 class for handling BigQuery tables information including environment and data
 \details{
 \subsection{Methods}{
 
-\code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)} Initialize a new object.
+\code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, tablesGroup = "register")} Initialize a new object.
 
 \code{$print()} Print information about the object.
 
@@ -46,7 +46,12 @@ R6 class for handling BigQuery tables information including environment and data
 \subsection{Method \code{new()}}{
 Initialize method - Creates a new fg_bq_tables object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{fg_bq_tables$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{fg_bq_tables$new(
+  environment,
+  dataFreeze = NULL,
+  tablesPathsTibble = NULL,
+  tablesGroup = "register"
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,6 +62,8 @@ Initialize method - Creates a new fg_bq_tables object
 \item{\code{dataFreeze}}{(Optional) Data freeze identifier (default is NULL)}
 
 \item{\code{tablesPathsTibble}}{(Optional) Tibble containing table paths (default is NULL)}
+
+\item{\code{tablesGroup}}{(Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'}
 }
 \if{html}{\out{</div>}}
 }

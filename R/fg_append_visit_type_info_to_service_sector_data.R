@@ -13,7 +13,7 @@
 #' @return sql script ready to be ran
 #'
 #' @importFrom checkmate assert_character
-#' @importFrom SqlRender readSql render
+#' @importFrom SqlRender readSql
 #' @importFrom stringr str_extract str_remove
 #'
 #' @export

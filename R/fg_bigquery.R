@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #' Get FinnGen BigQuery Tables
 #'
 #' @description
@@ -6,6 +8,7 @@
 #' @param environment Environment identifier (e.g., "build", "prod")
 #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
 #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+#' @param tablesGroup (Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
 #'
 #' @return An fg_bq_tables R6 object
 #'
@@ -13,12 +16,14 @@
 get_fg_bq_tables <- function(
   environment,
   dataFreeze = NULL,
-  tablesPathsTibble = NULL
+  tablesPathsTibble = NULL,
+  tablesGroup = "register"
 ) {
   fg_bq_tables$new(
     environment = environment,
     dataFreeze = dataFreeze,
-    tablesPathsTibble = tablesPathsTibble
+    tablesPathsTibble = tablesPathsTibble,
+    tablesGroup = tablesGroup
   )
 }
 
@@ -37,16 +42,17 @@ get_fg_bq_tables <- function(
 #' @param environment Environment identifier (e.g., "build", "prod")
 #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
 #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+#' @param tablesGroup (Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
 #' @param sql Character string containing the SQL query to execute
 #' @param ... Additional arguments passed to bigrquery::bq_project_query()
 #'
 #' @details
 #' ## Methods
-#' 
-#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)} Initialize a new object.
-#' 
+#'
+#' \code{$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, tablesGroup = "register")} Initialize a new object.
+#'
 #' \code{$print()} Print information about the object.
-#' 
+#'
 #' \code{$query(sql, ...)} Execute a SQL query against BigQuery. Returns a BigQuery table reference.
 #'
 #' @importFrom R6 R6Class
@@ -58,6 +64,8 @@ get_fg_bq_tables <- function(
 #' @importFrom stringr str_extract str_replace str_subset
 #' @importFrom glue glue
 #' @importFrom bigrquery bq_project_query
+#' @importFrom stats na.omit
+#' @importFrom utils tail
 #'
 #' @export
 fg_bq_tables <- R6::R6Class(
@@ -93,23 +101,26 @@ fg_bq_tables <- R6::R6Class(
     #' @param environment Environment identifier (e.g., "build", "prod")
     #' @param dataFreeze (Optional) Data freeze identifier (default is NULL)
     #' @param tablesPathsTibble (Optional) Tibble containing table paths (default is NULL)
+    #' @param tablesGroup (Optional) Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
     initialize = function(
       environment,
       dataFreeze = NULL,
-      tablesPathsTibble = NULL
+      tablesPathsTibble = NULL,
+      tablesGroup = "register"
     ) {
       start_time <- Sys.time()
+
+      # Validate tablesGroup
+      tablesGroup |> checkmate::assertChoice(c("register", "cdm", "register_and_cdm"))
 
       if (environment == "sandbox-XX") {
         environment <- "build"
       }
-
-      # environment |> .assertEnvironment()  done in fg_connection
       message("Connecting to BigQuery...")
       connection <- fg_connection(environment)
 
       if (is.null(dataFreeze)) {
-        if (environment == "review") {
+        if (environment == "preview") {
           dataFreeze <- 'dev'
         } else if (environment == "build") {
           dataFreeze <- 'dev'
@@ -128,7 +139,8 @@ fg_bq_tables <- R6::R6Class(
         tablesPathsTibble <- fg_getLatestTablePaths(
           connection = connection,
           dataFreeze = dataFreeze,
-          skipDataFreezeValidation = TRUE
+          skipDataFreezeValidation = TRUE,
+          tablesGroup = tablesGroup
         )
       }
 
@@ -146,25 +158,25 @@ fg_bq_tables <- R6::R6Class(
         tibble::deframe()
 
       message("Creating table connections (this may take a moment)...")
+      
+      failed_tables <- character(0)
+      
       tbl <- tablesPathsTibble |>
         dplyr::mutate(
           table_dplyr = purrr::map(
             full_path,
             function(full_path) {
+              tbl <- NULL
               tryCatch(
-                dplyr::tbl(
+                tbl <- dplyr::tbl(
                   connection,
                   I(paste0(connection@project, ".", full_path))
                 ),
                 error = function(e) {
-                  stop(
-                    "Error table : ",
-                    full_path,
-                    "Error message: ",
-                    e$message
-                  )
+                  failed_tables <<- c(failed_tables, full_path)
                 }
               )
+              return(tbl)
             }
           )
         ) |>
@@ -184,13 +196,34 @@ fg_bq_tables <- R6::R6Class(
         as.numeric(difftime(Sys.time(), start_time, units = "secs")),
         2
       )
-      message(
-        "Successfully connected to ",
-        length(tbl),
-        " tables in ",
-        elapsed_time,
-        " seconds"
-      )
+      
+      # Count successful and failed connections
+      n_successful <- sum(sapply(tbl, function(x) !is.null(x)))
+      n_failed <- length(tbl) - n_successful
+      
+      if (n_failed == 0) {
+        message(
+          "Successfully connected to all ",
+          n_successful,
+          " tables in ",
+          elapsed_time,
+          " seconds"
+        )
+      } else {
+        message(
+          "Connected to ",
+          n_successful,
+          " tables (",
+          n_failed,
+          " failed) in ",
+          elapsed_time,
+          " seconds"
+        )
+        if (n_failed > 0) {
+          failed_table_names <- names(tbl)[sapply(tbl, is.null)]
+          message("Failed tables: \033[31m", paste(failed_table_names, collapse = ", "), "\033[0m")
+        }
+      }
     },
 
     #' @description
@@ -207,11 +240,22 @@ fg_bq_tables <- R6::R6Class(
       cat("Available Tables:\n")
       cat("-----------------\n")
       for (i in seq_along(private$.tablePaths)) {
-        cat(sprintf(
-          "  %-35s %s\n",
-          names(private$.tablePaths)[i],
-          private$.tablePaths[[i]]
-        ))
+        table_name <- names(private$.tablePaths)[i]
+        table_exists <- !is.null(private$.tbl[[table_name]])
+        
+        if (table_exists) {
+          cat(sprintf(
+            "  [v] %-33s %s\n",
+            table_name,
+            private$.tablePaths[[i]]
+          ))
+        } else {
+          cat(sprintf(
+            "  [x] %-33s %s\n",
+            table_name,
+            private$.tablePaths[[i]]
+          ))
+        }
       }
 
       invisible(self)
@@ -330,6 +374,7 @@ fg_getLatestDataFreeze <- function(
 #' @param connection BigQuery connection object
 #' @param dataFreeze Data freeze identifier
 #' @param skipDataFreezeValidation Whether to skip data freeze validation
+#' @param tablesGroup Table group to include: 'register' (default), 'cdm', or 'register_and_cdm'
 #'
 #' @return Tibble with table_id and full_path columns
 #'
@@ -344,7 +389,8 @@ fg_getLatestDataFreeze <- function(
 fg_getLatestTablePaths <- function(
   connection,
   dataFreeze,
-  skipDataFreezeValidation = FALSE
+  skipDataFreezeValidation = FALSE,
+  tablesGroup = "register"
 ) {
   # connection
   connection |> checkmate::assertClass("BigQueryConnection")
@@ -354,13 +400,8 @@ fg_getLatestTablePaths <- function(
     .assertDataFreeze(connection, dataFreeze)
   }
 
-  if (dataFreeze == "dev") {
-    dataFreezeNumber <- Inf
-  } else {
-    dataFreezeNumber <- dataFreeze |>
-      stringr::str_remove("^r") |>
-      as.integer()
-  }
+  # Validate tablesGroup
+  tablesGroup |> checkmate::assertChoice(c("register", "cdm", "register_and_cdm"))
 
   # table paths
   validTablesPath <- system.file("csv/tables.csv", package = "FinnGenUtilsR")
@@ -371,6 +412,21 @@ fg_getLatestTablePaths <- function(
       table_path_template = readr::col_character(),
       first_data_freeze = readr::col_integer()
     )
+  )
+
+  # Filter tables based on tablesGroup
+  if (tablesGroup == "register") {
+    tablesPathsTibble <- tablesPathsTibble |>
+      dplyr::filter(!grepl("^cdm_", table_id) | table_id == "cdm_concept")
+  } else if (tablesGroup == "cdm") {
+    tablesPathsTibble <- tablesPathsTibble |>
+      dplyr::filter(grepl("^cdm_", table_id))
+  }
+  # "register_and_cdm" keeps all tables
+  dataFreezeNumber <- ifelse(
+    dataFreeze == "dev",
+    Inf,
+    as.numeric(stringr::str_remove(dataFreeze, "^r"))
   )
 
   tablesPathsTibble <- tablesPathsTibble |>
