@@ -8,7 +8,8 @@ Get Latest Table Paths
 fg_getLatestTablePaths(
   connection,
   dataFreeze,
-  skipDataFreezeValidation = FALSE
+  skipDataFreezeValidation = FALSE,
+  tablesGroup = "register"
 )
 ```
 
@@ -25,6 +26,11 @@ fg_getLatestTablePaths(
 - skipDataFreezeValidation:
 
   Whether to skip data freeze validation
+
+- tablesGroup:
+
+  Table group to include: 'register' (default), 'cdm', or
+  'register_and_cdm'
 
 ## Value
 

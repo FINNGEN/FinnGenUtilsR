@@ -12,7 +12,7 @@ fg_CDMConnector(environment = NULL, cdmDataFreezeVersion = NULL, ...)
 
 - environment:
 
-  Environment identifier (e.g., "build", "review", or "sandbox-XX")
+  Environment identifier (e.g., "build", "preview", or "sandbox-XX")
 
 - cdmDataFreezeVersion:
 

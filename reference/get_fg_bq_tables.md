@@ -5,7 +5,12 @@ Creates a new fg_bq_tables object
 ## Usage
 
 ``` r
-get_fg_bq_tables(environment, dataFreeze = NULL, tablesPathsTibble = NULL)
+get_fg_bq_tables(
+  environment,
+  dataFreeze = NULL,
+  tablesPathsTibble = NULL,
+  tablesGroup = "register"
+)
 ```
 
 ## Arguments
@@ -21,6 +26,11 @@ get_fg_bq_tables(environment, dataFreeze = NULL, tablesPathsTibble = NULL)
 - tablesPathsTibble:
 
   (Optional) Tibble containing table paths (default is NULL)
+
+- tablesGroup:
+
+  (Optional) Table group to include: 'register' (default), 'cdm', or
+  'register_and_cdm'
 
 ## Value
 

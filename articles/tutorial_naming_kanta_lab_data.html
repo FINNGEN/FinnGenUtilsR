@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,24 +102,28 @@ your sandbox, or set other data freeze versions if needed (see
 <span><span class="co">#&gt; Connecting to BigQuery...</span></span>
 <span><span class="co">#&gt; Using data freeze: dev</span></span>
 <span><span class="co">#&gt; Finding latest table versions...</span></span>
-<span><span class="co">#&gt;   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev</span></span>
-<span><span class="co">#&gt;   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev</span></span>
-<span><span class="co">#&gt;   - kanta: sandbox_tools_dev.kanta_dev_dev</span></span>
-<span><span class="co">#&gt;   - kidney: sandbox_tools_dev.kidney_dev_dev</span></span>
-<span><span class="co">#&gt;   - vision: sandbox_tools_dev.vision_dev_dev</span></span>
 <span><span class="co">#&gt;   - birth_mother: sandbox_tools_dev.birth_mother_dev_dev</span></span>
-<span><span class="co">#&gt;   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev</span></span>
-<span><span class="co">#&gt;   - drug_events: sandbox_tools_dev.drug_events_dev_dev</span></span>
-<span><span class="co">#&gt;   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev</span></span>
-<span><span class="co">#&gt;   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev</span></span>
-<span><span class="co">#&gt;   - code_counts: sandbox_tools_dev.code_counts_dev_dev</span></span>
 <span><span class="co">#&gt;   - code_prevalence_stratified: sandbox_tools_dev.code_prevalence_stratified_dev_dev</span></span>
+<span><span class="co">#&gt;   - covariates: sandbox_tools_dev.covariates_dev_dev</span></span>
+<span><span class="co">#&gt;   - drug_events: sandbox_tools_dev.drug_events_dev_dev</span></span>
 <span><span class="co">#&gt;   - endpoint_cohorts: sandbox_tools_dev.endpoint_cohorts_dev_dev</span></span>
 <span><span class="co">#&gt;   - fg_codes_info: medical_codes.fg_codes_info_dev</span></span>
 <span><span class="co">#&gt;   - finngen_vnrs: medical_codes.finngen_vnr_dev</span></span>
-<span><span class="co">#&gt;   - omop_concept: finngen_omop_dev_dev.concept</span></span>
+<span><span class="co">#&gt;   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta: sandbox_tools_dev.kanta_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev</span></span>
+<span><span class="co">#&gt;   - kidney: sandbox_tools_dev.kidney_dev_dev</span></span>
+<span><span class="co">#&gt;   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev</span></span>
+<span><span class="co">#&gt;   - other_drugs: sandbox_tools_dev.other_drugs_dev_dev</span></span>
+<span><span class="co">#&gt;   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev</span></span>
+<span><span class="co">#&gt;   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal</span></span>
+<span><span class="co">#&gt;   - spirometry: sandbox_tools_dev.spirometry_dev_dev</span></span>
+<span><span class="co">#&gt;   - vaccination: sandbox_tools_dev.vaccination_dev_dev</span></span>
+<span><span class="co">#&gt;   - vision: sandbox_tools_dev.vision_dev_dev</span></span>
+<span><span class="co">#&gt;   - cdm_concept: finngen_omop_dev_dev.concept</span></span>
 <span><span class="co">#&gt; Creating table connections (this may take a moment)...</span></span>
-<span><span class="co">#&gt; Successfully connected to 16 tables in 8.06 seconds</span></span></code></pre></div>
+<span><span class="co">#&gt; Successfully connected to all 20 tables in 11.09 seconds</span></span></code></pre></div>
 <p>We can access the Kanta lab data using the <code>fgbq</code> object
 as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -193,19 +197,19 @@ column with information about the OMOP_CONCEPT_ID name.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># Ordered by: desc(APPROX_EVENT_DATETIME)</span></span></span>
 <span><span class="co">#&gt;   FINNGENID  EVENT_AGE APPROX_EVENT_DATETIME TEST_NAME  TEST_ID OMOP_CONCEPT_ID</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int64&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00000001      70.4 2021-08-24 <span style="color: #949494;">09:06:00</span>   p-krea     4600            3<span style="text-decoration: underline;">020</span>564</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00000001      68.0 2019-03-30 <span style="color: #949494;">12:24:00</span>   p-krea     4600            3<span style="text-decoration: underline;">020</span>564</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00000001      64.2 2015-06-12 <span style="color: #949494;">07:00:00</span>   p-krea     4600            3<span style="text-decoration: underline;">020</span>564</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00000001      68.3 2019-07-10 <span style="color: #949494;">09:46:00</span>   fp-trigly  1605041         3<span style="text-decoration: underline;">048</span>773</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00000001      70.6 2021-10-27 <span style="color: #949494;">07:01:00</span>   fp-kol-hdl 4516            3<span style="text-decoration: underline;">023</span>602</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> FG00000001      67.6 2018-10-16 <span style="color: #949494;">08:59:00</span>   fp-kol-hdl 4516            3<span style="text-decoration: underline;">023</span>602</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00000001      70.9 2022-02-09 <span style="color: #949494;">07:18:00</span>   fp-kol-ldl 4599            3<span style="text-decoration: underline;">001</span>308</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00000001      69.7 2020-12-08 <span style="color: #949494;">13:21:00</span>   p-crp      4594            3<span style="text-decoration: underline;">020</span>460</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00000001      70.4 2021-08-25 <span style="color: #949494;">08:40:00</span>   p-crp      4594            3<span style="text-decoration: underline;">020</span>460</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00000001      71.6 2022-11-04 <span style="color: #949494;">16:18:00</span>   p-crp      1605013         3<span style="text-decoration: underline;">020</span>460</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00000001      64.0 2015-03-30 <span style="color: #949494;">10:06:00</span>   p-crp      4594            3<span style="text-decoration: underline;">020</span>460</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> FG00000001      67.2 2018-06-05 <span style="color: #949494;">10:13:00</span>   p-na       6003622         3<span style="text-decoration: underline;">019</span>550</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: concept_name &lt;chr&gt;</span></span></span></code></pre></div>
 <p>(same table in html format for exploration)</p>
 <pre><code><span><span class="co">#&gt; Warning: ORDER BY is ignored in subqueries without LIMIT</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> Do you need to move arrange() later in the pipeline or use window_order() instead?</span></span></code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["FINNGENID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["EVENT_AGE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["APPROX_EVENT_DATETIME"],"name":[3],"type":["dttm"],"align":["right"]},{"label":["TEST_NAME"],"name":[4],"type":["chr"],"align":["left"]},{"label":["TEST_ID"],"name":[5],"type":["chr"],"align":["left"]},{"label":["OMOP_CONCEPT_ID"],"name":[6],"type":["int64"],"align":["right"]},{"label":["concept_name"],"name":[7],"type":["chr"],"align":["left"]}],"data":[{"1":"FG00000001","2":"70.430","3":"2021-08-24 09:06:00","4":"p-krea","5":"4600","6":"3020564","7":"Creatinine [Moles/volume] in Serum or Plasma"},{"1":"FG00000001","2":"68.027","3":"2019-03-30 12:24:00","4":"p-krea","5":"4600","6":"3020564","7":"Creatinine [Moles/volume] in Serum or Plasma"},{"1":"FG00000001","2":"64.230","3":"2015-06-12 07:00:00","4":"p-krea","5":"4600","6":"3020564","7":"Creatinine [Moles/volume] in Serum or Plasma"},{"1":"FG00000001","2":"68.306","3":"2019-07-10 09:46:00","4":"fp-trigly","5":"1605041","6":"3048773","7":"Triglyceride [Moles/volume] in Serum or Plasma --fasting"},{"1":"FG00000001","2":"70.605","3":"2021-10-27 07:01:00","4":"fp-kol-hdl","5":"4516","6":"3023602","7":"Cholesterol in HDL [Moles/volume] in Serum or Plasma"},{"1":"FG00000001","2":"67.575","3":"2018-10-16 08:59:00","4":"fp-kol-hdl","5":"4516","6":"3023602","7":"Cholesterol in HDL [Moles/volume] in Serum or Plasma"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["FINNGENID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["EVENT_AGE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["APPROX_EVENT_DATETIME"],"name":[3],"type":["dttm"],"align":["right"]},{"label":["TEST_NAME"],"name":[4],"type":["chr"],"align":["left"]},{"label":["TEST_ID"],"name":[5],"type":["chr"],"align":["left"]},{"label":["OMOP_CONCEPT_ID"],"name":[6],"type":["int64"],"align":["right"]},{"label":["concept_name"],"name":[7],"type":["chr"],"align":["left"]}],"data":[{"1":"FG00000001","2":"70.893","3":"2022-02-09 07:18:00","4":"fp-kol-ldl","5":"4599","6":"3001308","7":"Cholesterol in LDL [Moles/volume] in Serum or Plasma"},{"1":"FG00000001","2":"69.721","3":"2020-12-08 13:21:00","4":"p-crp","5":"4594","6":"3020460","7":"C reactive protein [Mass/volume] in Serum or Plasma"},{"1":"FG00000001","2":"70.433","3":"2021-08-25 08:40:00","4":"p-crp","5":"4594","6":"3020460","7":"C reactive protein [Mass/volume] in Serum or Plasma"},{"1":"FG00000001","2":"71.627","3":"2022-11-04 16:18:00","4":"p-crp","5":"1605013","6":"3020460","7":"C reactive protein [Mass/volume] in Serum or Plasma"},{"1":"FG00000001","2":"64.027","3":"2015-03-30 10:06:00","4":"p-crp","5":"4594","6":"3020460","7":"C reactive protein [Mass/volume] in Serum or Plasma"},{"1":"FG00000001","2":"67.211","3":"2018-06-05 10:13:00","4":"p-na","5":"6003622","6":"3019550","7":"Sodium [Moles/volume] in Serum or Plasma"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>

@@ -7,7 +7,7 @@ and data freeze
 
 ### Methods
 
-`$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)`
+`$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL, tablesGroup = "register")`
 Initialize a new object.
 
 `$print()` Print information about the object.
@@ -57,7 +57,12 @@ Initialize method - Creates a new fg_bq_tables object
 
 #### Usage
 
-    fg_bq_tables$new(environment, dataFreeze = NULL, tablesPathsTibble = NULL)
+    fg_bq_tables$new(
+      environment,
+      dataFreeze = NULL,
+      tablesPathsTibble = NULL,
+      tablesGroup = "register"
+    )
 
 #### Arguments
 
@@ -72,6 +77,11 @@ Initialize method - Creates a new fg_bq_tables object
 - `tablesPathsTibble`:
 
   (Optional) Tibble containing table paths (default is NULL)
+
+- `tablesGroup`:
+
+  (Optional) Table group to include: 'register' (default), 'cdm', or
+  'register_and_cdm'
 
 ------------------------------------------------------------------------
 

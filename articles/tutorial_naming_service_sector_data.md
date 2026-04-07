@@ -44,24 +44,28 @@ fgbq <- get_fg_bq_tables(
 #> Connecting to BigQuery...
 #> Using data freeze: dev
 #> Finding latest table versions...
-#>   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev
-#>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev
-#>   - kanta: sandbox_tools_dev.kanta_dev_dev
-#>   - kidney: sandbox_tools_dev.kidney_dev_dev
-#>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - birth_mother: sandbox_tools_dev.birth_mother_dev_dev
-#>   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev
-#>   - drug_events: sandbox_tools_dev.drug_events_dev_dev
-#>   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev
-#>   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev
-#>   - code_counts: sandbox_tools_dev.code_counts_dev_dev
 #>   - code_prevalence_stratified: sandbox_tools_dev.code_prevalence_stratified_dev_dev
+#>   - covariates: sandbox_tools_dev.covariates_dev_dev
+#>   - drug_events: sandbox_tools_dev.drug_events_dev_dev
 #>   - endpoint_cohorts: sandbox_tools_dev.endpoint_cohorts_dev_dev
 #>   - fg_codes_info: medical_codes.fg_codes_info_dev
 #>   - finngen_vnrs: medical_codes.finngen_vnr_dev
-#>   - omop_concept: finngen_omop_dev_dev.concept
+#>   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev
+#>   - kanta: sandbox_tools_dev.kanta_dev_dev
+#>   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev
+#>   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev
+#>   - kidney: sandbox_tools_dev.kidney_dev_dev
+#>   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev
+#>   - other_drugs: sandbox_tools_dev.other_drugs_dev_dev
+#>   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev
+#>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal
+#>   - spirometry: sandbox_tools_dev.spirometry_dev_dev
+#>   - vaccination: sandbox_tools_dev.vaccination_dev_dev
+#>   - vision: sandbox_tools_dev.vision_dev_dev
+#>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to 16 tables in 8.21 seconds
+#> Successfully connected to all 20 tables in 11.42 seconds
 ```
 
 We can access the service sector data using the `fgbq` object as
@@ -297,12 +301,12 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
 #> # Database: BigQueryConnection
 #>   FINNGENID  SOURCE INDEX APPROX_EVENT_DAY CODE5 CODE6 CODE8 CODE9 provider_code
 #>   <chr>      <chr>  <chr> <date>           <chr> <chr> <chr> <chr> <chr>        
-#> 1 FG00000001 PURCH  39    2020-03-13       NA    NA    NA    NA    NA           
-#> 2 FG00000001 PURCH  91    2022-05-09       NA    NA    NA    NA    NA           
-#> 3 FG00000001 PURCH  92    2022-10-07       NA    NA    NA    NA    NA           
-#> 4 FG00000001 PURCH  144   2008-03-06       NA    NA    NA    NA    NA           
-#> 5 FG00000001 PURCH  145   2008-03-12       NA    NA    NA    NA    NA           
-#> 6 FG00000001 PURCH  169   2010-08-09       NA    NA    NA    NA    NA           
+#> 1 FG00000001 PURCH  68    2022-12-25       NA    NA    NA    NA    NA           
+#> 2 FG00000001 PURCH  89    2022-12-31       NA    NA    NA    NA    NA           
+#> 3 FG00000001 PURCH  107   2002-02-16       NA    NA    NA    NA    NA           
+#> 4 FG00000001 PURCH  132   2006-01-13       NA    NA    NA    NA    NA           
+#> 5 FG00000001 PURCH  181   2011-05-03       NA    NA    NA    NA    NA           
+#> 6 FG00000001 PURCH  207   2012-08-30       NA    NA    NA    NA    NA           
 #> # ℹ 2 more variables: provider_name_en <chr>, provider_concept_class_id <chr>
 ```
 
@@ -336,7 +340,7 @@ fg_codes_info_table <- "atlas-development-270609.medical_codes_dev.fg_codes_info
 service_sector_bq_table <- bq_table(
   project = project_id,
   dataset = "sandbox_tools_dev",
-  table = "finngen_dev_service_sector_detailed_longitudinal_dev"
+  table = "finngen_dev_service_sector_detailed_longitudinal"
 )
 ```
 
@@ -346,7 +350,7 @@ service_sector_bq_table <- bq_table(
 # Get events for subject FG00000001 directly from BigQuery
 ss_subject_1_bq <- bq_project_query(
   project_id,
-  "SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev` WHERE FINNGENID = 'FG00000001'"
+  "SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal` WHERE FINNGENID = 'FG00000001'"
 ) 
 ```
 

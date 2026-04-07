@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@ find the number of your sandbox in the URL when you are logged in to the
 FinnGen Data Access Portal.</p>
 <p><img src="pic/sandbox_number.png"></p>
 <p>Moreover, for internal use it is possible to specify ‘build’ or
-‘review’ as environment.</p>
+‘preview’ as environment.</p>
 <div class="section level3">
 <h3 id="create-connection-to-bigquery-tables">Create Connection to BigQuery Tables<a class="anchor" aria-label="anchor" href="#create-connection-to-bigquery-tables"></a>
 </h3>
@@ -101,24 +101,28 @@ FinnGen Data Access Portal.</p>
 <span><span class="co">#&gt; Connecting to BigQuery...</span></span>
 <span><span class="co">#&gt; Using data freeze: dev</span></span>
 <span><span class="co">#&gt; Finding latest table versions...</span></span>
-<span><span class="co">#&gt;   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev</span></span>
-<span><span class="co">#&gt;   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev</span></span>
-<span><span class="co">#&gt;   - kanta: sandbox_tools_dev.kanta_dev_dev</span></span>
-<span><span class="co">#&gt;   - kidney: sandbox_tools_dev.kidney_dev_dev</span></span>
-<span><span class="co">#&gt;   - vision: sandbox_tools_dev.vision_dev_dev</span></span>
 <span><span class="co">#&gt;   - birth_mother: sandbox_tools_dev.birth_mother_dev_dev</span></span>
-<span><span class="co">#&gt;   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev</span></span>
-<span><span class="co">#&gt;   - drug_events: sandbox_tools_dev.drug_events_dev_dev</span></span>
-<span><span class="co">#&gt;   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev</span></span>
-<span><span class="co">#&gt;   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev</span></span>
-<span><span class="co">#&gt;   - code_counts: sandbox_tools_dev.code_counts_dev_dev</span></span>
 <span><span class="co">#&gt;   - code_prevalence_stratified: sandbox_tools_dev.code_prevalence_stratified_dev_dev</span></span>
+<span><span class="co">#&gt;   - covariates: sandbox_tools_dev.covariates_dev_dev</span></span>
+<span><span class="co">#&gt;   - drug_events: sandbox_tools_dev.drug_events_dev_dev</span></span>
 <span><span class="co">#&gt;   - endpoint_cohorts: sandbox_tools_dev.endpoint_cohorts_dev_dev</span></span>
 <span><span class="co">#&gt;   - fg_codes_info: medical_codes.fg_codes_info_dev</span></span>
 <span><span class="co">#&gt;   - finngen_vnrs: medical_codes.finngen_vnr_dev</span></span>
-<span><span class="co">#&gt;   - omop_concept: finngen_omop_dev_dev.concept</span></span>
+<span><span class="co">#&gt;   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta: sandbox_tools_dev.kanta_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev</span></span>
+<span><span class="co">#&gt;   - kidney: sandbox_tools_dev.kidney_dev_dev</span></span>
+<span><span class="co">#&gt;   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev</span></span>
+<span><span class="co">#&gt;   - other_drugs: sandbox_tools_dev.other_drugs_dev_dev</span></span>
+<span><span class="co">#&gt;   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev</span></span>
+<span><span class="co">#&gt;   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal</span></span>
+<span><span class="co">#&gt;   - spirometry: sandbox_tools_dev.spirometry_dev_dev</span></span>
+<span><span class="co">#&gt;   - vaccination: sandbox_tools_dev.vaccination_dev_dev</span></span>
+<span><span class="co">#&gt;   - vision: sandbox_tools_dev.vision_dev_dev</span></span>
+<span><span class="co">#&gt;   - cdm_concept: finngen_omop_dev_dev.concept</span></span>
 <span><span class="co">#&gt; Creating table connections (this may take a moment)...</span></span>
-<span><span class="co">#&gt; Successfully connected to 16 tables in 8.08 seconds</span></span></code></pre></div>
+<span><span class="co">#&gt; Successfully connected to all 20 tables in 11.36 seconds</span></span></code></pre></div>
 <p>By default <code><a href="../reference/get_fg_bq_tables.html">get_fg_bq_tables()</a></code> will find the latest
 available data freeze and table versions but you can specify a specific
 version if needed.</p>
@@ -145,23 +149,27 @@ information when printed:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Available Tables:</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt;   minimum_extended                    atlas-development-270609.sandbox_tools_dev.minimum_extended_dev</span></span>
-<span><span class="co">#&gt;   service_sector_detailed_longitudinal atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev</span></span>
-<span><span class="co">#&gt;   kanta                               atlas-development-270609.sandbox_tools_dev.kanta_dev</span></span>
-<span><span class="co">#&gt;   kidney                              atlas-development-270609.sandbox_tools_dev.kidney_dev</span></span>
-<span><span class="co">#&gt;   vision                              atlas-development-270609.sandbox_tools_dev.vision_dev</span></span>
-<span><span class="co">#&gt;   birth_mother                        atlas-development-270609.sandbox_tools_dev.birth_mother_dev</span></span>
-<span><span class="co">#&gt;   hla_imputed                         atlas-development-270609.sandbox_tools_dev.hla_imputed_dev</span></span>
-<span><span class="co">#&gt;   drug_events                         atlas-development-270609.sandbox_tools_dev.drug_events_dev</span></span>
-<span><span class="co">#&gt;   kanta_medication_delivery           atlas-development-270609.sandbox_tools_dev.kanta_medication_delivery_dev</span></span>
-<span><span class="co">#&gt;   kanta_prescription                  atlas-development-270609.sandbox_tools_dev.kanta_prescription_dev</span></span>
-<span><span class="co">#&gt;   code_counts                         atlas-development-270609.sandbox_tools_dev.code_counts_dev</span></span>
-<span><span class="co">#&gt;   code_prevalence_stratified          atlas-development-270609.sandbox_tools_dev.code_prevalence_stratified_dev</span></span>
-<span><span class="co">#&gt;   endpoint_cohorts                    atlas-development-270609.sandbox_tools_dev.endpoint_cohorts_dev</span></span>
-<span><span class="co">#&gt;   fg_codes_info                       atlas-development-270609.medical_codes_dev.fg_codes_info_dev</span></span>
-<span><span class="co">#&gt;   finngen_vnrs                        atlas-development-270609.medical_codes_dev.finngen_vnr_dev</span></span>
-<span><span class="co">#&gt;   omop_concept                        atlas-development-270609.finngen_omop_dev.concept</span></span></code></pre></div>
-<p>This shows: - Environment (e.g., build, sandbox, review) - Data
+<span><span class="co">#&gt;   [v] birth_mother                      atlas-development-270609.sandbox_tools_dev.birth_mother_dev</span></span>
+<span><span class="co">#&gt;   [v] code_prevalence_stratified        atlas-development-270609.sandbox_tools_dev.code_prevalence_stratified_dev</span></span>
+<span><span class="co">#&gt;   [v] covariates                        atlas-development-270609.sandbox_tools_dev.covariates_dev</span></span>
+<span><span class="co">#&gt;   [v] drug_events                       atlas-development-270609.sandbox_tools_dev.drug_events_dev</span></span>
+<span><span class="co">#&gt;   [v] endpoint_cohorts                  atlas-development-270609.sandbox_tools_dev.endpoint_cohorts_dev</span></span>
+<span><span class="co">#&gt;   [v] fg_codes_info                     atlas-development-270609.medical_codes_dev.fg_codes_info_dev</span></span>
+<span><span class="co">#&gt;   [v] finngen_vnrs                      atlas-development-270609.medical_codes_dev.finngen_vnr_dev</span></span>
+<span><span class="co">#&gt;   [v] hla_imputed                       atlas-development-270609.sandbox_tools_dev.hla_imputed_dev</span></span>
+<span><span class="co">#&gt;   [v] kanta                             atlas-development-270609.sandbox_tools_dev.kanta_dev</span></span>
+<span><span class="co">#&gt;   [v] kanta_medication_delivery         atlas-development-270609.sandbox_tools_dev.kanta_medication_delivery_dev</span></span>
+<span><span class="co">#&gt;   [v] kanta_prescription                atlas-development-270609.sandbox_tools_dev.kanta_prescription_dev</span></span>
+<span><span class="co">#&gt;   [v] kidney                            atlas-development-270609.sandbox_tools_dev.kidney_dev</span></span>
+<span><span class="co">#&gt;   [v] minimum_extended                  atlas-development-270609.sandbox_tools_dev.minimum_extended_dev</span></span>
+<span><span class="co">#&gt;   [v] other_drugs                       atlas-development-270609.sandbox_tools_dev.other_drugs_dev</span></span>
+<span><span class="co">#&gt;   [v] plasma_samples                    atlas-development-270609.sandbox_tools_dev.plasma_samples_dev</span></span>
+<span><span class="co">#&gt;   [v] service_sector_detailed_longitudinal atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal</span></span>
+<span><span class="co">#&gt;   [v] spirometry                        atlas-development-270609.sandbox_tools_dev.spirometry_dev</span></span>
+<span><span class="co">#&gt;   [v] vaccination                       atlas-development-270609.sandbox_tools_dev.vaccination_dev</span></span>
+<span><span class="co">#&gt;   [v] vision                            atlas-development-270609.sandbox_tools_dev.vision_dev</span></span>
+<span><span class="co">#&gt;   [v] cdm_concept                       atlas-development-270609.finngen_omop_dev.concept</span></span></code></pre></div>
+<p>This shows: - Environment (e.g., build, sandbox, preview) - Data
 Freeze version (e.g., dev, r13_v3) - Project ID - Billing Project ID -
 All available tables with their full paths in case you want to run raw
 SQL queries</p>
@@ -179,22 +187,26 @@ were tibbles thanks to <a href="https://dbplyr.tidyverse.org/" class="external-l
 <p>You can view all available table names:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fgbq</span><span class="op">$</span><span class="va">tbl</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "minimum_extended"                    </span></span>
-<span><span class="co">#&gt;  [2] "service_sector_detailed_longitudinal"</span></span>
-<span><span class="co">#&gt;  [3] "kanta"                               </span></span>
-<span><span class="co">#&gt;  [4] "kidney"                              </span></span>
-<span><span class="co">#&gt;  [5] "vision"                              </span></span>
-<span><span class="co">#&gt;  [6] "birth_mother"                        </span></span>
-<span><span class="co">#&gt;  [7] "hla_imputed"                         </span></span>
-<span><span class="co">#&gt;  [8] "drug_events"                         </span></span>
-<span><span class="co">#&gt;  [9] "kanta_medication_delivery"           </span></span>
-<span><span class="co">#&gt; [10] "kanta_prescription"                  </span></span>
-<span><span class="co">#&gt; [11] "code_counts"                         </span></span>
-<span><span class="co">#&gt; [12] "code_prevalence_stratified"          </span></span>
-<span><span class="co">#&gt; [13] "endpoint_cohorts"                    </span></span>
-<span><span class="co">#&gt; [14] "fg_codes_info"                       </span></span>
-<span><span class="co">#&gt; [15] "finngen_vnrs"                        </span></span>
-<span><span class="co">#&gt; [16] "omop_concept"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "birth_mother"                        </span></span>
+<span><span class="co">#&gt;  [2] "code_prevalence_stratified"          </span></span>
+<span><span class="co">#&gt;  [3] "covariates"                          </span></span>
+<span><span class="co">#&gt;  [4] "drug_events"                         </span></span>
+<span><span class="co">#&gt;  [5] "endpoint_cohorts"                    </span></span>
+<span><span class="co">#&gt;  [6] "fg_codes_info"                       </span></span>
+<span><span class="co">#&gt;  [7] "finngen_vnrs"                        </span></span>
+<span><span class="co">#&gt;  [8] "hla_imputed"                         </span></span>
+<span><span class="co">#&gt;  [9] "kanta"                               </span></span>
+<span><span class="co">#&gt; [10] "kanta_medication_delivery"           </span></span>
+<span><span class="co">#&gt; [11] "kanta_prescription"                  </span></span>
+<span><span class="co">#&gt; [12] "kidney"                              </span></span>
+<span><span class="co">#&gt; [13] "minimum_extended"                    </span></span>
+<span><span class="co">#&gt; [14] "other_drugs"                         </span></span>
+<span><span class="co">#&gt; [15] "plasma_samples"                      </span></span>
+<span><span class="co">#&gt; [16] "service_sector_detailed_longitudinal"</span></span>
+<span><span class="co">#&gt; [17] "spirometry"                          </span></span>
+<span><span class="co">#&gt; [18] "vaccination"                         </span></span>
+<span><span class="co">#&gt; [19] "vision"                              </span></span>
+<span><span class="co">#&gt; [20] "cdm_concept"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="accessing-tables">Accessing Tables<a class="anchor" aria-label="anchor" href="#accessing-tables"></a>
@@ -230,16 +242,16 @@ example, to filter for events with code “D45” in the OUTPAT source:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># Database: BigQueryConnection</span></span></span>
 <span><span class="co">#&gt;    FINNGENID  SOURCE EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> FG00255635 OUTPAT      9.39 2007-11-20       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> FG00257218 OUTPAT     23.7  2018-08-26       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> FG00257493 OUTPAT     51.3  2022-03-28       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    83   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FG00146210 OUTPAT     70.7  2010-04-24       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> FG00147113 OUTPAT     71.6  2018-12-13       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> FG00147218 OUTPAT     68.1  2019-08-12       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> FG00147218 OUTPAT     64.6  2016-03-07       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    91   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> FG00366895 OUTPAT     38.6  2018-11-28       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> FG00367217 OUTPAT     50.7  2015-08-08       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    91   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> FG00367695 OUTPAT     42.5  2021-04-16       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    83   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> FG00062848 OUTPAT      23.7 2018-08-26       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> FG00063225 OUTPAT      29.7 2016-07-12       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    92   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> FG00063361 OUTPAT      57.7 2021-01-11       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FG00063373 OUTPAT      21.8 2019-12-25       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> FG00064139 OUTPAT      68.8 2005-02-13       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    91   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> FG00064139 OUTPAT      71.9 2008-02-16       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    2    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> FG00064370 OUTPAT      70.7 2010-04-24       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> FG00317851 OUTPAT      59.8 2019-07-23       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> FG00317989 OUTPAT      44.3 2018-04-23       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> FG00318873 OUTPAT      51.3 2022-03-28       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    83   </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: CODE6 &lt;chr&gt;, CODE7 &lt;chr&gt;, CODE8 &lt;chr&gt;, CODE9 &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ICDVER &lt;chr&gt;, CATEGORY &lt;chr&gt;, INDEX &lt;chr&gt;</span></span></span></code></pre></div>
@@ -253,16 +265,16 @@ example, to filter for events with code “D45” in the OUTPAT source:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># Database: BigQueryConnection</span></span></span>
 <span><span class="co">#&gt;    FINNGENID  SOURCE EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> FG00255635 OUTPAT      9.39 2007-11-20       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> FG00257218 OUTPAT     23.7  2018-08-26       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> FG00257493 OUTPAT     51.3  2022-03-28       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    83   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FG00146210 OUTPAT     70.7  2010-04-24       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> FG00147113 OUTPAT     71.6  2018-12-13       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> FG00147218 OUTPAT     68.1  2019-08-12       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> FG00147218 OUTPAT     64.6  2016-03-07       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    91   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> FG00366895 OUTPAT     38.6  2018-11-28       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> FG00367217 OUTPAT     50.7  2015-08-08       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    91   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> FG00367695 OUTPAT     42.5  2021-04-16       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    83   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> FG00062848 OUTPAT      23.7 2018-08-26       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> FG00063225 OUTPAT      29.7 2016-07-12       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    92   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> FG00063361 OUTPAT      57.7 2021-01-11       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FG00063373 OUTPAT      21.8 2019-12-25       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> FG00064139 OUTPAT      68.8 2005-02-13       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    91   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> FG00064139 OUTPAT      71.9 2008-02-16       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    2    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> FG00064370 OUTPAT      70.7 2010-04-24       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> FG00317851 OUTPAT      59.8 2019-07-23       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> FG00317989 OUTPAT      44.3 2018-04-23       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> FG00318873 OUTPAT      51.3 2022-03-28       J45   J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    83   </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: CODE6 &lt;chr&gt;, CODE7 &lt;chr&gt;, CODE8 &lt;chr&gt;, CODE9 &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ICDVER &lt;chr&gt;, CATEGORY &lt;chr&gt;, INDEX &lt;chr&gt;</span></span></span></code></pre></div>
@@ -278,8 +290,8 @@ example, to filter for events with code “D45” in the OUTPAT source:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># Database: BigQueryConnection</span></span></span>
 <span><span class="co">#&gt;   CODE1       n</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int64&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> J458    <span style="text-decoration: underline;">13</span>542</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> J450    <span style="text-decoration: underline;">88</span>559</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> J450    <span style="text-decoration: underline;">88</span>559</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> J458    <span style="text-decoration: underline;">13</span>542</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> J459   <span style="text-decoration: underline;">183</span>889</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> J45    <span style="text-decoration: underline;">100</span>414</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> J451    <span style="text-decoration: underline;">58</span>219</span></span></code></pre></div>
@@ -329,14 +341,14 @@ into memory using <code><a href="https://dplyr.tidyverse.org/reference/compute.h
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 16</span></span></span>
-<span><span class="co">#&gt;   FINNGENID  SOURCE   EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00388172 OUTPAT        78.7 2010-08-16       J450  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00388172 PRIM_OUT      81.3 2013-04-22       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    R50  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00388173 PRIM_OUT      87.6 2021-08-13       J45   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    R20  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00388174 OUTPAT        63.2 2016-05-28       J459  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00388180 PRIM_OUT      62.3 2020-01-10       J459  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    R20  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> FG00388182 OUTPAT        50.9 2017-01-09       J450  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt;   FINNGENID  SOURCE EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00404543 OUTPAT      63.0 2021-03-20       J451  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00404547 OUTPAT      82.8 2018-04-29       J451  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00404547 OUTPAT      66.4 2001-12-11       J459  J459  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    96   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00404547 OUTPAT      69.2 2004-10-02       J450  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    92   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00404547 OUTPAT      75.9 2011-05-15       J451  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> FG00404551 OUTPAT      62.7 2016-07-20       J450  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    93   </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: CODE6 &lt;chr&gt;, CODE7 &lt;chr&gt;, CODE8 &lt;chr&gt;, CODE9 &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ICDVER &lt;chr&gt;, CATEGORY &lt;chr&gt;, INDEX &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
@@ -361,11 +373,11 @@ BigQuery tables. For example:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 4</span></span></span>
 <span><span class="co">#&gt;   FINNGENID  CODE1 SOURCE APPROX_EVENT_DAY</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00042388 J45   OUTPAT 2018-08-26      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00042765 J45   OUTPAT 2016-07-12      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00042901 J45   OUTPAT 2021-01-11      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00042913 J45   OUTPAT 2019-12-25      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00030575 J45   OUTPAT 2007-11-20</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00132875 J45   OUTPAT 2007-11-20      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00134458 J45   OUTPAT 2018-08-26      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00134835 J45   OUTPAT 2016-07-12      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00134971 J45   OUTPAT 2021-01-11      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00134983 J45   OUTPAT 2019-12-25</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="connection-details">Connection Details<a class="anchor" aria-label="anchor" href="#connection-details"></a>

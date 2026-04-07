@@ -40,6 +40,10 @@
   : Get Latest Data Freeze
 - [`fg_getLatestTablePaths()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_getLatestTablePaths.md)
   : Get Latest Table Paths
+- [`fg_omop_summaries()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_omop_summaries.md)
+  : Generate OMOP CDM Summaries Report
+- [`fg_register_data_summaries()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_register_data_summaries.md)
+  : Generate Data Summaries Report for FinnGen Register Data
 - [`get_fg_bq_tables()`](https://finngen.github.io/FinnGenUtilsR/reference/get_fg_bq_tables.md)
   : Get FinnGen BigQuery Tables
 - [`runGWASAnalysis()`](https://finngen.github.io/FinnGenUtilsR/reference/runGWASAnalysis.md)

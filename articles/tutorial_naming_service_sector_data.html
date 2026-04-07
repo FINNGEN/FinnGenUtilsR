@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,24 +106,28 @@ your sandbox, or set other data freeze versions if needed (see
 <span><span class="co">#&gt; Connecting to BigQuery...</span></span>
 <span><span class="co">#&gt; Using data freeze: dev</span></span>
 <span><span class="co">#&gt; Finding latest table versions...</span></span>
-<span><span class="co">#&gt;   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev</span></span>
-<span><span class="co">#&gt;   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev</span></span>
-<span><span class="co">#&gt;   - kanta: sandbox_tools_dev.kanta_dev_dev</span></span>
-<span><span class="co">#&gt;   - kidney: sandbox_tools_dev.kidney_dev_dev</span></span>
-<span><span class="co">#&gt;   - vision: sandbox_tools_dev.vision_dev_dev</span></span>
 <span><span class="co">#&gt;   - birth_mother: sandbox_tools_dev.birth_mother_dev_dev</span></span>
-<span><span class="co">#&gt;   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev</span></span>
-<span><span class="co">#&gt;   - drug_events: sandbox_tools_dev.drug_events_dev_dev</span></span>
-<span><span class="co">#&gt;   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev</span></span>
-<span><span class="co">#&gt;   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev</span></span>
-<span><span class="co">#&gt;   - code_counts: sandbox_tools_dev.code_counts_dev_dev</span></span>
 <span><span class="co">#&gt;   - code_prevalence_stratified: sandbox_tools_dev.code_prevalence_stratified_dev_dev</span></span>
+<span><span class="co">#&gt;   - covariates: sandbox_tools_dev.covariates_dev_dev</span></span>
+<span><span class="co">#&gt;   - drug_events: sandbox_tools_dev.drug_events_dev_dev</span></span>
 <span><span class="co">#&gt;   - endpoint_cohorts: sandbox_tools_dev.endpoint_cohorts_dev_dev</span></span>
 <span><span class="co">#&gt;   - fg_codes_info: medical_codes.fg_codes_info_dev</span></span>
 <span><span class="co">#&gt;   - finngen_vnrs: medical_codes.finngen_vnr_dev</span></span>
-<span><span class="co">#&gt;   - omop_concept: finngen_omop_dev_dev.concept</span></span>
+<span><span class="co">#&gt;   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta: sandbox_tools_dev.kanta_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev</span></span>
+<span><span class="co">#&gt;   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev</span></span>
+<span><span class="co">#&gt;   - kidney: sandbox_tools_dev.kidney_dev_dev</span></span>
+<span><span class="co">#&gt;   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev</span></span>
+<span><span class="co">#&gt;   - other_drugs: sandbox_tools_dev.other_drugs_dev_dev</span></span>
+<span><span class="co">#&gt;   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev</span></span>
+<span><span class="co">#&gt;   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal</span></span>
+<span><span class="co">#&gt;   - spirometry: sandbox_tools_dev.spirometry_dev_dev</span></span>
+<span><span class="co">#&gt;   - vaccination: sandbox_tools_dev.vaccination_dev_dev</span></span>
+<span><span class="co">#&gt;   - vision: sandbox_tools_dev.vision_dev_dev</span></span>
+<span><span class="co">#&gt;   - cdm_concept: finngen_omop_dev_dev.concept</span></span>
 <span><span class="co">#&gt; Creating table connections (this may take a moment)...</span></span>
-<span><span class="co">#&gt; Successfully connected to 16 tables in 8.21 seconds</span></span></code></pre></div>
+<span><span class="co">#&gt; Successfully connected to all 20 tables in 11.42 seconds</span></span></code></pre></div>
 <p>We can access the service sector data using the <code>fgbq</code>
 object as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -363,17 +367,17 @@ abstracts this nuances, and assign one provider type code per row.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># Database: BigQueryConnection</span></span></span>
 <span><span class="co">#&gt;   FINNGENID  SOURCE INDEX APPROX_EVENT_DAY CODE5 CODE6 CODE8 CODE9 provider_code</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00000001 PURCH  39    2020-03-13       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00000001 PURCH  91    2022-05-09       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00000001 PURCH  92    2022-10-07       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00000001 PURCH  144   2008-03-06       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00000001 PURCH  145   2008-03-12       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> FG00000001 PURCH  169   2010-08-09       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FG00000001 PURCH  68    2022-12-25       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FG00000001 PURCH  89    2022-12-31       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FG00000001 PURCH  107   2002-02-16       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FG00000001 PURCH  132   2006-01-13       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> FG00000001 PURCH  181   2011-05-03       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> FG00000001 PURCH  207   2012-08-30       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: provider_name_en &lt;chr&gt;, provider_concept_class_id &lt;chr&gt;</span></span></span></code></pre></div>
 (same table in html format for exploration)
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["FINNGENID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["SOURCE"],"name":[2],"type":["chr"],"align":["left"]},{"label":["INDEX"],"name":[3],"type":["chr"],"align":["left"]},{"label":["APPROX_EVENT_DAY"],"name":[4],"type":["date"],"align":["right"]},{"label":["CODE5"],"name":[5],"type":["chr"],"align":["left"]},{"label":["CODE6"],"name":[6],"type":["chr"],"align":["left"]},{"label":["CODE8"],"name":[7],"type":["chr"],"align":["left"]},{"label":["CODE9"],"name":[8],"type":["chr"],"align":["left"]},{"label":["provider_code"],"name":[9],"type":["chr"],"align":["left"]},{"label":["provider_name_en"],"name":[10],"type":["chr"],"align":["left"]},{"label":["provider_concept_class_id"],"name":[11],"type":["chr"],"align":["left"]}],"data":[{"1":"FG00000001","2":"PURCH","3":"39","4":"2020-03-13","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"91","4":"2022-05-09","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"92","4":"2022-10-07","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"144","4":"2008-03-06","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"145","4":"2008-03-12","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"169","4":"2010-08-09","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["FINNGENID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["SOURCE"],"name":[2],"type":["chr"],"align":["left"]},{"label":["INDEX"],"name":[3],"type":["chr"],"align":["left"]},{"label":["APPROX_EVENT_DAY"],"name":[4],"type":["date"],"align":["right"]},{"label":["CODE5"],"name":[5],"type":["chr"],"align":["left"]},{"label":["CODE6"],"name":[6],"type":["chr"],"align":["left"]},{"label":["CODE8"],"name":[7],"type":["chr"],"align":["left"]},{"label":["CODE9"],"name":[8],"type":["chr"],"align":["left"]},{"label":["provider_code"],"name":[9],"type":["chr"],"align":["left"]},{"label":["provider_name_en"],"name":[10],"type":["chr"],"align":["left"]},{"label":["provider_concept_class_id"],"name":[11],"type":["chr"],"align":["left"]}],"data":[{"1":"FG00000001","2":"PURCH","3":"68","4":"2022-12-25","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"89","4":"2022-12-31","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"107","4":"2002-02-16","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"132","4":"2006-01-13","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"181","4":"2011-05-03","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"},{"1":"FG00000001","2":"PURCH","3":"207","4":"2012-08-30","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -405,7 +409,7 @@ references:</p>
 <span><span class="va">service_sector_bq_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bigrquery.r-dbi.org/reference/bq_refs.html" class="external-link">bq_table</a></span><span class="op">(</span></span>
 <span>  project <span class="op">=</span> <span class="va">project_id</span>,</span>
 <span>  dataset <span class="op">=</span> <span class="st">"sandbox_tools_dev"</span>,</span>
-<span>  table <span class="op">=</span> <span class="st">"finngen_dev_service_sector_detailed_longitudinal_dev"</span></span>
+<span>  table <span class="op">=</span> <span class="st">"finngen_dev_service_sector_detailed_longitudinal"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -415,7 +419,7 @@ references:</p>
 <code class="sourceCode R"><span><span class="co"># Get events for subject FG00000001 directly from BigQuery</span></span>
 <span><span class="va">ss_subject_1_bq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bigrquery.r-dbi.org/reference/bq_query.html" class="external-link">bq_project_query</a></span><span class="op">(</span></span>
 <span>  <span class="va">project_id</span>,</span>
-<span>  <span class="st">"SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev` WHERE FINNGENID = 'FG00000001'"</span></span>
+<span>  <span class="st">"SELECT * FROM `atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal` WHERE FINNGENID = 'FG00000001'"</span></span>
 <span><span class="op">)</span> </span></code></pre></div>
 </div>
 <div class="section level3">

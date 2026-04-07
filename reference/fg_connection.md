@@ -12,7 +12,7 @@ fg_connection(environment)
 
 - environment:
 
-  Environment identifier (e.g., "build", "review", or "sandbox-XX")
+  Environment identifier (e.g., "build", "preview", or "sandbox-XX")
 
 ## Value
 
