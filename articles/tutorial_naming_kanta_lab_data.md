@@ -59,7 +59,7 @@ fgbq <- get_fg_bq_tables(
 #>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to all 20 tables in 11.09 seconds
+#> Successfully connected to all 20 tables in 12.09 seconds
 ```
 
 We can access the Kanta lab data using the `fgbq` object as follows:
