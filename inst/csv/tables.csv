@@ -8,11 +8,8 @@ fg_codes_info,medical_codes.fg_codes_info_{version},0
 finngen_vnrs,medical_codes.finngen_vnr_{version},0
 hla_imputed,sandbox_tools_{datafreeze}.hla_imputed_{datafreeze}_{version},14
 kanta,sandbox_tools_{datafreeze}.kanta_{datafreeze}_{version},12
-kanta_medication_delivery,sandbox_tools_{datafreeze}.kanta_medication_delivery_{datafreeze}_{version},12
-kanta_prescription,sandbox_tools_{datafreeze}.kanta_prescription_{datafreeze}_{version},12
 kidney,sandbox_tools_{datafreeze}.kidney_{datafreeze}_{version},12
 minimum_extended,sandbox_tools_{datafreeze}.minimum_extended_{datafreeze}_{version},11
-other_drugs,sandbox_tools_{datafreeze}.other_drugs_{datafreeze}_{version},12
 plasma_samples,sandbox_tools_{datafreeze}.plasma_samples_{datafreeze}_{version},13
 service_sector_detailed_longitudinal,sandbox_tools_{datafreeze}.finngen_{datafreeze}_service_sector_detailed_longitudinal,11
 spirometry,sandbox_tools_{datafreeze}.spirometry_{datafreeze}_{version},12
