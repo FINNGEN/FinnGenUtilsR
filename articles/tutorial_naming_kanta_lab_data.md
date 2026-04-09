@@ -47,11 +47,8 @@ fgbq <- get_fg_bq_tables(
 #>   - finngen_vnrs: medical_codes.finngen_vnr_dev
 #>   - hla_imputed: sandbox_tools_dev.hla_imputed_dev_dev
 #>   - kanta: sandbox_tools_dev.kanta_dev_dev
-#>   - kanta_medication_delivery: sandbox_tools_dev.kanta_medication_delivery_dev_dev
-#>   - kanta_prescription: sandbox_tools_dev.kanta_prescription_dev_dev
 #>   - kidney: sandbox_tools_dev.kidney_dev_dev
 #>   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev
-#>   - other_drugs: sandbox_tools_dev.other_drugs_dev_dev
 #>   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev
 #>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal
 #>   - spirometry: sandbox_tools_dev.spirometry_dev_dev
@@ -59,7 +56,7 @@ fgbq <- get_fg_bq_tables(
 #>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to all 20 tables in 12.09 seconds
+#> Successfully connected to all 17 tables in 7.89 seconds
 ```
 
 We can access the Kanta lab data using the `fgbq` object as follows:
@@ -137,14 +134,14 @@ kanta_subject_1_tbl_with_omop_name |>
 #> # Source:     SQL [?? x 7]
 #> # Database:   BigQueryConnection
 #> # Ordered by: desc(APPROX_EVENT_DATETIME)
-#>   FINNGENID  EVENT_AGE APPROX_EVENT_DATETIME TEST_NAME  TEST_ID OMOP_CONCEPT_ID
-#>   <chr>          <dbl> <dttm>                <chr>      <chr>           <int64>
-#> 1 FG00000001      70.9 2022-02-09 07:18:00   fp-kol-ldl 4599            3001308
-#> 2 FG00000001      69.7 2020-12-08 13:21:00   p-crp      4594            3020460
-#> 3 FG00000001      70.4 2021-08-25 08:40:00   p-crp      4594            3020460
-#> 4 FG00000001      71.6 2022-11-04 16:18:00   p-crp      1605013         3020460
-#> 5 FG00000001      64.0 2015-03-30 10:06:00   p-crp      4594            3020460
-#> 6 FG00000001      67.2 2018-06-05 10:13:00   p-na       6003622         3019550
+#>   FINNGENID  EVENT_AGE APPROX_EVENT_DATETIME TEST_NAME TEST_ID OMOP_CONCEPT_ID
+#>   <chr>          <dbl> <dttm>                <chr>     <chr>           <int64>
+#> 1 FG00000001      67.6 2018-10-19 11:00:00   ab-be     50030           3003396
+#> 2 FG00000001      65.4 2016-08-01 07:57:00   ab-be     10083           3003396
+#> 3 FG00000001      66.2 2017-06-08 15:34:00   fp-gluk   1468            3018251
+#> 4 FG00000001      68.0 2019-03-18 12:46:00   p-probnp  4760            3029187
+#> 5 FG00000001      70.8 2021-12-21 01:28:00   l-baso(a) 3001168         3022096
+#> 6 FG00000001      67.1 2018-05-02 14:06:00   b-leuk    2218            3010813
 #> # ℹ 1 more variable: concept_name <chr>
 ```
 
