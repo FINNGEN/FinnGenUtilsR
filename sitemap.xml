@@ -3,6 +3,7 @@
 <url><loc>https://finngen.github.io/FinnGenUtilsR/LICENSE-text.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/articles/index.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_fgbq.html</loc></url>
+<url><loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_naming_drug_events_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_naming_kanta_lab_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/articles/tutorial_naming_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/authors.html</loc></url>
@@ -26,8 +27,8 @@
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_append_visit_type_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_bq_tables.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_connection.html</loc></url>
+<url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_code_info_to_kanta_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_code_info_to_longitudinal_data.html</loc></url>
-<url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_concept_info_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_provider_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_visit_type_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_getLatestDataFreeze.html</loc></url>

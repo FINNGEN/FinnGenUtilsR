@@ -4,6 +4,8 @@
 
 - [Tutorial connection to FinnGen BQ
   tables](https://finngen.github.io/FinnGenUtilsR/articles/tutorial_fgbq.md):
+- [Adding Names to Drug Events
+  Data](https://finngen.github.io/FinnGenUtilsR/articles/tutorial_naming_drug_events_data.md):
 - [Adding Names to Kanta Lab
   Data](https://finngen.github.io/FinnGenUtilsR/articles/tutorial_naming_kanta_lab_data.md):
 - [Adding names to longitudinal and service sector

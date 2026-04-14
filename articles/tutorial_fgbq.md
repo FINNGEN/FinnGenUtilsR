@@ -58,7 +58,7 @@ fgbq <- get_fg_bq_tables(
 #>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to all 17 tables in 8.57 seconds
+#> Successfully connected to all 17 tables in 7.91 seconds
 ```
 
 By default
@@ -173,50 +173,27 @@ to filter for events with code “D45” in the OUTPAT source:
 ``` r
 # Get events with code "J45" in OUTPAT
 fgbq$tbl$service_sector_detailed_longitudinal |> 
-  filter(CODE1 == "J45" & SOURCE == "OUTPAT")
-#> # Source:   SQL [?? x 16]
-#> # Database: BigQueryConnection
-#>    FINNGENID  SOURCE EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5
-#>    <chr>      <chr>      <dbl> <date>           <chr> <chr> <chr> <chr> <chr>
-#>  1 FG00399691 OUTPAT      59.8 2019-07-23       J45   NA    NA    NA    NA   
-#>  2 FG00399829 OUTPAT      44.3 2018-04-23       J45   NA    NA    NA    NA   
-#>  3 FG00400713 OUTPAT      51.3 2022-03-28       J45   J45   NA    NA    83   
-#>  4 FG00418367 OUTPAT      50.7 2015-08-08       J45   NA    NA    NA    91   
-#>  5 FG00418845 OUTPAT      42.5 2021-04-16       J45   NA    NA    NA    83   
-#>  6 FG00419209 OUTPAT      47.0 2014-12-22       J45   NA    NA    NA    93   
-#>  7 FG00420151 OUTPAT      59.8 2019-07-23       J45   NA    NA    NA    NA   
-#>  8 FG00420289 OUTPAT      44.3 2018-04-23       J45   NA    NA    NA    NA   
-#>  9 FG00119530 OUTPAT      41.3 2019-08-08       J45   NA    NA    NA    93   
-#> 10 FG00119530 OUTPAT      23.7 2002-01-26       J45   NA    NA    NA    91   
-#> # ℹ more rows
-#> # ℹ 7 more variables: CODE6 <chr>, CODE7 <chr>, CODE8 <chr>, CODE9 <chr>,
-#> #   ICDVER <chr>, CATEGORY <chr>, INDEX <chr>
-```
-
-Or other tidyverse functions like
-[`stringr::str_detect()`](https://stringr.tidyverse.org/reference/str_detect.html)
-
-``` r
-# Get events with code "J45" in OUTPAT
-fgbq$tbl$service_sector_detailed_longitudinal |> 
-  filter(CODE1 == "J45" & SOURCE == "OUTPAT")
-#> # Source:   SQL [?? x 16]
-#> # Database: BigQueryConnection
-#>    FINNGENID  SOURCE EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5
-#>    <chr>      <chr>      <dbl> <date>           <chr> <chr> <chr> <chr> <chr>
-#>  1 FG00399691 OUTPAT      59.8 2019-07-23       J45   NA    NA    NA    NA   
-#>  2 FG00399829 OUTPAT      44.3 2018-04-23       J45   NA    NA    NA    NA   
-#>  3 FG00400713 OUTPAT      51.3 2022-03-28       J45   J45   NA    NA    83   
-#>  4 FG00418367 OUTPAT      50.7 2015-08-08       J45   NA    NA    NA    91   
-#>  5 FG00418845 OUTPAT      42.5 2021-04-16       J45   NA    NA    NA    83   
-#>  6 FG00419209 OUTPAT      47.0 2014-12-22       J45   NA    NA    NA    93   
-#>  7 FG00420151 OUTPAT      59.8 2019-07-23       J45   NA    NA    NA    NA   
-#>  8 FG00420289 OUTPAT      44.3 2018-04-23       J45   NA    NA    NA    NA   
-#>  9 FG00119530 OUTPAT      41.3 2019-08-08       J45   NA    NA    NA    93   
-#> 10 FG00119530 OUTPAT      23.7 2002-01-26       J45   NA    NA    NA    91   
-#> # ℹ more rows
-#> # ℹ 7 more variables: CODE6 <chr>, CODE7 <chr>, CODE8 <chr>, CODE9 <chr>,
-#> #   ICDVER <chr>, CATEGORY <chr>, INDEX <chr>
+  filter(CODE1 == "J45" & SOURCE == "OUTPAT") |> 
+  glimpse()
+#> Rows: ??
+#> Columns: 16
+#> Database: BigQueryConnection
+#> $ FINNGENID        <chr> "FG00001468", "FG00001845", "FG00001981", "FG00001993…
+#> $ SOURCE           <chr> "OUTPAT", "OUTPAT", "OUTPAT", "OUTPAT", "OUTPAT", "OU…
+#> $ EVENT_AGE        <dbl> 23.655, 29.656, 57.717, 21.760, 68.846, 71.852, 14.09…
+#> $ APPROX_EVENT_DAY <date> 2018-08-26, 2016-07-12, 2021-01-11, 2019-12-25, 2005…
+#> $ CODE1            <chr> "J45", "J45", "J45", "J45", "J45", "J45", "J45", "J45…
+#> $ CODE2            <chr> NA, NA, "J45", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+#> $ CODE3            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ CODE4            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ CODE5            <chr> "93", "92", NA, NA, "91", "2", "92", NA, NA, NA, NA, …
+#> $ CODE6            <chr> "65", "10E", "70", "96", "20", "55", "30", "15Y", "10…
+#> $ CODE7            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ CODE8            <chr> "R52", NA, "R52", "R10", NA, NA, NA, "R10", "R10", "R…
+#> $ CODE9            <chr> "E", NA, "E", "E", NA, NA, NA, "6", "E", "E", "E", NA…
+#> $ ICDVER           <chr> "10", "10", "10", "10", "10", "10", "10", "10", "10",…
+#> $ CATEGORY         <chr> "2", "1", "1", "2", "1", "1", "1", "1", "1", "2", "3"…
+#> $ INDEX            <chr> "682342", "828784", "970654", "972744", "1257416", "1…
 ```
 
 Or other tidyverse functions like
@@ -227,16 +204,13 @@ Or other tidyverse functions like
 fgbq$tbl$service_sector_detailed_longitudinal |> 
   filter(stringr::str_detect(CODE1, "^J45")) |> 
   count(CODE1) |> 
-  head()
-#> # Source:   SQL [?? x 2]
-#> # Database: BigQueryConnection
-#>   CODE1       n
-#>   <chr> <int64>
-#> 1 J458    13542
-#> 2 J459   183889
-#> 3 J45    100414
-#> 4 J451    58219
-#> 5 J450    88559
+  head() |> 
+  glimpse()
+#> Rows: ??
+#> Columns: 2
+#> Database: BigQueryConnection
+#> $ CODE1 <chr> "J450", "J459", "J451", "J45", "J458"
+#> $ n     <int64> 88559, 183889, 58219, 100414, 13542
 ```
 
 ### Joining Tables
@@ -253,21 +227,16 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
     by = "FINNGENID"
   ) |> 
   count(SMOKE2, SMOKE3, sort = TRUE) |> 
-  head()
-#> # Source:     SQL [?? x 3]
-#> # Database:   BigQueryConnection
-#> # Ordered by: desc(n)
-#>   SMOKE2 SMOKE3        n
-#>   <chr>  <chr>   <int64>
-#> 1 no     NA        43697
-#> 2 NA     NA        35806
-#> 3 no     never     32092
-#> 4 NA     never     26376
-#> 5 no     current   16633
-#> 6 yes    NA        15056
+  head()|> 
+  glimpse()
+#> Rows: ??
+#> Columns: 3
+#> Database: BigQueryConnection
+#> Ordered by: desc(n)
+#> $ SMOKE2 <chr> "no", NA, "no", NA, "no", "yes"
+#> $ SMOKE3 <chr> NA, NA, "never", "never", "current", NA
+#> $ n      <int64> 43697, 35806, 32092, 26376, 16633, 15056
 ```
-
-(same table in html format for exploration)
 
 ### Collect results into R
 
@@ -281,18 +250,26 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   filter(stringr::str_detect(CODE1, "^J45")) |> 
   filter(EVENT_AGE > 50) |> 
   head() |>
-  collect() 
-#> # A tibble: 6 × 16
-#>   FINNGENID  SOURCE   EVENT_AGE APPROX_EVENT_DAY CODE1 CODE2 CODE3 CODE4 CODE5
-#>   <chr>      <chr>        <dbl> <date>           <chr> <chr> <chr> <chr> <chr>
-#> 1 FG00464967 OUTPAT        80.1 2016-09-04       J459  NA    NA    NA    93   
-#> 2 FG00464967 OUTPAT        80.1 2016-09-04       J459  NA    NA    NA    93   
-#> 3 FG00464967 OUTPAT        80.5 2017-02-06       J450  NA    NA    NA    93   
-#> 4 FG00464969 PRIM_OUT      90.1 2021-06-11       J450  NA    NA    NA    R52  
-#> 5 FG00464969 PRIM_OUT      86.4 2017-10-06       J45   NA    NA    NA    R20  
-#> 6 FG00464973 PRIM_OUT      54.4 2015-12-30       J45   NA    NA    NA    R50  
-#> # ℹ 7 more variables: CODE6 <chr>, CODE7 <chr>, CODE8 <chr>, CODE9 <chr>,
-#> #   ICDVER <chr>, CATEGORY <chr>, INDEX <chr>
+  collect() |> 
+  glimpse()
+#> Rows: 6
+#> Columns: 16
+#> $ FINNGENID        <chr> "FG00322782", "FG00322785", "FG00322789", "FG00322789…
+#> $ SOURCE           <chr> "PRIM_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM…
+#> $ EVENT_AGE        <dbl> 64.956, 84.706, 57.582, 61.407, 59.639, 61.703
+#> $ APPROX_EVENT_DAY <date> 2016-08-04, 2017-10-12, 2013-02-06, 2016-12-04, 2023-…
+#> $ CODE1            <chr> "J45", "J459", "J45", "J459", "J45", "J459"
+#> $ CODE2            <chr> NA, NA, NA, NA, NA, NA
+#> $ CODE3            <chr> NA, NA, NA, NA, NA, NA
+#> $ CODE4            <chr> NA, NA, NA, NA, NA, NA
+#> $ CODE5            <chr> "R10", "R90", "R10", "R20", "R52", "R20"
+#> $ CODE6            <chr> "T60", "T11", "T11", "T42", "T40", "T40"
+#> $ CODE7            <chr> "2222", "51321", "32311", "51321", "51321", "51321"
+#> $ CODE8            <chr> NA, NA, NA, NA, NA, NA
+#> $ CODE9            <chr> NA, NA, NA, NA, NA, NA
+#> $ ICDVER           <chr> NA, NA, NA, NA, NA, NA
+#> $ CATEGORY         <chr> "ICD1", "ICD1", "ICD1", "ICD2", "ICD1", "ICD1"
+#> $ INDEX            <chr> "144366891", "144377781", "144377910", "144367579", …
 ```
 
 ### Running SQL Queries
@@ -316,11 +293,11 @@ bigrquery::bq_table_download(result)
 #> # A tibble: 5 × 4
 #>   FINNGENID  CODE1 SOURCE APPROX_EVENT_DAY
 #>   <chr>      <chr> <chr>  <date>          
-#> 1 FG00255635 J45   OUTPAT 2007-11-20      
-#> 2 FG00257218 J45   OUTPAT 2018-08-26      
-#> 3 FG00257493 J45   OUTPAT 2022-03-28      
-#> 4 FG00132875 J45   OUTPAT 2007-11-20      
-#> 5 FG00134458 J45   OUTPAT 2018-08-26
+#> 1 FG00011698 J45   OUTPAT 2018-08-26      
+#> 2 FG00012075 J45   OUTPAT 2016-07-12      
+#> 3 FG00012211 J45   OUTPAT 2021-01-11      
+#> 4 FG00012223 J45   OUTPAT 2019-12-25      
+#> 5 FG00012989 J45   OUTPAT 2005-02-13
 ```
 
 ### Connection Details

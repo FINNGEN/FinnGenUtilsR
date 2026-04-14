@@ -28,10 +28,10 @@
   : FinnGen BigQuery Tables Handler
 - [`fg_connection()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_connection.md)
   : Create FinnGen BigQuery Connection
+- [`fg_dbplyr_append_code_info_to_kanta_data()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_code_info_to_kanta_data.md)
+  : fg_dbplyr_append_code_info_to_kanta_data
 - [`fg_dbplyr_append_code_info_to_longitudinal_data()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_code_info_to_longitudinal_data.md)
   : fg_dbplyr_append_code_info_to_longitudinal_data
-- [`fg_dbplyr_append_concept_info_data()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_concept_info_data.md)
-  : fg_dbplyr_append_concept_info_data
 - [`fg_dbplyr_append_provider_info_to_service_sector_data()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_provider_info_to_service_sector_data.md)
   : fg_dbplyr_append_provider_info_to_service_sector_data
 - [`fg_dbplyr_append_visit_type_info_to_service_sector_data()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_visit_type_info_to_service_sector_data.md)

@@ -56,30 +56,38 @@ fgbq <- get_fg_bq_tables(
 #>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to all 17 tables in 7.89 seconds
+#> Successfully connected to all 17 tables in 7.49 seconds
 ```
 
 We can access the Kanta lab data using the `fgbq` object as follows:
 
 ``` r
-fgbq$tbl$kanta |> head()
-#> # Source:   SQL [?? x 21]
-#> # Database: BigQueryConnection
-#>   FINNGENID  EVENT_AGE APPROX_EVENT_DATETIME TEST_NAME TEST_ID OMOP_CONCEPT_ID
-#>   <chr>          <dbl> <dttm>                <chr>     <chr>           <int64>
-#> 1 FG00000034      65.7 2022-03-17 07:55:00   na        NA                   -1
-#> 2 FG00000035      82.7 2022-08-30 09:58:00   na        NA                   -1
-#> 3 FG00000069      66.4 2020-10-16 07:01:00   na        NA                   -1
-#> 4 FG00000107      64.7 2019-09-22 13:55:00   na        NA                   -1
-#> 5 FG00000172      91.0 2022-09-01 11:59:00   na        NA                   -1
-#> 6 FG00000186      82.8 2021-08-04 07:37:00   na        NA                   -1
-#> # ℹ 15 more variables: MEASUREMENT_VALUE <dbl>, MEASUREMENT_UNIT <chr>,
-#> #   MEASUREMENT_VALUE_HARMONIZED <dbl>, MEASUREMENT_UNIT_HARMONIZED <chr>,
-#> #   MEASUREMENT_VALUE_EXTRACTED <dbl>, MEASUREMENT_VALUE_MERGED <dbl>,
-#> #   TEST_OUTCOME <chr>, MEASUREMENT_STATUS <chr>,
-#> #   REFERENCE_RANGE_LOW_VALUE <dbl>, REFERENCE_RANGE_HIGH_VALUE <dbl>,
-#> #   CODING_SYSTEM_OID <chr>, TEST_ID_SOURCE <chr>, TEST_NAME_SOURCE <chr>,
-#> #   MEASUREMENT_VALUE_SOURCE <dbl>, MEASUREMENT_UNIT_SOURCE <chr>
+fgbq$tbl$kanta |> 
+  glimpse()
+#> Rows: ??
+#> Columns: 21
+#> Database: BigQueryConnection
+#> $ FINNGENID                    <chr> "FG00000034", "FG00000035", "FG00000069",…
+#> $ EVENT_AGE                    <dbl> 65.718, 82.712, 66.375, 64.734, 90.995, 8…
+#> $ APPROX_EVENT_DATETIME        <dttm> 2022-03-17 07:55:00, 2022-08-30 09:58:00…
+#> $ TEST_NAME                    <chr> "na", "na", "na", "na", "na", "na", "na",…
+#> $ TEST_ID                      <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ OMOP_CONCEPT_ID              <int64> -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,…
+#> $ MEASUREMENT_VALUE            <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ MEASUREMENT_UNIT             <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ MEASUREMENT_VALUE_HARMONIZED <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ MEASUREMENT_UNIT_HARMONIZED  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ MEASUREMENT_VALUE_EXTRACTED  <dbl> NA, NA, NA, NA, 0.998700, 2.189545, NA, 2…
+#> $ MEASUREMENT_VALUE_MERGED     <dbl> NA, NA, NA, NA, 0.998700, 2.189545, NA, 2…
+#> $ TEST_OUTCOME                 <chr> "N", NA, NA, "L", "A", NA, NA, NA, NA, NA…
+#> $ MEASUREMENT_STATUS           <chr> "F", "F", "F", "F", "F", NA, "F", "F", "F…
+#> $ REFERENCE_RANGE_LOW_VALUE    <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ REFERENCE_RANGE_HIGH_VALUE   <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ CODING_SYSTEM_OID            <chr> "Helsinki_13010", "Seinäjoki_601", "Helsi…
+#> $ TEST_ID_SOURCE               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ TEST_NAME_SOURCE             <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ MEASUREMENT_VALUE_SOURCE     <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ MEASUREMENT_UNIT_SOURCE      <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
 ```
 
 ## Generate a table for analysis
@@ -99,56 +107,47 @@ the concepts:
 ``` r
 kanta_subject_1_tbl |> 
   select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID) |> 
-  head()
-#> # Source:     SQL [?? x 6]
-#> # Database:   BigQueryConnection
-#> # Ordered by: desc(APPROX_EVENT_DATETIME)
-#>   FINNGENID  EVENT_AGE APPROX_EVENT_DATETIME TEST_NAME TEST_ID OMOP_CONCEPT_ID
-#>   <chr>          <dbl> <dttm>                <chr>     <chr>           <int64>
-#> 1 FG00000001      71.7 2022-12-07 12:07:00   pt-gfre   656400               -1
-#> 2 FG00000001      71.6 2022-11-04 16:18:00   p-crp     1605013         3020460
-#> 3 FG00000001      71.6 2022-10-17 12:00:11   b-trom    3002791         3007461
-#> 4 FG00000001      71.6 2022-10-15 07:01:00   e-mchc    1557            3003338
-#> 5 FG00000001      71.5 2022-09-22 11:53:00   e-mchc    1557            3003338
-#> 6 FG00000001      71.5 2022-09-12 12:03:00   s-ca-ion  9010            3016431
+  glimpse()
+#> Rows: ??
+#> Columns: 6
+#> Database: BigQueryConnection
+#> Ordered by: desc(APPROX_EVENT_DATETIME)
+#> $ FINNGENID             <chr> "FG00000001", "FG00000001", "FG00000001", "FG000…
+#> $ EVENT_AGE             <dbl> 71.718, 71.627, 71.578, 71.573, 71.510, 71.482, …
+#> $ APPROX_EVENT_DATETIME <dttm> 2022-12-07 12:07:00, 2022-11-04 16:18:00, 2022-…
+#> $ TEST_NAME             <chr> "pt-gfre", "p-crp", "b-trom", "e-mchc", "e-mchc"…
+#> $ TEST_ID               <chr> "656400", "1605013", "3002791", "1557", "1557", …
+#> $ OMOP_CONCEPT_ID       <int64> -1, 3020460, 3007461, 3003338, 3003338, 301643…
 ```
-
-(same table in html format for exploration)
 
 ### Adding info to OMOP_CONCEPT_ID codes
 
-Function `fg_dbplyr_append_concept_info_data` adds a new column with
-information about the OMOP_CONCEPT_ID name.
+Function `fg_dbplyr_append_code_info_to_kanta_data` adds a new column
+with information about the OMOP_CONCEPT_ID name.
 
 ``` r
 kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |> 
-   fg_dbplyr_append_concept_info_data(fg_bq_tables = fgbq)
+   fg_dbplyr_append_code_info_to_kanta_data(fg_bq_tables = fgbq)
 ```
 
 ``` r
 kanta_subject_1_tbl_with_omop_name |>  
   dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) |> 
-  head()
+  glimpse()
+#> Rows: ??
 #> Warning: ORDER BY is ignored in subqueries without LIMIT
 #> ℹ Do you need to move arrange() later in the pipeline or use window_order() instead?
-#> # Source:     SQL [?? x 7]
-#> # Database:   BigQueryConnection
-#> # Ordered by: desc(APPROX_EVENT_DATETIME)
-#>   FINNGENID  EVENT_AGE APPROX_EVENT_DATETIME TEST_NAME TEST_ID OMOP_CONCEPT_ID
-#>   <chr>          <dbl> <dttm>                <chr>     <chr>           <int64>
-#> 1 FG00000001      67.6 2018-10-19 11:00:00   ab-be     50030           3003396
-#> 2 FG00000001      65.4 2016-08-01 07:57:00   ab-be     10083           3003396
-#> 3 FG00000001      66.2 2017-06-08 15:34:00   fp-gluk   1468            3018251
-#> 4 FG00000001      68.0 2019-03-18 12:46:00   p-probnp  4760            3029187
-#> 5 FG00000001      70.8 2021-12-21 01:28:00   l-baso(a) 3001168         3022096
-#> 6 FG00000001      67.1 2018-05-02 14:06:00   b-leuk    2218            3010813
-#> # ℹ 1 more variable: concept_name <chr>
+#> Columns: 7
+#> Database: BigQueryConnection
+#> Ordered by: desc(APPROX_EVENT_DATETIME)
+#> $ FINNGENID             <chr> "FG00000001", "FG00000001", "FG00000001", "FG000…
+#> $ EVENT_AGE             <dbl> 71.482, 66.981, 71.241, 66.493, 64.727, 66.616, …
+#> $ APPROX_EVENT_DATETIME <dttm> 2022-09-12 12:03:00, 2018-03-13 10:46:00, 2022-…
+#> $ TEST_NAME             <chr> "s-ca-ion", "p-k", "p-k", "ab-hbo2", "p-hs-crp",…
+#> $ TEST_ID               <chr> "9010", "1999", "1999", "3240", "50435", "689", …
+#> $ OMOP_CONCEPT_ID       <int64> 3016431, 3023103, 3023103, 3014007, 3010156, 3…
+#> $ concept_name          <chr> "Calcium.ionized [Moles/volume] adjusted to pH 7…
 ```
-
-(same table in html format for exploration)
-
-    #> Warning: ORDER BY is ignored in subqueries without LIMIT
-    #> ℹ Do you need to move arrange() later in the pipeline or use window_order() instead?
 
 ## Alternative: Running SQL Queries
 
