@@ -43,15 +43,16 @@ datafreeze
 dbplyr
 dev
 dplyr
-exporation
 fg
 fi
+finngen
 github
 gsutil
 gwas
 hilmo
 http
 httr
+kanta
 omop
 phenodescription
 runGWASAnalysis
@@ -63,3 +64,4 @@ tibble
 tibbles
 tidyverse
 unmodifiable
+vnrs

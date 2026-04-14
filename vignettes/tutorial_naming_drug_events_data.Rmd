@@ -1,0 +1,101 @@
+---
+title: "Adding Names to Drug Events Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_drug_events_data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Intro
+
+This tutorial demonstrates how to work with drug events data using the `FinnGenUtilsR` package. The drug events data contains medication purchase and prescription records with VNR (Finnish national product codes) identifiers. This tutorial shows how to append human-readable medication names and ATC codes by joining with the `finngen_vnrs` reference table.
+
+Unlike other data types (such as service sector or longitudinal data), there is no custom helper function for adding names to drug events data. Instead, we use a simple join operation with the `finngen_vnrs` table.
+
+To understand what the `fgbq` object is, see the dedicated vignette `tutorial_fgbq`.
+
+# Set up
+
+```{r setup}
+library(dplyr)
+library(FinnGenUtilsR)
+```
+
+Connect to the latest versions of BigQuery tables using `get_fg_bq_tables()`.
+Remember to change the environment to your sandbox, or set other data freeze versions if needed (see `tutorial_fgbq` vignette for more details).
+
+```{r}
+fgbq <- get_fg_bq_tables(
+  environment = "sandbox-XX"
+)
+```
+
+We can access the drug events data using the `fgbq` object as follows: 
+
+```{r}
+fgbq$tbl$drug_events |> 
+  glimpse()
+```
+
+We can also view the finngen_vnrs reference table that contains medication names and ATC codes:
+
+```{r}
+fgbq$tbl$finngen_vnrs |> 
+  glimpse()
+```
+
+# Generate a table for analysis
+
+For example, we create a subset of the drug events table by querying events from subject "FG00003640": 
+
+```{r}
+drug_events_subject_tbl <- fgbq$tbl$drug_events |> 
+  filter(FINNGENID == "FG00003640") |> 
+  arrange(desc(MEDICATION_APPROX_EVENT_DAY))
+```
+
+We can see that this table contains VNR codes (MEDICATION_VNR and PRESCRIPTION_VNR) but not the medication names:
+
+```{r}
+drug_events_subject_tbl |> 
+  glimpse()
+``` 
+
+
+## Adding medication information via VNR codes
+
+To add medication names and ATC codes to the drug events data, we simply join with the `finngen_vnrs` reference table. The drug events table contains two VNR columns:
+
+- `MEDICATION_VNR`: The VNR code for the actual medication dispensed
+- `PRESCRIPTION_VNR`: The VNR code from the original prescription (may differ from what was dispensed)
+
+We can join on either column depending on which medication information we need. Here we'll join on `MEDICATION_VNR`:
+
+Note: The VNR codes in the drug_events table are stored as strings, while in the finngen_vnrs table they are integers. We need to convert the type before joining.
+
+```{r}
+drug_events_with_names <- drug_events_subject_tbl |> 
+  mutate(MEDICATION_VNR = as.integer(MEDICATION_VNR)) |> 
+  left_join(
+    fgbq$tbl$finngen_vnrs,
+    by = c("MEDICATION_VNR" = "VNR")
+  )
+```
+
+Now we can see the medication names, ATC codes, and other information:
+
+```{r}
+drug_events_with_names |> 
+  dplyr::glimpse()
+```
+
+# Alternative: Running SQL Queries
+You can also run SQL queries directly on the BigQuery tables. See the `tutorial_service_sector_data` vignette for examples of how to do this with the service sector data, but the same principles apply to the drug events data.

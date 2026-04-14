@@ -77,7 +77,7 @@ fg_bq_append_concept_info_data <- function(
 }
 
 
-#' fg_dbplyr_append_concept_info_data
+#' fg_dbplyr_append_code_info_to_kanta_data
 #'
 #' @param dbplyr_table a tbl object with the data
 #' @param fg_bq_tables an object of type fg_bq_tables with the bigquery tables
@@ -91,7 +91,7 @@ fg_bq_append_concept_info_data <- function(
 #'
 #' @export
 #'
-fg_dbplyr_append_concept_info_data <- function(
+fg_dbplyr_append_code_info_to_kanta_data <- function(
     dbplyr_table,
     fg_bq_tables,
     ...) {
