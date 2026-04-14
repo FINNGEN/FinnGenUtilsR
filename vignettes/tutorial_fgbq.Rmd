@@ -99,7 +99,7 @@ You can treat these tables as if they were regular tibbles. For example, to filt
 # Get events with code "J45" in OUTPAT
 fgbq$tbl$service_sector_detailed_longitudinal |> 
   filter(CODE1 == "J45" & SOURCE == "OUTPAT") |> 
-  glimmpse()
+  glimpse()
 ```
 
 Or other tidyverse functions like `stringr::str_detect()`
@@ -110,7 +110,7 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   filter(stringr::str_detect(CODE1, "^J45")) |> 
   count(CODE1) |> 
   head() |> 
-  glimmpse()
+  glimpse()
 ```
 
 ## Joining Tables
@@ -127,7 +127,7 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   ) |> 
   count(SMOKE2, SMOKE3, sort = TRUE) |> 
   head()|> 
-  glimmpse()
+  glimpse()
 ```
 
 
@@ -140,7 +140,7 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   filter(EVENT_AGE > 50) |> 
   head() |>
   collect() |> 
-  glimmpse()
+  glimpse()
 ```
 
 ## Running SQL Queries

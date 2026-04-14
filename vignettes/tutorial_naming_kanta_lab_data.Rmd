@@ -40,7 +40,7 @@ We can access the Kanta lab data using the `fgbq` object as follows:
 
 ```{r}
 fgbq$tbl$kanta |> 
-  glimmpse()
+  glimpse()
 ```
 
 # Generate a table for analysis
@@ -58,7 +58,7 @@ We can see that this table contains OMOP_CONCEPT_ID but not the names of the con
 ```{r}
 kanta_subject_1_tbl |> 
   select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID) |> 
-  glimmpse()
+  glimpse()
 ```
 
 ## Adding info to OMOP_CONCEPT_ID codes
@@ -74,7 +74,7 @@ kanta_subject_1_tbl_with_omop_name <- kanta_subject_1_tbl |>
 ```{r}
 kanta_subject_1_tbl_with_omop_name |>  
   dplyr::select(FINNGENID, EVENT_AGE, APPROX_EVENT_DATETIME, TEST_NAME, TEST_ID, OMOP_CONCEPT_ID, concept_name) |> 
-  glimmpse()
+  glimpse()
 ```
 
 
