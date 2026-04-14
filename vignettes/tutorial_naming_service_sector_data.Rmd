@@ -44,7 +44,8 @@ fgbq <- get_fg_bq_tables(
 We can access the service sector data using the `fgbq` object as follows: 
 
 ```{r}
-fgbq$tbl$service_sector_detailed_longitudinal |> head()
+fgbq$tbl$service_sector_detailed_longitudinal |> 
+  glimmpse()
 ```
 
 # Generate a table in service sector format
@@ -60,11 +61,8 @@ ss_subject_1_tbl <- fgbq$tbl$service_sector_detailed_longitudinal |>
 We can see that this table does not currently have information about the medical codes: 
 
 ```{r}
-ss_subject_1_tbl |> head()
-```
-(same table in html format for exporation)
-```{r echo=FALSE}
-ss_subject_1_tbl |> head() |> as.data.frame() |> rmarkdown::paged_table()
+ss_subject_1_tbl |> 
+  glimmpse()
 ```
 
 ## Adding info to medical codes
@@ -83,14 +81,7 @@ ss_subject_1_with_translations_tbl <- fg_dbplyr_append_code_info_to_longitudinal
 ```{r}
 ss_subject_1_with_translations_tbl |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
-  head()
-```
-(same table in html format for exploration)
-```{r echo=FALSE}
-ss_subject_1_with_translations_tbl |>  
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
-  head() |> 
-  as.data.frame() |> rmarkdown::paged_table()
+  glimmpse()
 ```
 
 ## If an event/row uses more than one medical code 
@@ -112,16 +103,9 @@ fg_dbplyr_append_code_info_to_longitudinal_data(
 ) |>
   filter(vocabulary_id == "ICD10fi" | vocabulary_id == "VNRfi") |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
-  head()
+  glimmpse()
 ```
 
-(same table in html format for exploration)
-```{r echo=FALSE}
-ss_subject_1_with_translations_tbl |>  
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
-  head() |> 
-  as.data.frame() |> rmarkdown::paged_table()
-```
 
 Se the help, for more options
 
@@ -147,15 +131,8 @@ fg_dbplyr_append_code_info_to_longitudinal_data(
   NCSPfi_precision = 2
 ) |>
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
-  head()
+  glimmpse()
 
-```
-(same table in html format for exploration)
-```{r echo=FALSE}
-ss_subject_1_with_translations_tbl |>  
-  dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, CODE3, code, name_en, name_fi, omop_concept_id) |> 
-  head() |> 
-  as.data.frame() |> rmarkdown::paged_table()
 ```
 
 We can see in column `code` the truncated code and in `name_en` the name of the truncated code. 
@@ -177,21 +154,10 @@ fg_dbplyr_append_visit_type_info_to_service_sector_data(
   ss_subject_1_tbl, 
   fg_bq_tables = fgbq
 ) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
-  head()
+  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit)|> 
+  glimmpse()
 ```
 
-(same table in html format for exploration)
-```{r echo=FALSE}
-fg_dbplyr_append_visit_type_info_to_service_sector_data(
-  ss_subject_1_tbl, 
-  fg_bq_tables = fgbq
-) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, visit_type_code, visit_type_name_en, is_clinic_visit, is_follow_up_visit) |> 
-  head() |> 
-  collect() |> 
-  as.data.frame() |> rmarkdown::paged_table()
-```
 
 # Adding info to provider type 
 
@@ -207,21 +173,8 @@ fg_dbplyr_append_provider_info_to_service_sector_data(
   fg_bq_tables = fgbq
 ) |> 
   dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
-  head()
+  glimmpse()
 ```
-(same table in html format for exploration)
-```{r echo=FALSE}
-fg_dbplyr_append_provider_info_to_service_sector_data(
-  ss_subject_1_tbl, 
-  fg_bq_tables = fgbq
-) |> 
-  dplyr::select(FINNGENID, SOURCE, INDEX, APPROX_EVENT_DAY, CODE5, CODE6, CODE8, CODE9, provider_code, provider_name_en, provider_concept_class_id) |> 
-  head() |> 
-  collect() |> 
-  as.data.frame() |> rmarkdown::paged_table()
-```
-
-
 
 # Alternative: Running SQL Queries
 
@@ -276,5 +229,5 @@ result_bq_table <- fg_bq_append_code_info_to_longitudinal_data(
 # The result is a new temporary table in BigQuery
 result_bq_table |> bq_table_download() |>  
   dplyr::select(FINNGENID, SOURCE, APPROX_EVENT_DAY, CODE1, CODE2, vocabulary_id, code, name_en, name_fi, omop_concept_id) |> 
-  head()
+  glimmpse()
 ```

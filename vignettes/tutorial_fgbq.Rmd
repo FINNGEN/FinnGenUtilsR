@@ -98,14 +98,8 @@ You can treat these tables as if they were regular tibbles. For example, to filt
 ```{r}
 # Get events with code "J45" in OUTPAT
 fgbq$tbl$service_sector_detailed_longitudinal |> 
-  filter(CODE1 == "J45" & SOURCE == "OUTPAT")
-```
-
-Or other tidyverse functions like `stringr::str_detect()`
-```{r}
-# Get events with code "J45" in OUTPAT
-fgbq$tbl$service_sector_detailed_longitudinal |> 
-  filter(CODE1 == "J45" & SOURCE == "OUTPAT")
+  filter(CODE1 == "J45" & SOURCE == "OUTPAT") |> 
+  glimmpse()
 ```
 
 Or other tidyverse functions like `stringr::str_detect()`
@@ -115,7 +109,8 @@ Or other tidyverse functions like `stringr::str_detect()`
 fgbq$tbl$service_sector_detailed_longitudinal |> 
   filter(stringr::str_detect(CODE1, "^J45")) |> 
   count(CODE1) |> 
-  head()
+  head() |> 
+  glimmpse()
 ```
 
 ## Joining Tables
@@ -131,24 +126,10 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
     by = "FINNGENID"
   ) |> 
   count(SMOKE2, SMOKE3, sort = TRUE) |> 
-  head()
+  head()|> 
+  glimmpse()
 ```
 
-(same table in html format for exploration)
-```{r echo=FALSE}
-fgbq$tbl$service_sector_detailed_longitudinal |> 
-  filter(dplyr::sql("code1 LIKE 'J45%'")) |> 
-  distinct(FINNGENID) |> 
-  left_join(
-    fgbq$tbl$minimum_extended, 
-    by = "FINNGENID"
-  ) |> 
-  count(SMOKE2, SMOKE3, sort = TRUE) |> 
-  head() |> 
-  collect() |> 
-  as.data.frame() |> 
-  rmarkdown::paged_table()
-```
 
 ## Collect results into R
 Once you have reduce the size of the total data you can download it into memory using `collect()`. For example:  
@@ -158,7 +139,8 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   filter(stringr::str_detect(CODE1, "^J45")) |> 
   filter(EVENT_AGE > 50) |> 
   head() |>
-  collect() 
+  collect() |> 
+  glimmpse()
 ```
 
 ## Running SQL Queries
