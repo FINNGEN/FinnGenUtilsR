@@ -7,10 +7,11 @@
 #' @param fg_bq_tables An fg_bq_tables object
 #' @param output_path Path where the R Markdown file will be written. If NULL, creates a temp file, renders to HTML, and opens in browser.
 #' @param detailedOutput Logical flag to include detailed column-level statistics (default: FALSE)
+#' @param tables_list Vector of table names to process. If NULL (default), processes all tables in fg_bq_tables.
 #'
 #' @return The path to the generated R Markdown file (invisibly)
 #'
-#' @importFrom checkmate assert_class assertString assertLogical
+#' @importFrom checkmate assert_class assertString assertLogical assertCharacter
 #' @importFrom dplyr tally n_distinct summarise collect across where
 #' @importFrom purrr map_chr
 #' @importFrom glue glue
@@ -20,11 +21,28 @@
 fg_register_data_summaries <- function(
   fg_bq_tables,
   output_path = NULL,
-  detailedOutput = FALSE
+  detailedOutput = FALSE,
+  tables_list = NULL
 ) {
   fg_bq_tables |> checkmate::assert_class('fg_bq_tables')
   if (!is.null(output_path)) output_path |> checkmate::assertString()
   detailedOutput |> checkmate::assertLogical()
+  if (!is.null(tables_list)) {
+    tables_list |> checkmate::assertCharacter(min.len = 1)
+    # Validate that all specified tables exist in fg_bq_tables
+    available_tables <- names(fg_bq_tables$tbl)
+    invalid_tables <- setdiff(tables_list, available_tables)
+    if (length(invalid_tables) > 0) {
+      stop("The following tables are not available in fg_bq_tables: ", paste(invalid_tables, collapse = ", "))
+    }
+  }
+  
+  # Determine which tables to process
+  tables_to_process <- if (is.null(tables_list)) {
+    names(fg_bq_tables$tbl)
+  } else {
+    tables_list
+  }
   
   # Create temp file if output_path is NULL
   render_html <- is.null(output_path)
@@ -46,7 +64,7 @@ fg_register_data_summaries <- function(
   )
   
   # Iterate through each table
-  for (table_name in names(fg_bq_tables$tbl)) {
+  for (table_name in tables_to_process) {
     message("Processing table: ", table_name)
     md_lines <- c(md_lines, "", glue::glue("## {table_name}"), "")
     
@@ -126,13 +144,20 @@ fg_register_data_summaries <- function(
           md_lines <- c(md_lines, glue::glue("#### {col}"), "")
           md_lines <- c(md_lines, glue::glue("*Type: {col_class}*"), "")
           
-          # Get distinct count
-          distinct_count <- tbl_obj |>
-            dplyr::summarise(n_distinct = dplyr::n_distinct(!!rlang::sym(col))) |>
-            dplyr::collect() |>
-            dplyr::pull(n_distinct)
+          # Get distinct count and missing percentage
+          col_stats <- tbl_obj |>
+            dplyr::summarise(
+              n_distinct = dplyr::n_distinct(!!rlang::sym(col)),
+              n_missing = sum(as.integer(is.na(!!rlang::sym(col)))),
+              n_total = dplyr::n()
+            ) |>
+            dplyr::collect()
+          
+          distinct_count <- col_stats$n_distinct
+          missing_pct <- round((col_stats$n_missing / col_stats$n_total) * 100, 2)
           
           md_lines <- c(md_lines, glue::glue("- Distinct values: {format(distinct_count, big.mark = ',')}"))
+          md_lines <- c(md_lines, glue::glue("- Missing values: {format(col_stats$n_missing, big.mark = ',')} ({missing_pct}%)"))
           
           # Handle different column types
           if (col_class %in% c("character", "factor")) {

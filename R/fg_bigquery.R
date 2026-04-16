@@ -513,9 +513,10 @@ fg_getLatestTablePaths <- function(
   dataset_id <- stringr::str_extract(full_path, "^[^.]+")
 
   if (grepl("finngen_omop", dataset_id)) {
+    currentFinngenOmopDataFreeze <- stringr::str_extract(dataset_id, "^finngen_omop_r[0-9]+")
     lastVersion <- bigrquery::bq_project_datasets(project_id) |>
       purrr::map_chr(~ .x$dataset) |>
-      stringr::str_subset("^finngen_omop") |>
+      stringr::str_subset(currentFinngenOmopDataFreeze) |>
       stringr::str_extract("[^_]+$") |>
       .lastNumberSuffix(prefix = "v")
   } else {
