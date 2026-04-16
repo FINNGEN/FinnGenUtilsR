@@ -7,7 +7,8 @@
 fg_register_data_summaries(
   fg_bq_tables,
   output_path = NULL,
-  detailedOutput = FALSE
+  detailedOutput = FALSE,
+  tables_list = NULL
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ fg_register_data_summaries(
 \item{output_path}{Path where the R Markdown file will be written. If NULL, creates a temp file, renders to HTML, and opens in browser.}
 
 \item{detailedOutput}{Logical flag to include detailed column-level statistics (default: FALSE)}
+
+\item{tables_list}{Vector of table names to process. If NULL (default), processes all tables in fg_bq_tables.}
 }
 \value{
 The path to the generated R Markdown file (invisibly)
