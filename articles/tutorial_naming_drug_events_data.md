@@ -56,13 +56,13 @@ fgbq <- get_fg_bq_tables(
 #>   - kidney: sandbox_tools_dev.kidney_dev_dev
 #>   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev
 #>   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev
-#>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal
+#>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev
 #>   - spirometry: sandbox_tools_dev.spirometry_dev_dev
 #>   - vaccination: sandbox_tools_dev.vaccination_dev_dev
 #>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to all 17 tables in 7.9 seconds
+#> Successfully connected to all 17 tables in 8.51 seconds
 ```
 
 We can access the drug events data using the `fgbq` object as follows:

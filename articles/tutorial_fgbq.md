@@ -52,13 +52,13 @@ fgbq <- get_fg_bq_tables(
 #>   - kidney: sandbox_tools_dev.kidney_dev_dev
 #>   - minimum_extended: sandbox_tools_dev.minimum_extended_dev_dev
 #>   - plasma_samples: sandbox_tools_dev.plasma_samples_dev_dev
-#>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal
+#>   - service_sector_detailed_longitudinal: sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev
 #>   - spirometry: sandbox_tools_dev.spirometry_dev_dev
 #>   - vaccination: sandbox_tools_dev.vaccination_dev_dev
 #>   - vision: sandbox_tools_dev.vision_dev_dev
 #>   - cdm_concept: finngen_omop_dev_dev.concept
 #> Creating table connections (this may take a moment)...
-#> Successfully connected to all 17 tables in 7.91 seconds
+#> Successfully connected to all 17 tables in 9.39 seconds
 ```
 
 By default
@@ -102,7 +102,7 @@ fgbq
 #>   [v] kidney                            atlas-development-270609.sandbox_tools_dev.kidney_dev
 #>   [v] minimum_extended                  atlas-development-270609.sandbox_tools_dev.minimum_extended_dev
 #>   [v] plasma_samples                    atlas-development-270609.sandbox_tools_dev.plasma_samples_dev
-#>   [v] service_sector_detailed_longitudinal atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal
+#>   [v] service_sector_detailed_longitudinal atlas-development-270609.sandbox_tools_dev.finngen_dev_service_sector_detailed_longitudinal_dev
 #>   [v] spirometry                        atlas-development-270609.sandbox_tools_dev.spirometry_dev
 #>   [v] vaccination                       atlas-development-270609.sandbox_tools_dev.vaccination_dev
 #>   [v] vision                            atlas-development-270609.sandbox_tools_dev.vision_dev
@@ -180,19 +180,19 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
 #> Database: BigQueryConnection
 #> $ FINNGENID        <chr> "FG00001468", "FG00001845", "FG00001981", "FG00001993…
 #> $ SOURCE           <chr> "OUTPAT", "OUTPAT", "OUTPAT", "OUTPAT", "OUTPAT", "OU…
-#> $ EVENT_AGE        <dbl> 23.655, 29.656, 57.717, 21.760, 68.846, 71.852, 14.09…
+#> $ EVENT_AGE        <dbl> 23.655, 29.656, 57.717, 21.760, 68.846, 71.852, 23.65…
 #> $ APPROX_EVENT_DAY <date> 2018-08-26, 2016-07-12, 2021-01-11, 2019-12-25, 2005…
 #> $ CODE1            <chr> "J45", "J45", "J45", "J45", "J45", "J45", "J45", "J45…
-#> $ CODE2            <chr> NA, NA, "J45", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+#> $ CODE2            <chr> NA, NA, "J45", NA, NA, NA, NA, NA, "J45", NA, NA, NA,…
 #> $ CODE3            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
 #> $ CODE4            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-#> $ CODE5            <chr> "93", "92", NA, NA, "91", "2", "92", NA, NA, NA, NA, …
-#> $ CODE6            <chr> "65", "10E", "70", "96", "20", "55", "30", "15Y", "10…
+#> $ CODE5            <chr> "93", "92", NA, NA, "91", "2", "93", "92", NA, NA, "9…
+#> $ CODE6            <chr> "65", "10E", "70", "96", "20", "55", "65", "10E", "70…
 #> $ CODE7            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-#> $ CODE8            <chr> "R52", NA, "R52", "R10", NA, NA, NA, "R10", "R10", "R…
-#> $ CODE9            <chr> "E", NA, "E", "E", NA, NA, NA, "6", "E", "E", "E", NA…
+#> $ CODE8            <chr> "R52", NA, "R52", "R10", NA, NA, "R52", NA, "R52", "R…
+#> $ CODE9            <chr> "E", NA, "E", "E", NA, NA, "E", NA, "E", "E", NA, NA,…
 #> $ ICDVER           <chr> "10", "10", "10", "10", "10", "10", "10", "10", "10",…
-#> $ CATEGORY         <chr> "2", "1", "1", "2", "1", "1", "1", "1", "1", "2", "3"…
+#> $ CATEGORY         <chr> "2", "1", "1", "2", "1", "1", "2", "1", "1", "2", "1"…
 #> $ INDEX            <chr> "682342", "828784", "970654", "972744", "1257416", "1…
 ```
 
@@ -209,8 +209,8 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
 #> Rows: ??
 #> Columns: 2
 #> Database: BigQueryConnection
-#> $ CODE1 <chr> "J450", "J459", "J451", "J45", "J458"
-#> $ n     <int64> 88559, 183889, 58219, 100414, 13542
+#> $ CODE1 <chr> "J45", "J450", "J451", "J459", "J458"
+#> $ n     <int64> 100414, 88559, 58219, 183889, 13542
 ```
 
 ### Joining Tables
@@ -254,22 +254,22 @@ fgbq$tbl$service_sector_detailed_longitudinal |>
   glimpse()
 #> Rows: 6
 #> Columns: 16
-#> $ FINNGENID        <chr> "FG00322782", "FG00322785", "FG00322789", "FG00322789…
-#> $ SOURCE           <chr> "PRIM_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM…
-#> $ EVENT_AGE        <dbl> 64.956, 84.706, 57.582, 61.407, 59.639, 61.703
-#> $ APPROX_EVENT_DAY <date> 2016-08-04, 2017-10-12, 2013-02-06, 2016-12-04, 2023-…
-#> $ CODE1            <chr> "J45", "J459", "J45", "J459", "J45", "J459"
+#> $ FINNGENID        <chr> "FG00067740", "FG00067741", "FG00067743", "FG00067744…
+#> $ SOURCE           <chr> "OUTPAT", "PRIM_OUT", "PRIM_OUT", "PRIM_OUT", "PRIM_O…
+#> $ EVENT_AGE        <dbl> 53.153, 71.091, 81.810, 67.444, 57.974, 74.620
+#> $ APPROX_EVENT_DAY <date> 2016-12-14, 2021-04-17, 2021-09-24, 2018-02-04, 2013-…
+#> $ CODE1            <chr> "J451", "J459", "J45", "J45", "J459", "J459"
 #> $ CODE2            <chr> NA, NA, NA, NA, NA, NA
 #> $ CODE3            <chr> NA, NA, NA, NA, NA, NA
 #> $ CODE4            <chr> NA, NA, NA, NA, NA, NA
-#> $ CODE5            <chr> "R10", "R90", "R10", "R20", "R52", "R20"
-#> $ CODE6            <chr> "T60", "T11", "T11", "T42", "T40", "T40"
-#> $ CODE7            <chr> "2222", "51321", "32311", "51321", "51321", "51321"
+#> $ CODE5            <chr> "93", "R20", "R20", "R20", "R10", "91"
+#> $ CODE6            <chr> "10I", "T40", "T40", "T40", "T11", "20"
+#> $ CODE7            <chr> NA, "51321", "51321", "51321", NA, NA
 #> $ CODE8            <chr> NA, NA, NA, NA, NA, NA
 #> $ CODE9            <chr> NA, NA, NA, NA, NA, NA
-#> $ ICDVER           <chr> NA, NA, NA, NA, NA, NA
-#> $ CATEGORY         <chr> "ICD1", "ICD1", "ICD1", "ICD2", "ICD1", "ICD1"
-#> $ INDEX            <chr> "144366891", "144377781", "144377910", "144367579", …
+#> $ ICDVER           <chr> "10", NA, NA, NA, NA, "10"
+#> $ CATEGORY         <chr> "2", "ICD2", "ICD1", "ICD3", "ICD1", "1"
+#> $ INDEX            <chr> "30343801", "30380344", "30378288", "30371167", "303…
 ```
 
 ### Running SQL Queries
@@ -293,11 +293,11 @@ bigrquery::bq_table_download(result)
 #> # A tibble: 5 × 4
 #>   FINNGENID  CODE1 SOURCE APPROX_EVENT_DAY
 #>   <chr>      <chr> <chr>  <date>          
-#> 1 FG00011698 J45   OUTPAT 2018-08-26      
-#> 2 FG00012075 J45   OUTPAT 2016-07-12      
-#> 3 FG00012211 J45   OUTPAT 2021-01-11      
-#> 4 FG00012223 J45   OUTPAT 2019-12-25      
-#> 5 FG00012989 J45   OUTPAT 2005-02-13
+#> 1 FG00440611 J45   OUTPAT 2019-07-23      
+#> 2 FG00440749 J45   OUTPAT 2018-04-23      
+#> 3 FG00441633 J45   OUTPAT 2022-03-28      
+#> 4 FG00442859 J45   OUTPAT 2007-09-19      
+#> 5 FG00065273 J45   OUTPAT 2018-12-13
 ```
 
 ### Connection Details

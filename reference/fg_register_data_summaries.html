@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FinnGenUtilsR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fg_register_data_summaries</span><span class="op">(</span></span>
 <span>  <span class="va">fg_bq_tables</span>,</span>
 <span>  output_path <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  detailedOutput <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  detailedOutput <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  tables_list <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -66,6 +67,10 @@
 
 <dt id="arg-detailedoutput">detailedOutput<a class="anchor" aria-label="anchor" href="#arg-detailedoutput"></a></dt>
 <dd><p>Logical flag to include detailed column-level statistics (default: FALSE)</p></dd>
+
+
+<dt id="arg-tables-list">tables_list<a class="anchor" aria-label="anchor" href="#arg-tables-list"></a></dt>
+<dd><p>Vector of table names to process. If NULL (default), processes all tables in fg_bq_tables.</p></dd>
 
 </dl></div>
     <div class="section level2">

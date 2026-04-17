@@ -9,7 +9,8 @@ fg_bq_tables
 fg_register_data_summaries(
   fg_bq_tables,
   output_path = NULL,
-  detailedOutput = FALSE
+  detailedOutput = FALSE,
+  tables_list = NULL
 )
 ```
 
@@ -28,6 +29,11 @@ fg_register_data_summaries(
 
   Logical flag to include detailed column-level statistics (default:
   FALSE)
+
+- tables_list:
+
+  Vector of table names to process. If NULL (default), processes all
+  tables in fg_bq_tables.
 
 ## Value
 

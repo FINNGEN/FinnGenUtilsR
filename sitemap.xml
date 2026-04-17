@@ -31,6 +31,7 @@
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_code_info_to_longitudinal_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_provider_info_to_service_sector_data.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_visit_type_info_to_service_sector_data.html</loc></url>
+<url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_getDatabaseConnector.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_getLatestDataFreeze.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_getLatestTablePaths.html</loc></url>
 <url><loc>https://finngen.github.io/FinnGenUtilsR/reference/fg_omop_summaries.html</loc></url>

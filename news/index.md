@@ -1,9 +1,16 @@
 # Changelog
 
-## FinnGenUtilsR 4.0.3
+## FinnGenUtilsR 4.0.8
+
+- Added `tables_list` parameter to
+  [`fg_register_data_summaries()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_register_data_summaries.md)
+  to allow processing specific tables
+
+## FinnGenUtilsR 4.0.4
 
 - Updates GWAS to run from standard API
 - Other fixes after production checked
+- Added `fg_getDatabaseConnector`
 
 ## FinnGenUtilsR 4.0.0
 

@@ -66,6 +66,8 @@ See vignettes or articles in
   : fg_dbplyr_append_provider_info_to_service_sector_data
 - [`fg_dbplyr_append_visit_type_info_to_service_sector_data()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_dbplyr_append_visit_type_info_to_service_sector_data.md)
   : fg_dbplyr_append_visit_type_info_to_service_sector_data
+- [`fg_getDatabaseConnector()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_getDatabaseConnector.md)
+  : Get Database Connector
 - [`fg_getLatestDataFreeze()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_getLatestDataFreeze.md)
   : Get Latest Data Freeze
 - [`fg_getLatestTablePaths()`](https://finngen.github.io/FinnGenUtilsR/reference/fg_getLatestTablePaths.md)
