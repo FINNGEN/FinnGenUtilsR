@@ -1,4 +1,4 @@
-# FinnGenUtilsR 4.0.7
+# FinnGenUtilsR 4.0.8
 - Added `tables_list` parameter to `fg_register_data_summaries()` to allow processing specific tables
 
 # FinnGenUtilsR 4.0.4
