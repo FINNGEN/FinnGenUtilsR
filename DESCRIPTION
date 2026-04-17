@@ -1,6 +1,6 @@
 Package: FinnGenUtilsR
 Title: FinnGenUtilsR
-Version: 4.0.3
+Version: 4.0.8
 Authors@R: 
     person("Javier", "Gracia-Tabuenca", , "javier.graciatabuenca@tuni.fi", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2455-0598"))
@@ -14,6 +14,7 @@ RoxygenNote: 7.3.3
 Imports: 
     bigrquery,
     checkmate,
+    DatabaseConnector,
     DBI,
     dbplyr,
     dplyr,

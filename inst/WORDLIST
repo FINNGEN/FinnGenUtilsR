@@ -6,6 +6,7 @@ CANC
 CDM
 CDMConnector
 CMD
+DatabaseConnector
 Eg
 FG
 FGconnectionHandler

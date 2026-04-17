@@ -490,6 +490,16 @@ fg_getLatestTablePaths <- function(
       )
   }
 
+  # special case finngen_omop_rXX tables with no version 
+  tablesPathsTibble <- tablesPathsTibble |>
+    dplyr::mutate(
+      full_path = ifelse(
+        grepl("finngen_omop", full_path) & grepl("_v-Inf", full_path),
+        stringr::str_remove(full_path, "_v-Inf"),
+        full_path
+      )
+    )
+
   return(tablesPathsTibble)
 }
 
@@ -513,9 +523,10 @@ fg_getLatestTablePaths <- function(
   dataset_id <- stringr::str_extract(full_path, "^[^.]+")
 
   if (grepl("finngen_omop", dataset_id)) {
+    currentFinngenOmopDataFreeze <- stringr::str_extract(dataset_id, "^finngen_omop_r[0-9]+|^finngen_omop_result_r[0-9]+")
     lastVersion <- bigrquery::bq_project_datasets(project_id) |>
       purrr::map_chr(~ .x$dataset) |>
-      stringr::str_subset("^finngen_omop") |>
+      stringr::str_subset(currentFinngenOmopDataFreeze) |>
       stringr::str_extract("[^_]+$") |>
       .lastNumberSuffix(prefix = "v")
   } else {

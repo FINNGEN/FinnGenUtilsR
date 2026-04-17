@@ -1,6 +1,10 @@
-# FinnGenUtilsR 4.0.3
+# FinnGenUtilsR 4.0.8
+- Added `tables_list` parameter to `fg_register_data_summaries()` to allow processing specific tables
+
+# FinnGenUtilsR 4.0.4
 - Updates GWAS to run from standard API
 - Other fixes after production checked
+- Added `fg_getDatabaseConnector`
 
 # FinnGenUtilsR 4.0.0
 - Refactor: Now we use an fg_table R6 object that finds automatically the connection parameters, last datafreeze and last table versions, or a specific datafreeze if needed.
