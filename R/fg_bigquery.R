@@ -440,7 +440,7 @@ fg_getLatestTablePaths <- function(
         dataFreeze
       )
     )
-browser()
+
   tablesPathsTibble <- tablesPathsTibble |>
     dplyr::mutate(
       full_path = purrr::map_chr(
@@ -523,7 +523,7 @@ browser()
   dataset_id <- stringr::str_extract(full_path, "^[^.]+")
 
   if (grepl("finngen_omop", dataset_id)) {
-    currentFinngenOmopDataFreeze <- stringr::str_extract(dataset_id, "^finngen_omop_r[0-9]+|^finngen_omop_results_r[0-9]+")
+    currentFinngenOmopDataFreeze <- stringr::str_extract(dataset_id, "^finngen_omop_r[0-9]+|^finngen_omop_result_r[0-9]+")
     lastVersion <- bigrquery::bq_project_datasets(project_id) |>
       purrr::map_chr(~ .x$dataset) |>
       stringr::str_subset(currentFinngenOmopDataFreeze) |>

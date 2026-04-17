@@ -15,7 +15,7 @@
 #' @export
 #' @importFrom bigrquery bq_auth
 #' @importFrom DatabaseConnector createDbiConnectionDetails connect
-fg_getDatabseConnector <- function(
+fg_getDatabaseConnector <- function(
   environment
 ) {
 
