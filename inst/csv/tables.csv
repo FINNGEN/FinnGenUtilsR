@@ -56,3 +56,4 @@ cdm_cohort,finngen_omop_{datafreeze}_{version}.cohort,0
 cdm_cohort_definition,finngen_omop_{datafreeze}_{version}.cohort_definition,0
 cdm_results_co2_codewas_counts,finngen_omop_result_{datafreeze}_{version}.person_code_counts,0
 cdm_results_co2_ehrbrowser_counts,finngen_omop_result_{datafreeze}_{version}.code_counts,0
+cdm_results_co2_ehrbrowser_stratified_counts,finngen_omop_result_{datafreeze}_{version}.stratified_code_counts,0
