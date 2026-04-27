@@ -1,5 +1,6 @@
-# FinnGenUtilsR 4.0.8
+# FinnGenUtilsR 4.0.9
 - Added `tables_list` parameter to `fg_register_data_summaries()` to allow processing specific tables
+- Added stratified_code_counts to tables
 
 # FinnGenUtilsR 4.0.4
 - Updates GWAS to run from standard API
