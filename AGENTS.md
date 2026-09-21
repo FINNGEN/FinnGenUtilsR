@@ -92,11 +92,17 @@ Repo-specific notes beyond STYLE.md:
 
 ## Git
 
+- **NEVER run `git commit` unless the user's most recent message explicitly
+  asks for a commit right now.** Making further edits, fixing a bug, or
+  finishing a task the user asked for is NOT permission to commit it — leave
+  the changes uncommitted in the working tree and say what's ready to commit.
+  An earlier "commit" instruction covers only the changes that existed at
+  that moment, never work done afterward. If in doubt, ask instead of
+  committing.
 - Feature branch → PR into `development`. Don't push directly to
   `development`/`main`; only a human opens the `development` → `main` release PR.
-- Only commit when explicitly asked — use the `commit` skill
-  (`.claude/skills/commit/`) for Conventional Commits formatting and safety
-  checks.
+- When asked to commit, use the `commit` skill (`.claude/skills/commit/`) for
+  Conventional Commits formatting and safety checks.
 - Use the `pull-request` skill (`.claude/skills/pull-request/`) to open PRs —
   it runs `devtools::check()` and targets `development`.
 - Bump `Version` in `DESCRIPTION` and add a `NEWS.md` entry for user-visible
