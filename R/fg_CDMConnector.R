@@ -17,8 +17,18 @@ fg_CDMConnector <- function(
     stop("Package 'CDMConnector' is required but not installed. Please install it to use this function.")
   }
 
+  if (utils::packageVersion("CDMConnector") < "2.8.0") {
+    stop("Package 'CDMConnector' >= 2.8.0 is required. Please update it to use this function.")
+  }
+
+  # TMP workaround until https://github.com/darwin-eu/CDMConnector/issues/60 is fixed:
+  .tmpPatchCDMConnectorBigQuerySchemaBug()
+
   # Making a connection object that is used to connect to the tables:
   connection <- fg_connection(environment)
+
+  # The write/scratch dataset used across all environments (see fg_getDatabaseConnector):
+  connection@dataset <- "sandbox"
 
   if (is.null(cdmDataFreezeVersion)) {
     if (environment == "preview") {
@@ -33,11 +43,9 @@ fg_CDMConnector <- function(
 
   project_id <- connection@project
   billing_project_id <- connection@billing
-  dataset_id <- connection@dataset
-
 
   cdmSchema <- paste0(project_id, ".finngen_omop_",cdmDataFreezeVersion)
-  writeSchema <- paste0(billing_project_id, ".", dataset_id)
+  writeSchema <- paste0(billing_project_id, ".sandbox")
 
 
   cdm <- CDMConnector::cdmFromCon(
@@ -48,6 +56,106 @@ fg_CDMConnector <- function(
   )
 
   return(cdm)
+}
+
+
+#' TEMPORARY: Patch CDMConnector's BigQuery Cross-Schema Bug
+#'
+#' `CDMConnector:::.inSchema()` collapses a 2-part BigQuery schema (project +
+#' dataset) into a single dotted string instead of a `DBI::Id()`, which bigrquery
+#' later double-qualifies when reading the table back (e.g. when `cdmFromCon()`
+#' validates write access, or when `compute()`/`insertTable()`/`generateCohortSet()`
+#' create tables in a `writeSchema` on a different project than the connection's
+#' default). All other multi-schema dbms already build a proper `DBI::Id()`; this
+#' swaps BigQuery onto that same path.
+#'
+#' This is a **temporary workaround**, tracked upstream at
+#' <https://github.com/darwin-eu/CDMConnector/issues/60>. Remove this function and
+#' its call site in `fg_CDMConnector()` once that issue is resolved and a fixed
+#' CDMConnector version is required in DESCRIPTION.
+#'
+#' Only patches when the known-buggy implementation is detected (matched by source
+#' code pattern, not version number), so it becomes a no-op — with a warning — if a
+#' future CDMConnector release fixes this differently.
+#'
+#' @return NULL (called for side effects)
+#'
+#' @keywords internal
+.tmpPatchCDMConnectorBigQuerySchemaBug <- function() {
+  ns <- asNamespace("CDMConnector")
+  current <- get(".inSchema", envir = ns)
+
+  if (isTRUE(attr(current, "fg_patched"))) {
+    return(invisible(NULL))
+  }
+
+  normalizedSource <- gsub("\\s+", " ", paste(deparse(body(current)), collapse = " "))
+  isKnownBuggyImplementation <- grepl(
+    'dbms == "bigquery" && length(schema) == 2',
+    normalizedSource,
+    fixed = TRUE
+  )
+
+  if (!isKnownBuggyImplementation) {
+    warning(
+      "CDMConnector's internal .inSchema() no longer matches the known BigQuery ",
+      "cross-schema bug that fg_CDMConnector() works around (tracked at ",
+      "https://github.com/darwin-eu/CDMConnector/issues/60). The temporary ",
+      "workaround was skipped; please verify BigQuery CDM access still works as ",
+      "expected, and remove .tmpPatchCDMConnectorBigQuerySchemaBug() if the ",
+      "upstream issue is resolved.",
+      call. = FALSE
+    )
+    return(invisible(NULL))
+  }
+
+  patched <- function(schema, table, dbms = NULL) {
+    checkmate::assertCharacter(schema, min.len = 1, max.len = 3, null.ok = TRUE)
+    checkmate::assertCharacter(table, len = 1, min.chars = 1)
+    checkmate::assertCharacter(dbms, len = 1, null.ok = TRUE)
+
+    if (is.null(schema)) {
+      if (dbms == "sql server") {
+        return(DBI::Id(table = paste0("#", table)))
+      }
+      return(DBI::Id(table = table))
+    }
+
+    if ("prefix" %in% names(schema)) {
+      checkmate::assertCharacter(
+        schema["prefix"], len = 1, min.chars = 1, pattern = "[a-zA-Z1-9_]+"
+      )
+      if (toupper(table) == table) {
+        table <- paste0(toupper(schema["prefix"]), table)
+      } else {
+        table <- paste0(schema["prefix"], table)
+      }
+      schema <- schema[!names(schema) %in% "prefix"]
+      checkmate::assertCharacter(schema, min.len = 1, max.len = 2)
+    }
+
+    if (isFALSE(dbms %in% c("snowflake", "sql server", "spark", "bigquery", "duckdb"))) {
+      checkmate::assertCharacter(schema, len = 1)
+    }
+
+    schema <- unname(schema)
+    if (!is.null(dbms) && dbms == "duckdb" && identical(schema, "main")) {
+      out <- table
+    } else {
+      out <- switch(
+        length(schema),
+        DBI::Id(schema = schema, table = table),
+        DBI::Id(catalog = schema[1], schema = schema[2], table = table)
+      )
+    }
+
+    return(out)
+  }
+  attr(patched, "fg_patched") <- TRUE
+
+  utils::assignInNamespace(".inSchema", patched, ns = ns)
+
+  invisible(NULL)
 }
 
 

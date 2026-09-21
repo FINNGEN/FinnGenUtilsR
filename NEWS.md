@@ -1,5 +1,15 @@
-# FinnGenUtilsR 4.0.8
+# FinnGenUtilsR 4.1.0
+- `fg_CDMConnector()` now requires `CDMConnector (>= 2.8.0)` and fixes a bug where
+  `writeSchema` was built from an unset connection dataset, producing a malformed
+  schema.
+- Added a temporary workaround for a CDMConnector BigQuery bug that broke
+  cross-project `cdmSchema`/`writeSchema` (tracked upstream at
+  https://github.com/darwin-eu/CDMConnector/issues/60); remove once resolved.
+- Added integration test for `fg_CDMConnector()`.
+
+# FinnGenUtilsR 4.0.9
 - Added `tables_list` parameter to `fg_register_data_summaries()` to allow processing specific tables
+- Added stratified_code_counts to tables
 
 # FinnGenUtilsR 4.0.4
 - Updates GWAS to run from standard API
