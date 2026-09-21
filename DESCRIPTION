@@ -1,6 +1,6 @@
 Package: FinnGenUtilsR
 Title: FinnGenUtilsR
-Version: 4.0.9
+Version: 4.1.0
 Authors@R: 
     person("Javier", "Gracia-Tabuenca", , "javier.graciatabuenca@tuni.fi", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2455-0598"))
@@ -11,7 +11,7 @@ Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Imports: 
+Imports:
     bigrquery,
     checkmate,
     DatabaseConnector,
