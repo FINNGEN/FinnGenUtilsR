@@ -3,6 +3,7 @@
 #' Create FinnGen BigQuery Connection
 #'
 #' @param environment Environment identifier (e.g., "build", "preview", or "sandbox-XX")
+#' @param dataset Default BigQuery dataset for the connection. If NULL, no default dataset is set.
 #'
 #' @return A BigQuery connection object
 #'
@@ -11,7 +12,8 @@
 #'
 #' @export
 fg_connection <- function(
-  environment
+  environment,
+  dataset = NULL
 ) {
   #
   # Validation
@@ -43,6 +45,7 @@ fg_connection <- function(
   connection <- DBI::dbConnect(
     bigrquery::bigquery(),
     project = project_id,
+    dataset = dataset,
     billing = billing_project_id,
     bigint = "integer64"
   )

@@ -17,8 +17,12 @@ fg_CDMConnector <- function(
     stop("Package 'CDMConnector' is required but not installed. Please install it to use this function.")
   }
 
+  if (utils::packageVersion("CDMConnector") < "2.8.0") {
+    stop("Package 'CDMConnector' >= 2.8.0 is required. Please update it to use this function.")
+  }
+
   # Making a connection object that is used to connect to the tables:
-  connection <- fg_connection(environment)
+  connection <- fg_connection(environment, dataset = "sandbox")
 
   if (is.null(cdmDataFreezeVersion)) {
     if (environment == "preview") {
@@ -33,11 +37,9 @@ fg_CDMConnector <- function(
 
   project_id <- connection@project
   billing_project_id <- connection@billing
-  dataset_id <- connection@dataset
-
 
   cdmSchema <- paste0(project_id, ".finngen_omop_",cdmDataFreezeVersion)
-  writeSchema <- paste0(billing_project_id, ".", dataset_id)
+  writeSchema <- paste0(billing_project_id, ".sandbox")
 
 
   cdm <- CDMConnector::cdmFromCon(
